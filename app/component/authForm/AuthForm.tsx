@@ -1,28 +1,51 @@
+import { Form, useActionData, useTransition } from "@remix-run/react";
+import type { AuthActionData } from "~/routes/__auth";
+import { AuthFormHeader } from "./AuthFormHeader";
 import { AuthInput } from "./AuthInput";
 import { AuthSubmitButton } from "./AuthSubmitButton";
 
-type Props = { title: string; type: "login" | "signup" };
+type Props = { type: "login" | "signup" };
 
-export const AuthForm: React.VFC<Props> = ({ title, type }) => {
+export const AuthForm: React.VFC<Props> = ({ type }) => {
+  const actionData = useActionData<AuthActionData>();
+  const transition = useTransition();
+  const isLoginType = type === "login";
+
   return (
     <div>
-      <div>
-        <img
-          src="/icon.png"
-          alt="logo"
-          className="w-[100px] h-[100px] mx-auto"
-        />
-      </div>
-      <h1 className="text-2xl font-bold text-center">{title}</h1>
-      <div className="mt-5 p-5 bg-white shadow-md rounded-md">
-        <div className="mt-5 space-y-4">
-          <AuthInput label="ユーザー名" type="text" />
-          <AuthInput label="パスワード" type="password" />
-        </div>
-        <div className="mt-5">
-          <AuthSubmitButton text={type === "login" ? "ログイン" : "登録"} />
-        </div>
-      </div>
+      <AuthFormHeader type={type} />
+      <Form method="post" className="mt-5 p-5 bg-white shadow-md rounded-md">
+        <fieldset disabled={transition.state === "submitting"}>
+          {actionData?.formError && (
+            <div className="p-3 bg-red-50 border border-red-200 rounded-md">
+              <p className="text-red-600">{actionData?.formError}</p>
+            </div>
+          )}
+          <div className="mt-5 space-y-4">
+            <AuthInput
+              label="ユーザー名"
+              type="text"
+              name="username"
+              defaultValue={actionData?.fields?.username}
+              errorMessage={actionData?.fieldErrors?.username}
+              autoComplete="username"
+            />
+            <AuthInput
+              label="パスワード"
+              type="password"
+              name="password"
+              errorMessage={actionData?.fieldErrors?.password}
+              autoComplete={isLoginType ? "current-password" : "new-password"}
+            />
+          </div>
+          <div className="mt-5">
+            <AuthSubmitButton
+              text={isLoginType ? "ログイン" : "登録"}
+              isSubmitting={transition.state === "submitting"}
+            />
+          </div>
+        </fieldset>
+      </Form>
     </div>
   );
 };
