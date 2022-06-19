@@ -10,14 +10,16 @@ const authForm = z.object({
     .min(6, "パスワードは6文字以上で入力してください。"),
 });
 
-type Fields = z.infer<typeof authForm>;
+// これをもとにLoginFormとSIgnupFormを作って、そっちを使うべきかも
+// ユーザー作成のときにのみ設定するべき項目とかありそう
+export type AuthForm = z.infer<typeof authForm>;
 type FormFieldErrors = {
-  [T in keyof Fields]: string[] | undefined;
+  [T in keyof AuthForm]: string[] | undefined;
 };
 export type AuthActionData = {
   formError?: string;
   fieldErrors?: FormFieldErrors;
-  fields?: Fields;
+  fields?: Omit<AuthForm, "password">;
 };
 
 export function validateAuthForm(form: unknown): FormFieldErrors | undefined {

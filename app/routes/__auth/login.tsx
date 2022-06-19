@@ -1,13 +1,21 @@
-import type { ActionFunction } from "@remix-run/node";
-import { json } from "@remix-run/node";
+import type { ActionFunction, LoaderFunction } from "@remix-run/node";
+import { json, redirect } from "@remix-run/node";
 import { Link } from "@remix-run/react";
 import { AuthForm } from "~/component/authForm/AuthForm";
 import type { AuthActionData } from "~/utils/auth";
 import { validateAuthForm } from "~/utils/auth";
-import { createUserSession, login } from "~/utils/session.server";
+import { createUserSession, getUser, login } from "~/utils/session.server";
 
 const badRequest = (data: AuthActionData) => {
   return json(data, { status: 400 });
+};
+
+export const loader: LoaderFunction = async ({ request }) => {
+  const user = await getUser(request);
+  if (user) {
+    return redirect("/");
+  }
+  return null;
 };
 
 export const action: ActionFunction = async ({ request }) => {
@@ -22,20 +30,21 @@ export const action: ActionFunction = async ({ request }) => {
     });
   }
 
-  const fields = { username, password };
   const fieldErrors = validateAuthForm({ username, password });
   if (fieldErrors) {
-    return badRequest({ fieldErrors, fields });
+    return badRequest({ fieldErrors, fields: { username } });
   }
 
   const user = await login({ username, password });
   if (!user) {
     return badRequest({
-      fields,
+      fields: { username },
       formError: "ユーザー名/パスワードの組み合わせが間違っています。",
     });
   }
-  return createUserSession(user.id);
+
+  const setCookieHeader = await createUserSession(user.id);
+  return redirect("/", { headers: { "Set-Cookie": setCookieHeader } });
 };
 
 export default function Login() {
