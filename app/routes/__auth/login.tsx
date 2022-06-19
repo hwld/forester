@@ -2,9 +2,9 @@ import type { ActionFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Link } from "@remix-run/react";
 import { AuthForm } from "~/component/authForm/AuthForm";
-import { validatePassword, validateUserName } from "~/utils/auth.server";
+import type { AuthActionData } from "~/utils/auth";
+import { validateAuthForm } from "~/utils/auth";
 import { createUserSession, login } from "~/utils/session.server";
-import type { AuthActionData } from "../__auth";
 
 const badRequest = (data: AuthActionData) => {
   return json(data, { status: 400 });
@@ -14,6 +14,8 @@ export const action: ActionFunction = async ({ request }) => {
   const formData = await request.formData();
   const username = formData.get("username");
   const password = formData.get("password");
+
+  // 入力された値の形式を確認する
   if (typeof username !== "string" || typeof password !== "string") {
     return badRequest({
       formError: "フォームが正しく送信されませんでした。",
@@ -21,11 +23,8 @@ export const action: ActionFunction = async ({ request }) => {
   }
 
   const fields = { username, password };
-  const fieldErrors = {
-    username: validateUserName(username),
-    password: validatePassword(password),
-  };
-  if (Object.values(fieldErrors).some(Boolean)) {
+  const fieldErrors = validateAuthForm({ username, password });
+  if (fieldErrors) {
     return badRequest({ fieldErrors, fields });
   }
 

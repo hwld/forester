@@ -1,10 +1,5 @@
-import type { ActionFunction } from "@remix-run/node";
 import { Link } from "@remix-run/react";
 import { AuthForm } from "~/component/authForm/AuthForm";
-
-export const action: ActionFunction = async ({ request }) => {
-  
-};
 
 export default function Signup() {
   return (

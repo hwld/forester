@@ -12,7 +12,8 @@
     "dev:css": "npm run generate:css -- --watch",
     "dev:remix": "remix dev",
     "generate:css": "npx tailwindcss -i ./styles/tailwind.css -o ./app/tailwind.css",
-    "start": "remix-serve build"
+    "start": "remix-serve build",
+    "check:type": "tsc --noEmit"
   },
   "dependencies": {
     "@prisma/client": "^3.15.1",
@@ -22,7 +23,8 @@
     "bcryptjs": "^2.4.3",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
-    "tiny-invariant": "^1.2.0"
+    "tiny-invariant": "^1.2.0",
+    "zod": "^3.17.3"
   },
   "devDependencies": {
     "@remix-run/dev": "^1.5.1",

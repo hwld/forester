@@ -1,8 +1,9 @@
 import type { ComponentProps } from "react";
+import { useMemo } from "react";
 
 type Props = {
   label: string;
-  errorMessage?: string;
+  errors?: string[];
 } & ComponentProps<"input">;
 
 const inputClass =
@@ -12,10 +13,24 @@ const normalInputClass = `${inputClass} focus:border-emerald-400 focus:ring-emer
 
 export const AuthInput: React.VFC<Props> = ({
   label,
-  errorMessage,
+  errors,
   ...inputProps
 }) => {
-  const isError = errorMessage !== undefined && errorMessage.length > 0;
+  const isError = errors !== undefined && errors.length > 0;
+
+  const errorMessages = useMemo(() => {
+    return (
+      <ul className="ml-3">
+        {errors?.map((error, i) => {
+          return (
+            <p key={i} className="text-red-400 text-sm">
+              {error}
+            </p>
+          );
+        })}
+      </ul>
+    );
+  }, [errors]);
 
   return (
     <div>
@@ -26,9 +41,7 @@ export const AuthInput: React.VFC<Props> = ({
           className={isError ? errorInputClass : normalInputClass}
         />
       </div>
-      {errorMessage ? (
-        <p className="text-red-400 text-sm">{errorMessage}</p>
-      ) : null}
+      {isError ? errorMessages : null}
     </div>
   );
 };

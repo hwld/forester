@@ -1,18 +1,6 @@
 import { Outlet } from "@remix-run/react";
 import { Logo } from "~/component/Logo";
 
-export type AuthActionData = {
-  formError?: string;
-  fieldErrors?: {
-    username: string | undefined;
-    password: string | undefined;
-  };
-  fields?: {
-    username: string;
-    password: string;
-  };
-};
-
 export default function Auth() {
   return (
     <div className="min-h-screen grid grid-cols-1 lg:grid-cols-2">

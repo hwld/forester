@@ -1,5 +1,5 @@
 import { Form, useActionData, useTransition } from "@remix-run/react";
-import type { AuthActionData } from "~/routes/__auth";
+import type { AuthActionData } from "~/utils/auth";
 import { AuthFormHeader } from "./AuthFormHeader";
 import { AuthInput } from "./AuthInput";
 import { AuthSubmitButton } from "./AuthSubmitButton";
@@ -27,14 +27,14 @@ export const AuthForm: React.VFC<Props> = ({ type }) => {
               type="text"
               name="username"
               defaultValue={actionData?.fields?.username}
-              errorMessage={actionData?.fieldErrors?.username}
+              errors={actionData?.fieldErrors?.username}
               autoComplete="username"
             />
             <AuthInput
               label="パスワード"
               type="password"
               name="password"
-              errorMessage={actionData?.fieldErrors?.password}
+              errors={actionData?.fieldErrors?.password}
               autoComplete={isLoginType ? "current-password" : "new-password"}
             />
           </div>
