@@ -3,12 +3,23 @@ import { json, redirect } from "@remix-run/node";
 import { Link } from "@remix-run/react";
 import { AuthForm } from "~/component/authForm/AuthForm";
 import type { AuthActionData } from "~/utils/auth";
-import { validateAuthForm } from "~/utils/auth";
+import { AuthSchema, validateAuthForm } from "~/utils/auth";
 import { db } from "~/utils/db.server";
 import { createUserSession, registerUser } from "~/utils/session.server";
 
+const authResponse = (
+  data: AuthActionData,
+  init: Parameters<typeof json>[1]
+) => {
+  const result = AuthSchema.authActionData.safeParse(data);
+  if (!result.success) {
+    throw new Error("サーバーでエラーが発生しました。");
+  }
+  return json(data, init);
+};
+
 const badRequest = (data: AuthActionData) => {
-  return json(data, { status: 400 });
+  return authResponse(data, { status: 400 });
 };
 
 export const loader: LoaderFunction = async () => {
