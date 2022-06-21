@@ -1,6 +1,23 @@
-import type { ActionFunction } from "@remix-run/node";
-import { redirect } from "@remix-run/node";
+import type { Post } from "@prisma/client";
+import type { ActionFunction, LoaderFunction } from "@remix-run/node";
+import { json, redirect } from "@remix-run/node";
+import { Form, useLoaderData } from "@remix-run/react";
+import { db } from "~/utils/db.server";
 import { getUser } from "~/utils/session.server";
+
+type LoaderData = {
+  posts: Post[];
+};
+
+export const loader: LoaderFunction = async ({ request }) => {
+  const user = await getUser(request);
+  if (!user) {
+    return redirect("login");
+  }
+
+  const posts = await db.post.findMany({ where: { userId: user.id } });
+  return json<LoaderData>({ posts });
+};
 
 export const action: ActionFunction = async ({ request }) => {
   const user = getUser(request);
@@ -10,6 +27,8 @@ export const action: ActionFunction = async ({ request }) => {
 };
 
 export default function Home() {
+  const { posts } = useLoaderData<LoaderData>();
+
   return (
     <>
       {/* ヘッダ */}
@@ -17,30 +36,38 @@ export default function Home() {
         <p className="font-bold text-xl text-white">ホーム</p>
       </div>
       {/* 投稿フォーム */}
-      <div className="bg-emerald-400 h-[150px] m-1 p-3 flex flex-col justify-between">
-        <input className="rounded-md px-3 py-2" />
-        <button className="bg-emerald-300 px-3 py-2 rounded-md self-end font-bold">
+      <Form
+        action="/posts?index"
+        method="post"
+        className="bg-emerald-400 h-[150px] m-1 p-3 flex flex-col justify-between"
+      >
+        <input name="content" className="rounded-md px-3 py-2" />
+        <button
+          type="submit"
+          className="bg-emerald-300 px-3 py-2 rounded-md self-end font-bold"
+        >
           投稿する
         </button>
-      </div>
+      </Form>
       {/* タイムライン*/}
       <ul>
-        {[...new Array(0)].map((_, i) => {
+        {posts.map((post) => {
           return (
-            <li key={i} className="p-3 m-1 bg-emerald-200 break-words">
-              <p>
-                Lorem ipsum dolor sit amet amet sit clita. Sadipscing diam lorem
-                amet dolores lorem est erat amet enim. No vero ex invidunt
-                consetetur eos clita elitr sadipscing et lobortis et exerci
-                sanctus et gubergren. Sea ut sed at vero vel sit praesent id
-                adipiscing sadipscing sea kasd stet ea nulla. Kasd suscipit enim
-                diam dolore in eirmod ut duo erat nonumy eirmod. Dolores
-                facilisi consetetur ut dolor amet vero sit dolore eos facilisi
-                erat duo takimata justo labore. Molestie dolor elitr voluptua
-                sit nonumy veniam exerci eos at invidunt labore est vero
-                takimata. Duo et aliquam stet dolor accumsan justo dolor nonumy
-                voluptua et.
-              </p>
+            <li key={post.id} className="p-3 m-1 bg-emerald-200 break-words">
+              <p>{post.content}</p>
+              <Form
+                action={`/posts/${post.id}/delete`}
+                method="post"
+                className="flex justify-end"
+                replace
+              >
+                <button
+                  type="submit"
+                  className="px-3 py-1 rounded-md bg-red-500 text-white"
+                >
+                  削除
+                </button>
+              </Form>
             </li>
           );
         })}
