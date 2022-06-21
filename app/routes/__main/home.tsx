@@ -1,3 +1,14 @@
+import type { ActionFunction } from "@remix-run/node";
+import { redirect } from "@remix-run/node";
+import { getUser } from "~/utils/session.server";
+
+export const action: ActionFunction = async ({ request }) => {
+  const user = getUser(request);
+  if (!user) {
+    return redirect("login");
+  }
+};
+
 export default function Home() {
   return (
     <>
