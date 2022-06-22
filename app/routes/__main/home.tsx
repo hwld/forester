@@ -3,17 +3,14 @@ import type { ActionFunction, LoaderFunction } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { Form, useLoaderData } from "@remix-run/react";
 import { db } from "~/utils/db.server";
-import { getUser } from "~/utils/session.server";
+import { getUser, requireUser } from "~/utils/session.server";
 
 type LoaderData = {
   posts: Post[];
 };
 
 export const loader: LoaderFunction = async ({ request }) => {
-  const user = await getUser(request);
-  if (!user) {
-    return redirect("login");
-  }
+  const user = await requireUser(request);
 
   const posts = await db.post.findMany({ where: { userId: user.id } });
   return json<LoaderData>({ posts });

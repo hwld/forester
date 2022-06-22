@@ -1,17 +1,14 @@
 import type { LoaderFunction } from "@remix-run/node";
-import { json, redirect } from "@remix-run/node";
+import { json } from "@remix-run/node";
 import { Outlet, useLoaderData } from "@remix-run/react";
-import { getUser } from "~/utils/session.server";
+import { requireUser } from "~/utils/session.server";
 
 type LoaderData = {
   username: string;
 };
 
 export const loader: LoaderFunction = async ({ request }) => {
-  const user = await getUser(request);
-  if (!user) {
-    return redirect("login");
-  }
+  const user = await requireUser(request);
 
   return json<LoaderData>({ username: user.username });
 };

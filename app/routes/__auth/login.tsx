@@ -4,7 +4,7 @@ import { Link } from "@remix-run/react";
 import { AuthForm } from "~/component/authForm/AuthForm";
 import type { AuthActionData } from "~/utils/auth";
 import { AuthSchema, validateAuthForm } from "~/utils/auth";
-import { createUserSession, getUser, login } from "~/utils/session.server";
+import { getUser, login } from "~/utils/session.server";
 
 // オブジェクトの中に余計なプロパティがあればエラーを出すようにする。
 const authResponse = (
@@ -47,16 +47,17 @@ export const action: ActionFunction = async ({ request }) => {
     return badRequest({ fieldErrors, fields: { username } });
   }
 
-  const user = await login({ username, password });
-  if (!user) {
+  const loginResult = await login({ username, password });
+  if (!loginResult) {
     return badRequest({
       fields: { username },
       formError: "ユーザー名/パスワードの組み合わせが間違っています。",
     });
   }
 
-  const setCookieHeader = await createUserSession(user.id);
-  return redirect("/", { headers: { "Set-Cookie": setCookieHeader } });
+  return redirect("/", {
+    headers: { "Set-Cookie": loginResult.sessionCookie },
+  });
 };
 
 export default function Login() {

@@ -5,7 +5,7 @@ import { AuthForm } from "~/component/authForm/AuthForm";
 import type { AuthActionData } from "~/utils/auth";
 import { AuthSchema, validateAuthForm } from "~/utils/auth";
 import { db } from "~/utils/db.server";
-import { createUserSession, registerUser } from "~/utils/session.server";
+import { registerUser } from "~/utils/session.server";
 
 const authResponse = (
   data: AuthActionData,
@@ -48,9 +48,8 @@ export const action: ActionFunction = async ({ request }) => {
     });
   }
 
-  const { userId } = await registerUser({ username, password });
-  const setCookieHeader = await createUserSession(userId);
-  return redirect("/", { headers: { "Set-Cookie": setCookieHeader } });
+  const { sessionCookie } = await registerUser({ username, password });
+  return redirect("/", { headers: { "Set-Cookie": sessionCookie } });
 };
 
 export default function Signup() {

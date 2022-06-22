@@ -20,18 +20,18 @@ const storage = createCookieSessionStorage({
   },
 });
 
-export async function createUserSession(userId: string) {
+async function createUserSession(userId: string) {
   const session = await storage.getSession();
   session.set("userId", userId);
   const setCookieHeader = await storage.commitSession(session);
   return setCookieHeader;
 }
 
-export async function getUserSession(request: Request) {
+async function getUserSession(request: Request) {
   return storage.getSession(request.headers.get("Cookie"));
 }
 
-export async function getUserId(request: Request) {
+async function getUserId(request: Request) {
   const session = await getUserSession(request);
   const userId = session.get("userId");
   if (!userId || typeof userId !== "string") {
@@ -57,6 +57,15 @@ export async function getUser(request: Request) {
   return user;
 }
 
+export async function requireUser(request: Request) {
+  const user = await getUser(request);
+  if (!user) {
+    throw redirect("/login");
+  }
+
+  return user;
+}
+
 export async function login({ username, password }: AuthForm) {
   const user = await db.user.findUnique({ where: { username } });
   if (!user) {
@@ -68,7 +77,9 @@ export async function login({ username, password }: AuthForm) {
     return null;
   }
 
-  return { id: user.id, username };
+  const sessionCookie = await createUserSession(user.id);
+
+  return { user: { id: user.id, username }, sessionCookie };
 }
 
 export async function logout(request: Request) {
@@ -80,12 +91,11 @@ export async function logout(request: Request) {
   });
 }
 
-export async function registerUser({ username, password }: AuthForm): Promise<{
-  userId: string;
-}> {
+export async function registerUser({ username, password }: AuthForm) {
   const passwordHash = await bcrypt.hash(password, 10);
 
   const user = await db.user.create({ data: { username, passwordHash } });
+  const sessionCookie = await createUserSession(user.id);
 
-  return { userId: user.id };
+  return { userId: user.id, sessionCookie };
 }

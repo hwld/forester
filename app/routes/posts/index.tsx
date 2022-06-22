@@ -1,17 +1,14 @@
 import type { ActionFunction, LoaderFunction } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { db } from "~/utils/db.server";
-import { getUser } from "~/utils/session.server";
+import { requireUser } from "~/utils/session.server";
 
 export const loader: LoaderFunction = async () => {
   return redirect("/");
 };
 
 export const action: ActionFunction = async ({ request }) => {
-  const user = await getUser(request);
-  if (!user) {
-    return redirect("/login");
-  }
+  const user = await requireUser(request);
 
   if (request.method === "POST") {
     const form = await request.formData();
