@@ -10,18 +10,20 @@ export const loader: LoaderFunction = async () => {
 export const action: ActionFunction = async ({ request }) => {
   const user = await requireUser(request);
 
-  if (request.method === "POST") {
-    const form = await request.formData();
-    const content = form.get("content");
+  switch (request.method) {
+    case "POST": {
+      const form = await request.formData();
+      const content = form.get("content");
 
-    if (typeof content !== "string") {
-      return json({ error: "無効なリクエストです。" }, { status: 400 });
+      if (typeof content !== "string") {
+        return json({ error: "無効なリクエストです。" }, { status: 400 });
+      }
+
+      const created = await db.post.create({
+        data: { userId: user.id, content },
+      });
+      return json({ post: created });
     }
-
-    const created = await db.post.create({
-      data: { userId: user.id, content },
-    });
-    return json({ post: created });
   }
 
   return null;

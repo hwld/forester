@@ -6,6 +6,7 @@ import { requireUser } from "~/utils/session.server";
 export const loader: LoaderFunction = async () => {
   return redirect("/");
 };
+
 export const action: ActionFunction = async ({ request, params }) => {
   if (request.method === "DELETE") {
     const user = await requireUser(request);

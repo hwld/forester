@@ -4,9 +4,9 @@ import { AuthFormHeader } from "./AuthFormHeader";
 import { AuthInput } from "./AuthInput";
 import { AuthSubmitButton } from "./AuthSubmitButton";
 
-type Props = { type: "login" | "signup" };
+type Props = { type: "login" | "signup"; action?: string };
 
-export const AuthForm: React.VFC<Props> = ({ type }) => {
+export const AuthForm: React.VFC<Props> = ({ type, action }) => {
   const actionData = useActionData<AuthActionData>();
   const transition = useTransition();
   const isLoginType = type === "login";
@@ -14,7 +14,11 @@ export const AuthForm: React.VFC<Props> = ({ type }) => {
   return (
     <div>
       <AuthFormHeader type={type} />
-      <Form method="post" className="mt-5 p-5 bg-white shadow-md rounded-md">
+      <Form
+        action={action}
+        method="post"
+        className="mt-5 p-5 bg-white shadow-md rounded-md"
+      >
         <fieldset disabled={transition.state === "submitting"}>
           {actionData?.formError && (
             <div className="p-3 bg-red-50 border border-red-200 rounded-md">

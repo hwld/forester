@@ -8,12 +8,15 @@ export const PostItem: React.VFC<Props> = ({ post, onDeletePost }) => {
   };
 
   return (
-    <li key={post.id} className="p-3 m-1 bg-emerald-200 break-words">
+    <li
+      key={post.id}
+      className="p-3 m-1 bg-emerald-200 break-words flex flex-col"
+    >
       <p>{post.content}</p>
 
       <button
         type="submit"
-        className="px-3 py-1 rounded-md bg-red-500 text-white"
+        className="px-3 py-1 rounded-md bg-red-500 text-white self-end"
         onClick={handleClickDelete}
       >
         削除
