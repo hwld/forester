@@ -15,7 +15,7 @@ export const action: ActionFunction = async ({ request }) => {
     const content = form.get("content");
 
     if (typeof content !== "string") {
-      return json({}, { status: 400 });
+      return json({ error: "無効なリクエストです。" }, { status: 400 });
     }
 
     const created = await db.post.create({
