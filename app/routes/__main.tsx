@@ -1,6 +1,8 @@
 import type { LoaderFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Outlet, useLoaderData } from "@remix-run/react";
+import { IconButton } from "~/component/IconButton";
+import { OpenPostFormButton } from "~/component/OpenPostFormButton";
 import { requireUser } from "~/utils/session.server";
 
 type LoaderData = {
@@ -26,22 +28,19 @@ export default function Main() {
               <img src="/icon.png" alt="logo" className="w-[50px]" />
 
               <ul className="space-y-1 mt-3">
-                {["🏡", "🧑‍🤝‍🧑", "⚙"].map((icon, i) => {
+                {[
+                  ["🏡", "ホーム"],
+                  ["🧑‍🤝‍🧑", "コミュニティ"],
+                  ["⚙", "設定"],
+                ].map(([icon, text], i) => {
                   return (
-                    <li
-                      key={i}
-                      className="p-2 bg-emerald-200 text-xl rounded-md flex"
-                    >
-                      <div>{icon}</div>
-                      <div className="hidden lg:block">MenuItem</div>
+                    <li key={i}>
+                      <IconButton icon={icon} text={text} fullWidth />
                     </li>
                   );
                 })}
                 <li>
-                  <button className="bg-emerald-300 px-3 py-2 rounded-md self-end font-bold flex">
-                    <div className="">✒</div>
-                    <div className="hidden lg:block">投稿する</div>
-                  </button>
+                  <OpenPostFormButton />
                 </li>
               </ul>
             </div>
