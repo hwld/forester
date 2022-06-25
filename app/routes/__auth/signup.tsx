@@ -1,7 +1,7 @@
 import type { ActionFunction, LoaderFunction } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { Link } from "@remix-run/react";
-import { AuthForm } from "~/component/authForm/AuthForm";
+import { AuthForm } from "~/component/AuthForm/AuthForm";
 import type { AuthActionData } from "~/utils/auth";
 import { AuthSchema, validateAuthForm } from "~/utils/auth";
 import { db } from "~/utils/db.server";

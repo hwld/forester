@@ -1,0 +1,7 @@
+/* headlessuiのダイアログを開いてtabを何回か押すと画面下にスクロールされるバグの対処
+   https://github.com/tailwindlabs/headlessui/pull/1432#issuecomment-1139182713 */
+#headlessui-portal-root {
+  position: fixed;
+  height: 100%;
+  width: 100%;
+}

@@ -7,6 +7,7 @@ import {
   Scripts,
   ScrollRestoration,
 } from "@remix-run/react";
+import headlessuiStyles from "./headlessui.css";
 import styles from "./tailwind.css";
 
 export const meta: MetaFunction = () => ({
@@ -17,6 +18,7 @@ export const meta: MetaFunction = () => ({
 
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: styles },
+  { rel: "stylesheet", href: headlessuiStyles },
   { rel: "icon", href: "icon.png" },
 ];
 

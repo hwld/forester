@@ -10,9 +10,9 @@ export const PostItem: React.VFC<Props> = ({ post, onDeletePost }) => {
   return (
     <li
       key={post.id}
-      className="p-3 m-1 bg-emerald-200 break-words flex flex-col"
+      className="p-3 m-1 bg-emerald-200 break-words flex flex-col rounded"
     >
-      <p>{post.content}</p>
+      <p className="whitespace-pre-line">{post.content}</p>
 
       <button
         type="submit"

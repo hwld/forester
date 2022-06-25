@@ -3,7 +3,7 @@ import type { LoaderFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useFetcher, useLoaderData } from "@remix-run/react";
 import { PostItem } from "~/component/Post";
-import { PostForm } from "~/component/postForm/PostForm";
+import { PostForm } from "~/component/PostForm/PostForm";
 import { db } from "~/utils/db.server";
 import { requireUser } from "~/utils/session.server";
 
