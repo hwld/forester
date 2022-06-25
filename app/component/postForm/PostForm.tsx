@@ -9,7 +9,7 @@ export const PostForm: React.VFC<Props> = ({ action }) => {
   const postFetcher = useFetcher();
 
   useEffect(() => {
-    if (postFetcher.type == "done" && postFetcher.data.post) {
+    if (postFetcher.type == "done" && postFetcher.data) {
       formRef.current?.reset();
     }
   }, [postFetcher]);
