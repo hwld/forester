@@ -7,6 +7,9 @@ import { AuthSchema, validateAuthForm } from "~/utils/auth";
 import { getUser, login } from "~/utils/session.server";
 
 // オブジェクトの中に余計なプロパティがあればエラーを出すようにする。
+// プロパティを明示的に指定し直すだけでも良いと思ったが、
+// 余計なプロパティが入ってるってことはどっかにバグが有るってことなので、
+// エラーを出して開発時に気づけるようにする。
 const authResponse = (
   data: AuthActionData,
   init: Parameters<typeof json>[1]

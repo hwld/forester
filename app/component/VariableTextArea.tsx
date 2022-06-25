@@ -1,5 +1,5 @@
 import type { ChangeEventHandler, ComponentProps } from "react";
-import { useLayoutEffect, useRef } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 
 type Props = {
   minRows?: number;
@@ -9,6 +9,8 @@ export const VariableTextArea: React.VFC<Props> = ({
   minRows,
   ...textAreaProps
 }) => {
+  // https://gist.github.com/gaearon/e7d97cdf38a2907924ea12e4ebdf3c85
+  const [show, setShow] = useState(false);
   const ref = useRef<HTMLTextAreaElement | null>(null);
 
   const changeHeight = (element: HTMLTextAreaElement) => {
@@ -22,11 +24,19 @@ export const VariableTextArea: React.VFC<Props> = ({
     textAreaProps.onChange?.(args);
   };
 
+  useEffect(() => {
+    setShow(true);
+  }, []);
+
   useLayoutEffect(() => {
     if (ref.current) {
       changeHeight(ref.current);
     }
   }, []);
+
+  if (!show) {
+    return null;
+  }
 
   return (
     <textarea
