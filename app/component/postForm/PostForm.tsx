@@ -1,15 +1,15 @@
-import { useFetcher } from "@remix-run/react";
 import { useEffect, useRef } from "react";
+import { usePostFetcher } from "~/routes/posts";
 import { VariableTextArea } from "../VariableTextArea";
 
 type Props = { action?: string };
 
 export const PostForm: React.VFC<Props> = ({ action }) => {
   const formRef = useRef<HTMLFormElement | null>(null);
-  const postFetcher = useFetcher();
+  const postFetcher = usePostFetcher();
 
   useEffect(() => {
-    if (postFetcher.type == "done" && postFetcher.data) {
+    if (postFetcher.type == "done" && postFetcher.data?.type === "ok") {
       formRef.current?.reset();
     }
   }, [postFetcher]);
