@@ -1,7 +1,7 @@
 import { json } from "@remix-run/node";
 import { z } from "zod";
 
-const postFormBase = z.object({ content: z.string() });
+const postFormBase = z.object({ content: z.string() }).strict();
 const postForm = z
   .object({
     content: z
@@ -11,17 +11,14 @@ const postForm = z
   })
   .strict();
 
-const fieldsErrors = z
-  .object({ content: z.string().array().optional() })
-  .strict();
-
-const fields = z.object({ content: z.string() }).strict();
-
 const errorResponse = z
   .object({
     formError: z.string().optional(),
-    fieldErrors: fieldsErrors.optional(),
-    fields: fields.optional(),
+    fieldErrors: z
+      .object({ content: z.string().array().optional() })
+      .strict()
+      .optional(),
+    fields: z.object({ content: z.string() }).strict().optional(),
   })
   .strict();
 const successResponse = z.object({
@@ -40,11 +37,13 @@ export type ErrorPostResponse = z.infer<typeof errorResponse>;
 export type SuccessPostResponse = z.infer<typeof successResponse>;
 export type PostResponse = z.infer<typeof response>;
 
+type ValidatePostFormResult =
+  | { type: "error"; error: ErrorPostResponse }
+  | { type: "ok"; data: PostForm };
+
 export const validatePostForm = (
   formData: FormData
-):
-  | { type: "error"; error: ErrorPostResponse }
-  | { type: "ok"; data: PostForm } => {
+): ValidatePostFormResult => {
   const form = Object.fromEntries(Array.from(formData));
 
   const typeValidResult = postFormBase.safeParse(form);
@@ -58,7 +57,7 @@ export const validatePostForm = (
   const typeValidated = typeValidResult.data;
   const validResult = postForm.safeParse(typeValidated);
   if (!validResult.success) {
-    const fieldErrors = validResult.error.flatten().fieldErrors;
+    const { fieldErrors } = validResult.error.flatten();
     return {
       type: "error",
       error: {

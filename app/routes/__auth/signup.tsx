@@ -1,25 +1,14 @@
 import type { ActionFunction, LoaderFunction } from "@remix-run/node";
-import { json, redirect } from "@remix-run/node";
+import { redirect } from "@remix-run/node";
 import { Link } from "@remix-run/react";
 import { AuthForm } from "~/component/AuthForm/AuthForm";
-import type { AuthActionData } from "~/utils/auth";
-import { AuthSchema, validateAuthForm } from "~/utils/auth";
+import type { ErrorAuthResponse } from "~/utils/auth";
+import { authResponse, validateAuthForm } from "~/utils/auth";
 import { db } from "~/utils/db.server";
 import { registerUser } from "~/utils/session.server";
 
-const authResponse = (
-  data: AuthActionData,
-  init: Parameters<typeof json>[1]
-) => {
-  const result = AuthSchema.authActionData.safeParse(data);
-  if (!result.success) {
-    throw new Error("サーバーでエラーが発生しました。");
-  }
-  return json(data, init);
-};
-
-const badRequest = (data: AuthActionData) => {
-  return authResponse(data, { status: 400 });
+const badRequest = (error: ErrorAuthResponse) => {
+  return authResponse({ type: "error", error }, { status: 400 });
 };
 
 export const loader: LoaderFunction = async () => {
@@ -27,29 +16,25 @@ export const loader: LoaderFunction = async () => {
 };
 
 export const action: ActionFunction = async ({ request }) => {
-  const formData = await request.formData();
-  const username = formData.get("username");
-  const password = formData.get("password");
+  if (request.method === "POST") {
+    const validResult = validateAuthForm(await request.formData());
+    if (validResult.type === "error") {
+      return badRequest(validResult.error);
+    }
 
-  if (typeof username !== "string" || typeof password !== "string") {
-    return badRequest({ formError: "フォームが正しく送信されませんでした。" });
+    const { username, password } = validResult.data;
+    const userExists = await db.user.findUnique({ where: { username } });
+    if (userExists) {
+      return badRequest({
+        fields: { username },
+        formError: `ユーザー名 ${username} はすでに使用されています。`,
+      });
+    }
+
+    const { sessionCookie } = await registerUser({ username, password });
+    return redirect("/", { headers: { "Set-Cookie": sessionCookie } });
   }
-
-  const fieldErrors = validateAuthForm({ username, password });
-  if (fieldErrors) {
-    return badRequest({ fields: { username }, fieldErrors });
-  }
-
-  const userExists = await db.user.findUnique({ where: { username } });
-  if (userExists) {
-    return badRequest({
-      fields: { username },
-      formError: `ユーザー名 ${username} はすでに使用されています。`,
-    });
-  }
-
-  const { sessionCookie } = await registerUser({ username, password });
-  return redirect("/", { headers: { "Set-Cookie": sessionCookie } });
+  return null;
 };
 
 export default function Signup() {

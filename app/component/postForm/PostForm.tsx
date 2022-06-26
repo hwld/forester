@@ -2,9 +2,9 @@ import { useEffect, useRef } from "react";
 import { usePostFetcher } from "~/routes/posts";
 import { VariableTextArea } from "../VariableTextArea";
 
-type Props = { action?: string };
+type Props = {};
 
-export const PostForm: React.VFC<Props> = ({ action }) => {
+export const PostForm: React.VFC<Props> = () => {
   const formRef = useRef<HTMLFormElement | null>(null);
   const postFetcher = usePostFetcher();
 
@@ -17,7 +17,7 @@ export const PostForm: React.VFC<Props> = ({ action }) => {
   return (
     <postFetcher.Form
       ref={formRef}
-      action={action}
+      action="/posts?index"
       method="post"
       className="bg-emerald-400 m-1 p-3 flex flex-col"
     >

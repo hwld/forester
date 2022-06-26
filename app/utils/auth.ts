@@ -1,5 +1,12 @@
+import { json } from "@remix-run/node";
 import { z } from "zod";
 
+const authFormBase = z
+  .object({
+    username: z.string(),
+    password: z.string(),
+  })
+  .strict();
 const authForm = z
   .object({
     username: z
@@ -12,39 +19,73 @@ const authForm = z
   })
   .strict();
 
-const formFieldErrors = z
-  .object({
-    username: z.string().array().optional(),
-    password: z.string().array().optional(),
-  })
-  .strict();
-
-const fields = z.object({ username: z.string() }).strict();
-
-const authActionData = z
+const errorResponse = z
   .object({
     formError: z.string().optional(),
-    fieldErrors: formFieldErrors.optional(),
-    fields: fields.optional(),
+    fieldErrors: z
+      .object({
+        username: z.string().array().optional(),
+        password: z.string().array().optional(),
+      })
+      .strict()
+      .optional(),
+    fields: z.object({ username: z.string() }).strict().optional(),
   })
   .strict();
 
-export const AuthSchema = { authActionData };
+const successResponse = z.undefined();
+
+const response = z.discriminatedUnion("type", [
+  z.object({ type: z.literal("error"), error: errorResponse }),
+  z.object({ type: z.literal("ok"), data: successResponse }),
+]);
+
+export const AuthSchema = { response };
 
 export type AuthForm = z.infer<typeof authForm>;
-type FormFieldErrors = z.infer<typeof formFieldErrors>;
-export type AuthActionData = z.infer<typeof authActionData>;
+export type ErrorAuthResponse = z.infer<typeof errorResponse>;
+export type SuccessAuthResponse = z.infer<typeof successResponse>;
+export type AuthResponse = z.infer<typeof response>;
 
-export function validateAuthForm(form: unknown): FormFieldErrors | undefined {
-  const parseResult = authForm.safeParse(form);
+type ValidateAuthFormResult =
+  | { type: "error"; error: ErrorAuthResponse }
+  | { type: "ok"; data: AuthForm };
+export const validateAuthForm = (
+  formData: FormData
+): ValidateAuthFormResult => {
+  const form = Object.fromEntries(Array.from(formData));
 
-  if (!parseResult.success) {
-    const { username, password } = parseResult.error.formErrors.fieldErrors;
+  const typeValidResult = authFormBase.safeParse(form);
+  if (!typeValidResult.success) {
     return {
-      username,
-      password,
+      type: "error",
+      error: { formError: "フォームが正しく送信されませんでした。" },
     };
   }
 
-  return undefined;
-}
+  const typeValidated = typeValidResult.data;
+  const validResult = authForm.safeParse(typeValidated);
+  if (!validResult.success) {
+    const { fieldErrors } = validResult.error.flatten();
+    return {
+      type: "error",
+      error: {
+        fieldErrors,
+        fields: { username: typeValidated.username },
+      },
+    };
+  }
+
+  return { type: "ok", data: validResult.data };
+};
+
+export const authResponse = (
+  data: AuthResponse,
+  init: Parameters<typeof json>[1]
+) => {
+  const result = response.safeParse(data);
+  if (!result.success) {
+    throw new Error("サーバーでエラーが発生しました。");
+  }
+  return json<AuthResponse>(data, init);
+};
