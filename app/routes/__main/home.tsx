@@ -34,7 +34,9 @@ export default function Home() {
       <div className="sticky top-0 h-12 bg-emerald-600 flex justify-between items-center px-4 select-none">
         <p className="font-bold text-xl text-white">ホーム</p>
       </div>
-      <PostForm action="/posts?index" />
+      <div className="bg-emerald-400">
+        <PostForm />
+      </div>
       <ul>
         {posts.map((post) => {
           return (

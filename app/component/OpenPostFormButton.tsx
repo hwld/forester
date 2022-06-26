@@ -2,12 +2,13 @@ import { Dialog } from "@headlessui/react";
 import { useRef, useState } from "react";
 import { MdOutlineClose } from "react-icons/md";
 import { IconButton } from "./IconButton";
-import { VariableTextArea } from "./VariableTextArea";
+import { PostForm } from "./PostForm/PostForm";
 
 type Props = {};
 
 export const OpenPostFormButton: React.VFC<Props> = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const ref = useRef<HTMLButtonElement | null>(null);
 
   const open = () => {
     setIsOpen(true);
@@ -16,8 +17,6 @@ export const OpenPostFormButton: React.VFC<Props> = () => {
   const close = () => {
     setIsOpen(false);
   };
-
-  const ref = useRef<HTMLButtonElement | null>(null);
 
   return (
     <>
@@ -31,7 +30,7 @@ export const OpenPostFormButton: React.VFC<Props> = () => {
       >
         <div className="fixed inset-0 bg-black/30" aria-hidden="true"></div>
         <div className="fixed inset-0 flex items-center justify-center py-4 px-5 ">
-          <Dialog.Panel className="w-full max-w-lg rounded bg-slate-200 flex flex-col items-stretch p-3">
+          <Dialog.Panel className="w-full max-w-lg rounded-xl bg-slate-200 flex flex-col items-stretch p-3">
             <div className="flex items-center">
               <button onClick={close}>
                 <MdOutlineClose className="w-8 h-8" />
@@ -39,17 +38,8 @@ export const OpenPostFormButton: React.VFC<Props> = () => {
             </div>
             <div className="flex mt-3 mx-3">
               <div className="w-10 h-10 rounded-full bg-emerald-500"></div>
-              <div className="flex-grow flex flex-col ml-3">
-                <VariableTextArea
-                  className="rounded px-3 py-2 resize-none"
-                  minRows={3}
-                />
-                <button
-                  onClick={close}
-                  className="mt-2 px-3 py-1 bg-emerald-500 text-white rounded self-end"
-                >
-                  投稿
-                </button>
+              <div className="flex-grow">
+                <PostForm onSuccess={close} />
               </div>
             </div>
           </Dialog.Panel>
