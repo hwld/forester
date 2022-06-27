@@ -1,5 +1,6 @@
+import { Menu } from "@headlessui/react";
 import { HiOutlineDotsHorizontal } from "react-icons/hi";
-import { RiChat1Line } from "react-icons/ri";
+import { RiChat1Line, RiDeleteBinLine } from "react-icons/ri";
 import type { Post } from "~/routes/__main/home";
 
 type Props = { post: Post; onDeletePost: (id: string) => void };
@@ -20,10 +21,32 @@ export const PostItem: React.VFC<Props> = ({ post, onDeletePost }) => {
       <div className="ml-2 flex flex-col flex-grow space-y-2">
         <div className="flex justify-between">
           <p className="font-bold">{post.user.username}</p>
-          <div className="relative flex justify-center items-center group">
-            <div className="absolute bg-transparent group-hover:bg-emerald-500/20 w-8 h-8 rounded-full"></div>
-            <HiOutlineDotsHorizontal className="w-5 h-5 transition" />
-          </div>
+          <Menu as="div" className="relative">
+            <Menu.Button>
+              <div className="relative flex justify-center items-center group">
+                <div className="absolute bg-transparent group-hover:bg-emerald-500/20 w-8 h-8 rounded-full"></div>
+                <HiOutlineDotsHorizontal className="w-5 h-5 transition" />
+              </div>
+            </Menu.Button>
+
+            <Menu.Items className="absolute right-0 bg-emerald-100 w-56 shadow rounded">
+              <div className="px-1 py-1">
+                <Menu.Item>
+                  {({ active }) => (
+                    <button
+                      className={`flex w-full items-center rounded px-2 py-2  ${
+                        active ? "bg-emerald-300" : ""
+                      }`}
+                      onClick={handleClickDelete}
+                    >
+                      <RiDeleteBinLine className="mr-2 h-5 w-5" />
+                      <p className="font-bold">削除</p>
+                    </button>
+                  )}
+                </Menu.Item>
+              </div>
+            </Menu.Items>
+          </Menu>
         </div>
 
         <p className="whitespace-pre-line">{post.content}</p>
