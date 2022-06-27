@@ -1,9 +1,8 @@
-import type { Post } from "@prisma/client";
 import type { LoaderFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useFetcher, useLoaderData } from "@remix-run/react";
-import { PostItem } from "~/component/Post";
 import { PostForm } from "~/component/PostForm/PostForm";
+import { PostItem } from "~/component/PostItem";
 import { db } from "~/utils/db.server";
 import { requireUser } from "~/utils/session.server";
 
@@ -11,10 +10,27 @@ type LoaderData = {
   posts: Post[];
 };
 
+export type Post = {
+  id: string;
+  createdAt: Date;
+  content: string;
+  user: {
+    username: string;
+  };
+};
+
 export const loader: LoaderFunction = async ({ request }) => {
   const user = await requireUser(request);
 
-  const posts = await db.post.findMany({ where: { userId: user.id } });
+  const posts = await db.post.findMany({
+    select: {
+      id: true,
+      content: true,
+      createdAt: true,
+      user: { select: { username: true } },
+    },
+    where: { userId: user.id },
+  });
   return json<LoaderData>({ posts });
 };
 
