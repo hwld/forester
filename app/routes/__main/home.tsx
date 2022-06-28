@@ -2,7 +2,7 @@ import type { LoaderFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useFetcher, useLoaderData } from "@remix-run/react";
 import { PostForm } from "~/component/PostForm/PostForm";
-import { PostItem } from "~/component/PostItem";
+import { PostItem } from "~/component/PostItem/PostItem";
 import { db } from "~/utils/db.server";
 import { requireUser } from "~/utils/session.server";
 
@@ -12,17 +12,15 @@ type LoaderData = {
 
 export type Post = {
   id: string;
-  createdAt: Date;
+  createdAt: string;
   content: string;
-  user: {
-    username: string;
-  };
+  username: string;
 };
 
 export const loader: LoaderFunction = async ({ request }) => {
   const user = await requireUser(request);
 
-  const posts = await db.post.findMany({
+  const rowPosts = await db.post.findMany({
     select: {
       id: true,
       content: true,
@@ -30,7 +28,15 @@ export const loader: LoaderFunction = async ({ request }) => {
       user: { select: { username: true } },
     },
     where: { userId: user.id },
+    orderBy: { createdAt: "desc" },
   });
+  const posts: Post[] = rowPosts.map((row) => ({
+    id: row.id,
+    content: row.content,
+    username: row.user.username,
+    createdAt: row.createdAt.toUTCString(),
+  }));
+
   return json<LoaderData>({ posts });
 };
 
