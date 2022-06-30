@@ -1,15 +1,14 @@
+import { RiChat1Line } from "react-icons/ri";
 import { useDisclosure } from "~/hooks/useDisclosure";
-import { IconButton } from "./IconButton";
 import { PostFormDialog } from "./PostFormDialog";
+import { PostItemIconButton } from "./PostItem/PostItemIconButton";
 
-type Props = {};
-
-export const OpenPostFormDialogButton: React.VFC<Props> = () => {
+export const OpenReplyFormDialogButton: React.VFC = () => {
   const { isOpen, open, close } = useDisclosure();
 
   return (
     <>
-      <IconButton icon="✒" text="投稿する" textBold onClick={open} />
+      <PostItemIconButton icon={RiChat1Line} onClick={open} />
       <PostFormDialog isOpen={isOpen} close={close} />
     </>
   );

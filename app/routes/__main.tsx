@@ -2,7 +2,7 @@ import type { LoaderFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Outlet, useLoaderData } from "@remix-run/react";
 import { IconButton } from "~/component/IconButton";
-import { OpenPostFormButton } from "~/component/OpenPostFormButton";
+import { OpenPostFormDialogButton } from "~/component/OpenPostFormButton";
 import { requireUser } from "~/utils/session.server";
 
 type LoaderData = {
@@ -40,7 +40,7 @@ export default function Main() {
                   );
                 })}
                 <li>
-                  <OpenPostFormButton />
+                  <OpenPostFormDialogButton />
                 </li>
               </ul>
             </div>

@@ -44,7 +44,7 @@ export const PostForm: React.VFC<Props> = ({ onSuccess }) => {
       )}
       <button
         type="submit"
-        className="mt-3 bg-emerald-300 px-3 py-2 rounded-md self-end font-bold text-gray-800"
+        className="mt-3 bg-emerald-300 px-3 py-1 rounded-md self-end font-bold text-gray-800"
       >
         投稿する
       </button>

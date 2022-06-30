@@ -1,8 +1,9 @@
 import { Menu } from "@headlessui/react";
 import { HiOutlineDotsHorizontal } from "react-icons/hi";
-import { RiChat1Line, RiDeleteBinLine } from "react-icons/ri";
+import { RiDeleteBinLine } from "react-icons/ri";
 import type { Post } from "~/routes/__main/home";
 import { formatDate } from "~/utils/date";
+import { OpenReplyFormDialogButton } from "../OpenReplyFormDialogButton";
 import { PostItemIconButton } from "./PostItemIconButton";
 
 type Props = { post: Post; onDeletePost: (id: string) => void };
@@ -57,7 +58,7 @@ export const PostItem: React.VFC<Props> = ({ post, onDeletePost }) => {
 
         <p className="whitespace-pre-line">{post.content}</p>
         <div className="flex space-x-5">
-          <PostItemIconButton icon={RiChat1Line} />
+          <OpenReplyFormDialogButton />
         </div>
       </div>
     </li>
