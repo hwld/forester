@@ -1,10 +1,7 @@
-import { Menu } from "@headlessui/react";
-import { HiOutlineDotsHorizontal } from "react-icons/hi";
-import { RiDeleteBinLine } from "react-icons/ri";
 import type { Post } from "~/routes/__main/home";
 import { formatDate } from "~/utils/date";
-import { OpenReplyFormDialogButton } from "../OpenReplyFormDialogButton";
-import { PostItemIconButton } from "./PostItemIconButton";
+import { ReplyFormDialogButton } from "../OpenReplyFormDialogButton";
+import { PostItemMenuButton } from "./PostItemMenu";
 
 type Props = { post: Post; onDeletePost: (id: string) => void };
 
@@ -30,35 +27,12 @@ export const PostItem: React.VFC<Props> = ({ post, onDeletePost }) => {
             </p>
           </div>
 
-          <Menu as="div" className="relative">
-            <Menu.Button
-              as={PostItemIconButton}
-              icon={HiOutlineDotsHorizontal}
-            />
-
-            <Menu.Items className="absolute right-0 bg-emerald-100 w-56 shadow rounded">
-              <div className="px-1 py-1">
-                <Menu.Item>
-                  {({ active }) => (
-                    <button
-                      className={`flex w-full items-center rounded px-2 py-2  ${
-                        active ? "bg-emerald-300" : ""
-                      }`}
-                      onClick={handleClickDelete}
-                    >
-                      <RiDeleteBinLine className="mr-2 h-5 w-5" />
-                      <p className="font-bold">削除</p>
-                    </button>
-                  )}
-                </Menu.Item>
-              </div>
-            </Menu.Items>
-          </Menu>
+          <PostItemMenuButton onDeletePost={handleClickDelete} />
         </div>
 
         <p className="whitespace-pre-line">{post.content}</p>
         <div className="flex space-x-5">
-          <OpenReplyFormDialogButton />
+          <ReplyFormDialogButton />
         </div>
       </div>
     </li>

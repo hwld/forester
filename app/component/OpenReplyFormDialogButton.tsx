@@ -3,7 +3,7 @@ import { useDisclosure } from "~/hooks/useDisclosure";
 import { PostFormDialog } from "./PostFormDialog";
 import { PostItemIconButton } from "./PostItem/PostItemIconButton";
 
-export const OpenReplyFormDialogButton: React.VFC = () => {
+export const ReplyFormDialogButton: React.VFC = () => {
   const { isOpen, open, close } = useDisclosure();
 
   return (
