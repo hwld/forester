@@ -53,7 +53,7 @@ export default function Home() {
 
   return (
     <>
-      <div className="sticky top-0 h-12 bg-emerald-600 flex justify-between items-center px-4 select-none">
+      <div className="sticky top-0 h-12 bg-emerald-600 flex justify-between items-center px-4 select-none z-10">
         <p className="font-bold text-xl text-white">ホーム</p>
       </div>
       <div className="bg-emerald-400">
