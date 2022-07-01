@@ -3,9 +3,9 @@ import { MdError } from "react-icons/md";
 import { usePostFetcher } from "~/routes/posts";
 import { VariableTextArea } from "../VariableTextArea";
 
-type Props = { onSuccess?: () => void };
+type Props = { onSuccess?: () => void; replySourceId?: string };
 
-export const PostForm: React.VFC<Props> = ({ onSuccess }) => {
+export const PostForm: React.VFC<Props> = ({ onSuccess, replySourceId }) => {
   const formRef = useRef<HTMLFormElement | null>(null);
   const postFetcher = usePostFetcher();
 
@@ -29,9 +29,18 @@ export const PostForm: React.VFC<Props> = ({ onSuccess }) => {
       method="post"
       className="p-3 flex flex-col"
     >
+      {replySourceId && (
+        <input hidden name="replySourceId" defaultValue={replySourceId} />
+      )}
+      {error?.formError && (
+        <div className="p-3 bg-red-50 border border-red-200 rounded-md flex items-center">
+          <MdError className="fill-red-500 w-5 h-5" />
+          <p className="text-red-600">{error?.formError}</p>
+        </div>
+      )}
       <VariableTextArea
         name="content"
-        className={`rounded-md px-3 py-2 resize-none ${
+        className={`mt-3 rounded-md px-3 py-2 resize-none ${
           error?.fieldErrors?.content ? "" : ""
         }`}
         minRows={3}

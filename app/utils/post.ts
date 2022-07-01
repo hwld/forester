@@ -1,13 +1,16 @@
 import { json } from "@remix-run/node";
 import { z } from "zod";
 
-const postFormBase = z.object({ content: z.string() }).strict();
+const postFormBase = z
+  .object({ content: z.string(), replySourceId: z.string().optional() })
+  .strict();
 const postForm = z
   .object({
     content: z
       .string()
       .min(1, "1文字以上入力してください。")
       .max(250, "250文字以内で入力してください。"),
+    replySourceId: z.string().optional(),
   })
   .strict();
 
@@ -18,7 +21,10 @@ const errorResponse = z
       .object({ content: z.string().array().optional() })
       .strict()
       .optional(),
-    fields: z.object({ content: z.string() }).strict().optional(),
+    fields: z
+      .object({ content: z.string(), replySourceId: z.string().optional() })
+      .strict()
+      .optional(),
   })
   .strict();
 const successResponse = z.object({
@@ -62,7 +68,10 @@ export const validatePostForm = (
       type: "error",
       error: {
         fieldErrors,
-        fields: { content: typeValidated.content },
+        fields: {
+          content: typeValidated.content,
+          replySourceId: typeValidated.replySourceId,
+        },
       },
     };
   }

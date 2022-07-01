@@ -15,6 +15,7 @@ export type Post = {
   createdAt: string;
   content: string;
   username: string;
+  replyPostCount: number;
 };
 
 export const loader: LoaderFunction = async ({ request }) => {
@@ -26,6 +27,7 @@ export const loader: LoaderFunction = async ({ request }) => {
       content: true,
       createdAt: true,
       user: { select: { username: true } },
+      _count: { select: { replyPosts: true } },
     },
     where: { userId: user.id },
     orderBy: { createdAt: "desc" },
@@ -35,6 +37,7 @@ export const loader: LoaderFunction = async ({ request }) => {
     content: row.content,
     username: row.user.username,
     createdAt: row.createdAt.toUTCString(),
+    replyPostCount: row._count.replyPosts,
   }));
 
   return json<LoaderData>({ posts });

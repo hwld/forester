@@ -3,9 +3,13 @@ import { useRef } from "react";
 import { MdOutlineClose } from "react-icons/md";
 import { PostForm } from "./PostForm/PostForm";
 
-type Props = { isOpen: boolean; close: () => void };
+type Props = { isOpen: boolean; close: () => void; replySourceId?: string };
 
-export const PostFormDialog: React.VFC<Props> = ({ isOpen, close }) => {
+export const PostFormDialog: React.VFC<Props> = ({
+  isOpen,
+  close,
+  replySourceId,
+}) => {
   const ref = useRef<HTMLDialogElement | null>(null);
 
   return (
@@ -26,7 +30,7 @@ export const PostFormDialog: React.VFC<Props> = ({ isOpen, close }) => {
           <div className="flex mt-3 mx-3">
             <div className="w-10 h-10 rounded-full bg-emerald-500"></div>
             <div className="flex-grow">
-              <PostForm onSuccess={close} />
+              <PostForm onSuccess={close} replySourceId={replySourceId} />
             </div>
           </div>
         </Dialog.Panel>

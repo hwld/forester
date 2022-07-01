@@ -33,9 +33,23 @@ export const action: ActionFunction = async ({ request }) => {
       return badRequest(result.error);
     }
 
-    const { content } = result.data;
+    const { replySourceId, content } = result.data;
+
+    // replySourceIdが指定されている場合、その投稿が存在するかチェックする
+    if (replySourceId) {
+      const postExists = await db.post.findUnique({
+        where: { id: replySourceId },
+      });
+      if (!postExists) {
+        return badRequest({
+          fields: { content, replySourceId },
+          formError: `存在しない投稿に返信しようとしています。`,
+        });
+      }
+    }
+
     const created = await db.post.create({
-      data: { content, userId: user.id },
+      data: { content, userId: user.id, replySourcePostId: replySourceId },
     });
     return ok({ createdPost: { id: created.id, content: created.content } });
   }
