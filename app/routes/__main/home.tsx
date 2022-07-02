@@ -16,6 +16,8 @@ export type Post = {
   content: string;
   username: string;
   replyPostCount: number;
+  /** リプライ元のユーザー名 */
+  replyingTo?: string;
 };
 
 export const loader: LoaderFunction = async ({ request }) => {
@@ -27,17 +29,20 @@ export const loader: LoaderFunction = async ({ request }) => {
       content: true,
       createdAt: true,
       user: { select: { username: true } },
+      replySourcePost: { select: { user: { select: { username: true } } } },
       _count: { select: { replyPosts: true } },
     },
     where: { userId: user.id },
     orderBy: { createdAt: "desc" },
   });
+
   const posts: Post[] = rowPosts.map((row) => ({
     id: row.id,
     content: row.content,
     username: row.user.username,
     createdAt: row.createdAt.toUTCString(),
     replyPostCount: row._count.replyPosts,
+    replyingTo: row.replySourcePost?.user.username,
   }));
 
   return json<LoaderData>({ posts });

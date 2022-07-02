@@ -30,7 +30,14 @@ export const PostItem: React.VFC<Props> = ({ post, onDeletePost }) => {
           <PostItemMenuButton onDeletePost={handleClickDelete} />
         </div>
 
-        <p className="whitespace-pre-line">{post.content}</p>
+        <div>
+          {post.replyingTo && (
+            <div className="text-sm text-gray-600">
+              Replying to: {post.replyingTo}
+            </div>
+          )}
+          <p className="whitespace-pre-line">{post.content}</p>
+        </div>
         <div className="flex space-x-5">
           <ReplyFormDialogButton replySourceId={post.id} />
           {post.replyPostCount > 0 ? post.replyPostCount : ""}
