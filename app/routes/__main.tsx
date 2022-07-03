@@ -19,7 +19,7 @@ export default function Main() {
   const { username } = useLoaderData<LoaderData>();
 
   return (
-    <div className="bg-slate-200 min-h-screen flex">
+    <div className="bg-slate-200 flex">
       <div className="grid grid-cols-[75px_600px] lg:grid-cols-[300px_600px] xl:grid-cols-[300px_600px_300px] gap-3 mx-auto">
         {/* メニューカラム */}
         <div className="h-screen sticky top-0">

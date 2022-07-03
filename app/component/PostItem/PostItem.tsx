@@ -1,19 +1,27 @@
+import { useNavigate } from "@remix-run/react";
 import type { Post } from "~/routes/__main/home";
 import { formatDate } from "~/utils/date";
 import { ReplyFormDialogButton } from "../OpenReplyFormDialogButton";
 import { PostItemMenuButton } from "./PostItemMenu";
 
-type Props = { post: Post; onDeletePost: (id: string) => void };
+type Props = { post: Post; onDeletePost?: (id: string) => void };
 
+// TODO: 自分の投稿と他人の投稿を分ける
 export const PostItem: React.VFC<Props> = ({ post, onDeletePost }) => {
+  const navigator = useNavigate();
+
+  const handleClickItem = () => {
+    navigator(`/posts/${post.id}`);
+  };
+
   const handleClickDelete = () => {
-    onDeletePost(post.id);
+    onDeletePost?.(post.id);
   };
 
   return (
     <li
-      key={post.id}
-      className="p-3 m-1 bg-emerald-200 break-words flex rounded"
+      className="p-3 bg-emerald-200 break-words flex rounded hover:bg-opacity-90 transition cursor-pointer"
+      onClick={handleClickItem}
     >
       <div>
         <div className="w-12 h-12 rounded-full bg-emerald-500"></div>
@@ -36,7 +44,7 @@ export const PostItem: React.VFC<Props> = ({ post, onDeletePost }) => {
               Replying to: {post.replyingTo}
             </div>
           )}
-          <p className="whitespace-pre-line">{post.content}</p>
+          <p className="whitespace-pre-line break-all">{post.content}</p>
         </div>
         <div className="flex space-x-5">
           <ReplyFormDialogButton replySourceId={post.id} />

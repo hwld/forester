@@ -19,7 +19,7 @@ export const meta: MetaFunction = () => ({
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: styles },
   { rel: "stylesheet", href: headlessuiStyles },
-  { rel: "icon", href: "icon.png" },
+  { rel: "icon", href: "/icon.png" },
 ];
 
 export default function App() {

@@ -1,6 +1,7 @@
 import type { LoaderFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useFetcher, useLoaderData } from "@remix-run/react";
+import { MainHeader } from "~/component/MainHeader";
 import { PostForm } from "~/component/PostForm/PostForm";
 import { PostItem } from "~/component/PostItem/PostItem";
 import { db } from "~/utils/db.server";
@@ -61,20 +62,16 @@ export default function Home() {
 
   return (
     <>
-      <div className="sticky top-0 h-12 bg-emerald-600 flex justify-between items-center px-4 select-none z-10">
-        <p className="font-bold text-xl text-white">ホーム</p>
-      </div>
+      <MainHeader title="ホーム" />
       <div className="bg-emerald-400">
         <PostForm />
       </div>
       <ul>
         {posts.map((post) => {
           return (
-            <PostItem
-              key={post.id}
-              onDeletePost={handleDeletePost}
-              post={post}
-            />
+            <div key={post.id} className="m-2">
+              <PostItem onDeletePost={handleDeletePost} post={post} />
+            </div>
           );
         })}
       </ul>

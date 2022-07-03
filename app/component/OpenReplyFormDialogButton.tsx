@@ -3,14 +3,17 @@ import { useDisclosure } from "~/hooks/useDisclosure";
 import { PostFormDialog } from "./PostFormDialog";
 import { PostItemIconButton } from "./PostItem/PostItemIconButton";
 
-type Props = { replySourceId: string };
+type Props = { replySourceId: string; size?: "md" | "lg" };
 
-export const ReplyFormDialogButton: React.VFC<Props> = ({ replySourceId }) => {
+export const ReplyFormDialogButton: React.VFC<Props> = ({
+  replySourceId,
+  size,
+}) => {
   const { isOpen, open, close } = useDisclosure();
 
   return (
     <>
-      <PostItemIconButton icon={RiChat1Line} onClick={open} />
+      <PostItemIconButton icon={RiChat1Line} onClick={open} size={size} />
       <PostFormDialog
         isOpen={isOpen}
         close={close}
