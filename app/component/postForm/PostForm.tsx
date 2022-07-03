@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef } from "react";
 import { MdError } from "react-icons/md";
-import { usePostFetcher } from "~/routes/posts";
+import { usePostFetcher } from "~/routes/api/posts";
 import { VariableTextArea } from "../VariableTextArea";
 
 type Props = { onSuccess?: () => void; replySourceId?: string };
@@ -25,7 +25,7 @@ export const PostForm: React.VFC<Props> = ({ onSuccess, replySourceId }) => {
   return (
     <postFetcher.Form
       ref={formRef}
-      action="/posts?index"
+      action="/api/posts?index"
       method="post"
       className="p-3 flex flex-col"
     >

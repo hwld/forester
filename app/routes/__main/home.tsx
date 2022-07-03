@@ -54,7 +54,7 @@ export default function Home() {
 
   const handleDeletePost = (id: string) => {
     deletePostFetcher.submit(null, {
-      action: `/posts/${id}?index`,
+      action: `/api/posts/${id}?index`,
       method: "delete",
     });
   };
