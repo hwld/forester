@@ -1,27 +1,37 @@
-import { useNavigate } from "@remix-run/react";
+import type { ComponentProps } from "react";
 import type { Post } from "~/routes/__main/home";
 import { formatDate } from "~/utils/date";
 import { ReplyFormDialogButton } from "../OpenReplyFormDialogButton";
 import { PostItemMenuButton } from "./PostItemMenu";
 
-type Props = { post: Post; onDeletePost?: (id: string) => void };
+type Props = {
+  post: Post;
+  onDeletePost?: (id: string) => void;
+  onClick?: (id: string) => void;
+} & Omit<ComponentProps<"li">, "onClick">;
 
 // TODO: 自分の投稿と他人の投稿を分ける
-export const PostItem: React.VFC<Props> = ({ post, onDeletePost }) => {
-  const navigator = useNavigate();
-
-  const handleClickItem = () => {
-    navigator(`/posts/${post.id}`);
-  };
-
+export const PostItem: React.VFC<Props> = ({
+  post,
+  onDeletePost,
+  onClick,
+  ...props
+}) => {
   const handleClickDelete = () => {
     onDeletePost?.(post.id);
   };
 
+  const handleClick = () => {
+    onClick?.(post.id);
+  };
+
   return (
     <li
-      className="p-3 bg-emerald-200 break-words flex rounded hover:bg-opacity-90 transition cursor-pointer"
-      onClick={handleClickItem}
+      className={`p-3 bg-emerald-200 break-words flex rounded transition ${
+        onClick ? "hover:bg-opacity-80 cursor-pointer" : ""
+      }`}
+      onClick={handleClick}
+      {...props}
     >
       <div>
         <div className="w-12 h-12 rounded-full bg-emerald-500"></div>

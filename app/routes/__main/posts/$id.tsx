@@ -1,6 +1,6 @@
 import type { LoaderFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { useFetcher, useLoaderData } from "@remix-run/react";
+import { useFetcher, useLoaderData, useNavigate } from "@remix-run/react";
 import { MdError } from "react-icons/md";
 import { MainHeader } from "~/component/MainHeader";
 import { PostDetailItem } from "~/component/PostDetailItem";
@@ -91,6 +91,11 @@ export const loader: LoaderFunction = async ({ params }) => {
 export default function PostTree() {
   const { post, replySourcePost, replyPosts } = useLoaderData<PostTreeData>();
   const deletePostFetcher = useFetcher();
+  const navigator = useNavigate();
+
+  const handleClickPostItem = (postId: string) => {
+    navigator(`/posts/${postId}`);
+  };
 
   const handleDeletePost = (id: string) => {
     deletePostFetcher.submit(null, {
@@ -105,7 +110,11 @@ export default function PostTree() {
       <MainHeader title="投稿" canBack />
       {replySourcePost ? (
         <div className="mt-2 mx-2">
-          <PostItem post={replySourcePost} onDeletePost={handleDeletePost} />
+          <PostItem
+            post={replySourcePost}
+            onDeletePost={handleDeletePost}
+            onClick={handleClickPostItem}
+          />
           <div className="h-10 w-full flex justify-center">
             <div className="w-1 h-full bg-emerald-800" />
           </div>
@@ -125,7 +134,11 @@ export default function PostTree() {
       {replyPosts.map((reply) => {
         return (
           <div key={reply.id} className="m-2 mt-3">
-            <PostItem post={reply} onDeletePost={handleDeletePost} />
+            <PostItem
+              post={reply}
+              onDeletePost={handleDeletePost}
+              onClick={handleClickPostItem}
+            />
           </div>
         );
       })}
