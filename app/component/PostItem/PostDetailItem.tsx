@@ -2,6 +2,7 @@ import type { Post } from "~/routes/__main/home";
 import { formatDateDetail } from "~/utils/date";
 import { ReplyFormDialogButton } from "../OpenReplyFormDialogButton";
 import { PostMenuButton } from "./PostMenu/PostMenuButton";
+import { UserIcon } from "./UserIcon";
 
 type Props = { post: Post };
 
@@ -10,7 +11,7 @@ export const PostDetailItem: React.VFC<Props> = ({ post }) => {
     <li className="p-3 bg-emerald-100 break-words flex flex-col rounded transition">
       <div className="flex justify-between">
         <div className="flex space-x-3 items-center">
-          <div className="w-12 h-12 rounded-full bg-emerald-500"></div>
+          <UserIcon username={post.username} />
           <p className="font-bold">{post.username}</p>
         </div>
 
