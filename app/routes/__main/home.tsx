@@ -1,6 +1,6 @@
 import type { LoaderFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { useFetcher, useLoaderData, useNavigate } from "@remix-run/react";
+import { useLoaderData, useNavigate } from "@remix-run/react";
 import { MainHeader } from "~/component/MainHeader";
 import { PostForm } from "~/component/PostForm/PostForm";
 import { PostItem } from "~/component/PostItem/PostItem";
@@ -51,18 +51,10 @@ export const loader: LoaderFunction = async ({ request }) => {
 
 export default function Home() {
   const { posts } = useLoaderData<LoaderData>();
-  const deletePostFetcher = useFetcher();
   const navigator = useNavigate();
 
   const handleClickPostItem = (postId: string) => {
     navigator(`/posts/${postId}`);
-  };
-
-  const handleDeletePost = (id: string) => {
-    deletePostFetcher.submit(null, {
-      action: `/api/posts/${id}?index`,
-      method: "delete",
-    });
   };
 
   return (
@@ -75,11 +67,7 @@ export default function Home() {
         {posts.map((post) => {
           return (
             <div key={post.id} className="m-2">
-              <PostItem
-                onDeletePost={handleDeletePost}
-                onClick={handleClickPostItem}
-                post={post}
-              />
+              <PostItem onClick={handleClickPostItem} post={post} />
             </div>
           );
         })}

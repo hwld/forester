@@ -1,9 +1,9 @@
 import type { LoaderFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { useFetcher, useLoaderData, useNavigate } from "@remix-run/react";
+import { useLoaderData, useNavigate } from "@remix-run/react";
 import { MdError } from "react-icons/md";
 import { MainHeader } from "~/component/MainHeader";
-import { PostDetailItem } from "~/component/PostDetailItem";
+import { PostDetailItem } from "~/component/PostItem/PostDetailItem";
 import { PostItem } from "~/component/PostItem/PostItem";
 import { db } from "~/utils/db.server";
 import type { Post } from "../home";
@@ -90,18 +90,10 @@ export const loader: LoaderFunction = async ({ params }) => {
 
 export default function PostTree() {
   const { post, replySourcePost, replyPosts } = useLoaderData<PostTreeData>();
-  const deletePostFetcher = useFetcher();
   const navigator = useNavigate();
 
   const handleClickPostItem = (postId: string) => {
     navigator(`/posts/${postId}`);
-  };
-
-  const handleDeletePost = (id: string) => {
-    deletePostFetcher.submit(null, {
-      action: `/api/posts/${id}?index`,
-      method: "delete",
-    });
   };
 
   return (
@@ -110,11 +102,7 @@ export default function PostTree() {
       <MainHeader title="投稿" canBack />
       {replySourcePost ? (
         <div className="mt-2 mx-2">
-          <PostItem
-            post={replySourcePost}
-            onDeletePost={handleDeletePost}
-            onClick={handleClickPostItem}
-          />
+          <PostItem post={replySourcePost} onClick={handleClickPostItem} />
           <div className="h-10 w-full flex justify-center">
             <div className="w-1 h-full bg-emerald-800" />
           </div>
@@ -123,7 +111,7 @@ export default function PostTree() {
         <div className="h-2" />
       )}
       <div className="mx-2">
-        <PostDetailItem post={post} onDeletePost={handleDeletePost} />
+        <PostDetailItem post={post} />
       </div>
       {replyPosts.length > 0 && (
         <>
@@ -134,11 +122,7 @@ export default function PostTree() {
       {replyPosts.map((reply) => {
         return (
           <div key={reply.id} className="m-2 mt-3">
-            <PostItem
-              post={reply}
-              onDeletePost={handleDeletePost}
-              onClick={handleClickPostItem}
-            />
+            <PostItem post={reply} onClick={handleClickPostItem} />
           </div>
         );
       })}

@@ -4,7 +4,7 @@ import type { IconType } from "react-icons";
 
 type Props = { icon: IconType; size?: "md" | "lg" } & ComponentProps<"button">;
 
-export const PostItemIconButton = forwardRef<HTMLButtonElement, Props>(
+export const PostIconButton = forwardRef<HTMLButtonElement, Props>(
   function PostItemIconButton(
     { icon, size = "md", onClick, ...buttonProps },
     ref

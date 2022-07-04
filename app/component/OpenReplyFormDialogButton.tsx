@@ -1,7 +1,7 @@
 import { RiChat1Line } from "react-icons/ri";
 import { useDisclosure } from "~/hooks/useDisclosure";
 import { PostFormDialog } from "./PostFormDialog";
-import { PostItemIconButton } from "./PostItem/PostItemIconButton";
+import { PostIconButton } from "./PostItem/PostIconButton";
 
 type Props = { replySourceId: string; size?: "md" | "lg" };
 
@@ -13,7 +13,7 @@ export const ReplyFormDialogButton: React.VFC<Props> = ({
 
   return (
     <>
-      <PostItemIconButton icon={RiChat1Line} onClick={open} size={size} />
+      <PostIconButton icon={RiChat1Line} onClick={open} size={size} />
       <PostFormDialog
         isOpen={isOpen}
         close={close}

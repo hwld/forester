@@ -1,16 +1,11 @@
 import type { Post } from "~/routes/__main/home";
 import { formatDateDetail } from "~/utils/date";
-import { ReplyFormDialogButton } from "./OpenReplyFormDialogButton";
-import { PostItemMenuButton } from "./PostItem/PostItemMenu";
+import { ReplyFormDialogButton } from "../OpenReplyFormDialogButton";
+import { PostMenuButton } from "./PostMenu/PostMenuButton";
 
-type Props = { post: Post; onDeletePost?: (id: string) => void };
+type Props = { post: Post };
 
-// TODO: 自分の投稿と他人の投稿を分ける
-export const PostDetailItem: React.VFC<Props> = ({ post, onDeletePost }) => {
-  const handleClickDelete = () => {
-    onDeletePost?.(post.id);
-  };
-
+export const PostDetailItem: React.VFC<Props> = ({ post }) => {
   return (
     <li className="p-3 bg-emerald-100 break-words flex flex-col rounded transition">
       <div className="flex justify-between">
@@ -19,7 +14,7 @@ export const PostDetailItem: React.VFC<Props> = ({ post, onDeletePost }) => {
           <p className="font-bold">{post.username}</p>
         </div>
 
-        <PostItemMenuButton onDeletePost={handleClickDelete} />
+        <PostMenuButton post={post} />
       </div>
       <div className="ml-2 flex flex-col flex-grow space-y-3">
         <div className="mt-2">

@@ -2,25 +2,14 @@ import type { ComponentProps } from "react";
 import type { Post } from "~/routes/__main/home";
 import { formatDate } from "~/utils/date";
 import { ReplyFormDialogButton } from "../OpenReplyFormDialogButton";
-import { PostItemMenuButton } from "./PostItemMenu";
+import { PostMenuButton } from "./PostMenu/PostMenuButton";
 
 type Props = {
   post: Post;
-  onDeletePost?: (id: string) => void;
   onClick?: (id: string) => void;
 } & Omit<ComponentProps<"li">, "onClick">;
 
-// TODO: 自分の投稿と他人の投稿を分ける
-export const PostItem: React.VFC<Props> = ({
-  post,
-  onDeletePost,
-  onClick,
-  ...props
-}) => {
-  const handleClickDelete = () => {
-    onDeletePost?.(post.id);
-  };
-
+export const PostItem: React.VFC<Props> = ({ post, onClick, ...props }) => {
   const handleClick = () => {
     onClick?.(post.id);
   };
@@ -45,7 +34,7 @@ export const PostItem: React.VFC<Props> = ({
             </p>
           </div>
 
-          <PostItemMenuButton onDeletePost={handleClickDelete} />
+          <PostMenuButton post={post} />
         </div>
 
         <div>

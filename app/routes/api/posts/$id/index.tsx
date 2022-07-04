@@ -3,7 +3,7 @@ import { json, redirect } from "@remix-run/node";
 import { db } from "~/utils/db.server";
 import { requireUser } from "~/utils/session.server";
 
-export const loader: LoaderFunction = async () => {
+export const loader: LoaderFunction = async ({ request }) => {
   return redirect("/");
 };
 
