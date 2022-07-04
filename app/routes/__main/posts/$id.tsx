@@ -6,6 +6,7 @@ import { MainHeader } from "~/component/MainHeader";
 import { PostDetailItem } from "~/component/PostItem/PostDetailItem";
 import { PostItem } from "~/component/PostItem/PostItem";
 import { db } from "~/utils/db.server";
+import { getUser } from "~/utils/session.server";
 import type { Post } from "../home";
 
 type PostTreeData = {
@@ -14,7 +15,8 @@ type PostTreeData = {
   replyPosts: Post[];
 };
 
-export const loader: LoaderFunction = async ({ params }) => {
+export const loader: LoaderFunction = async ({ request, params }) => {
+  const loggedInUser = await getUser(request);
   const postId = params.id;
 
   const rowPost = await db.post.findUnique({
@@ -22,13 +24,13 @@ export const loader: LoaderFunction = async ({ params }) => {
       id: true,
       content: true,
       createdAt: true,
-      user: { select: { username: true } },
+      user: { select: { username: true, id: true } },
       replyPosts: {
         select: {
           id: true,
           content: true,
           createdAt: true,
-          user: { select: { username: true } },
+          user: { select: { username: true, id: true } },
           _count: { select: { replyPosts: true } },
         },
       },
@@ -37,9 +39,11 @@ export const loader: LoaderFunction = async ({ params }) => {
           id: true,
           content: true,
           createdAt: true,
-          user: { select: { username: true } },
+          user: { select: { username: true, id: true } },
           _count: { select: { replyPosts: true } },
-          replySourcePost: { select: { user: { select: { username: true } } } },
+          replySourcePost: {
+            select: { user: { select: { username: true, id: true } } },
+          },
         },
       },
     },
@@ -57,6 +61,7 @@ export const loader: LoaderFunction = async ({ params }) => {
     replyPostCount: rowPost.replyPosts.length,
     username: rowPost.user.username,
     replyingTo: rowPost.replySourcePost?.user.username,
+    isOwner: rowPost.user.id === loggedInUser?.id,
   };
 
   const replySourcePost: Post | undefined = rowPost.replySourcePost
@@ -67,6 +72,7 @@ export const loader: LoaderFunction = async ({ params }) => {
         username: rowPost.user.username,
         replyPostCount: rowPost.replySourcePost._count.replyPosts,
         replyingTo: rowPost.replySourcePost.replySourcePost?.user.username,
+        isOwner: rowPost.replySourcePost.user.id === loggedInUser?.id,
       }
     : undefined;
 
@@ -78,6 +84,7 @@ export const loader: LoaderFunction = async ({ params }) => {
       username: rowReply.user.username,
       replyPostCount: rowReply._count.replyPosts,
       replyingTo: post.username,
+      isOwner: rowReply.user.id === loggedInUser?.id,
     };
   });
 

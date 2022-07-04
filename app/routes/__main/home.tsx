@@ -19,21 +19,22 @@ export type Post = {
   replyPostCount: number;
   /** リプライ元のユーザー名 */
   replyingTo?: string;
+  isOwner: boolean;
 };
 
 export const loader: LoaderFunction = async ({ request }) => {
-  const user = await requireUser(request);
+  const loggedInUser = await requireUser(request);
 
   const rowPosts = await db.post.findMany({
     select: {
       id: true,
       content: true,
       createdAt: true,
-      user: { select: { username: true } },
+      user: { select: { username: true, id: true } },
       replySourcePost: { select: { user: { select: { username: true } } } },
       _count: { select: { replyPosts: true } },
     },
-    where: { userId: user.id },
+    where: { userId: loggedInUser.id },
     orderBy: { createdAt: "desc" },
   });
 
@@ -44,6 +45,7 @@ export const loader: LoaderFunction = async ({ request }) => {
     createdAt: row.createdAt.toUTCString(),
     replyPostCount: row._count.replyPosts,
     replyingTo: row.replySourcePost?.user.username,
+    isOwner: row.user.id === loggedInUser.id,
   }));
 
   return json<LoaderData>({ posts });
