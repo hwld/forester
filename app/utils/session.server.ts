@@ -43,7 +43,7 @@ async function getUserId(request: Request) {
 export async function getUser(request: Request) {
   const userId = await getUserId(request);
   if (typeof userId !== "string") {
-    return null;
+    return undefined;
   }
 
   const user = await db.user.findUnique({

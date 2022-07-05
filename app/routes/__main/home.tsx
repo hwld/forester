@@ -22,6 +22,11 @@ export type Post = {
   isOwner: boolean;
 };
 
+export type User = {
+  id: string;
+  username: string;
+};
+
 export const loader: LoaderFunction = async ({ request }) => {
   const loggedInUser = await requireUser(request);
 
