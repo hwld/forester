@@ -19,7 +19,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   const loggedInUser = await getUser(request);
   const postId = params.id;
 
-  const rowPost = await db.post.findUnique({
+  const rawPost = await db.post.findUnique({
     select: {
       id: true,
       content: true,
@@ -50,41 +50,41 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     where: { id: postId },
   });
 
-  if (!rowPost) {
+  if (!rawPost) {
     throw new Error("");
   }
 
   const post: Post = {
-    id: rowPost.id,
-    content: rowPost.content,
-    createdAt: rowPost.createdAt.toUTCString(),
-    replyPostCount: rowPost.replyPosts.length,
-    username: rowPost.user.username,
-    replyingTo: rowPost.replySourcePost?.user.username,
-    isOwner: rowPost.user.id === loggedInUser?.id,
+    id: rawPost.id,
+    content: rawPost.content,
+    createdAt: rawPost.createdAt.toUTCString(),
+    replyPostCount: rawPost.replyPosts.length,
+    username: rawPost.user.username,
+    replyingTo: rawPost.replySourcePost?.user.username,
+    isOwner: rawPost.user.id === loggedInUser?.id,
   };
 
-  const replySourcePost: Post | undefined = rowPost.replySourcePost
+  const replySourcePost: Post | undefined = rawPost.replySourcePost
     ? {
-        id: rowPost.replySourcePost.id,
-        content: rowPost.replySourcePost.content,
-        createdAt: rowPost.replySourcePost.createdAt.toUTCString(),
-        username: rowPost.user.username,
-        replyPostCount: rowPost.replySourcePost._count.replyPosts,
-        replyingTo: rowPost.replySourcePost.replySourcePost?.user.username,
-        isOwner: rowPost.replySourcePost.user.id === loggedInUser?.id,
+        id: rawPost.replySourcePost.id,
+        content: rawPost.replySourcePost.content,
+        createdAt: rawPost.replySourcePost.createdAt.toUTCString(),
+        username: rawPost.user.username,
+        replyPostCount: rawPost.replySourcePost._count.replyPosts,
+        replyingTo: rawPost.replySourcePost.replySourcePost?.user.username,
+        isOwner: rawPost.replySourcePost.user.id === loggedInUser?.id,
       }
     : undefined;
 
-  const replyPosts: Post[] = rowPost.replyPosts.map((rowReply) => {
+  const replyPosts: Post[] = rawPost.replyPosts.map((rawReply) => {
     return {
-      id: rowReply.id,
-      content: rowReply.content,
-      createdAt: rowReply.createdAt.toUTCString(),
-      username: rowReply.user.username,
-      replyPostCount: rowReply._count.replyPosts,
+      id: rawReply.id,
+      content: rawReply.content,
+      createdAt: rawReply.createdAt.toUTCString(),
+      username: rawReply.user.username,
+      replyPostCount: rawReply._count.replyPosts,
       replyingTo: post.username,
-      isOwner: rowReply.user.id === loggedInUser?.id,
+      isOwner: rawReply.user.id === loggedInUser?.id,
     };
   });
 

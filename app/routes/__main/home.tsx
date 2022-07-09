@@ -25,12 +25,14 @@ export type Post = {
 export type User = {
   id: string;
   username: string;
+  followedBy: number;
+  following: number;
 };
 
 export const loader: LoaderFunction = async ({ request }) => {
   const loggedInUser = await requireUser(request);
 
-  const rowPosts = await db.post.findMany({
+  const rawPosts = await db.post.findMany({
     select: {
       id: true,
       content: true,
@@ -43,14 +45,14 @@ export const loader: LoaderFunction = async ({ request }) => {
     orderBy: { createdAt: "desc" },
   });
 
-  const posts: Post[] = rowPosts.map((row) => ({
-    id: row.id,
-    content: row.content,
-    username: row.user.username,
-    createdAt: row.createdAt.toUTCString(),
-    replyPostCount: row._count.replyPosts,
-    replyingTo: row.replySourcePost?.user.username,
-    isOwner: row.user.id === loggedInUser.id,
+  const posts: Post[] = rawPosts.map((raw) => ({
+    id: raw.id,
+    content: raw.content,
+    username: raw.user.username,
+    createdAt: raw.createdAt.toUTCString(),
+    replyPostCount: raw._count.replyPosts,
+    replyingTo: raw.replySourcePost?.user.username,
+    isOwner: raw.user.id === loggedInUser.id,
   }));
 
   return json<LoaderData>({ posts });
