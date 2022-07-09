@@ -50,8 +50,9 @@ export async function getUser(request: Request) {
     where: { id: userId },
     select: { id: true, username: true },
   });
+
   if (!user) {
-    throw logout(request);
+    throw await logout(request);
   }
 
   return user;
@@ -84,6 +85,7 @@ export async function login({ username, password }: AuthForm) {
 
 export async function logout(request: Request) {
   const session = await getUserSession(request);
+
   return redirect("/login", {
     headers: {
       "Set-Cookie": await storage.destroySession(session),
