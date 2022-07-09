@@ -107,9 +107,9 @@ export default function UserHome() {
                 プロフィールを編集
               </button>
             ) : isFollowing ? (
-              <UnfollowButton />
+              <UnfollowButton userId={user.id} />
             ) : (
-              <FollowButton />
+              <FollowButton userId={user.id} />
             )}
           </div>
         </div>
