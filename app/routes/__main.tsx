@@ -1,6 +1,6 @@
 import type { LoaderFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { Outlet, useLoaderData } from "@remix-run/react";
+import { Link, Outlet, useLoaderData } from "@remix-run/react";
 import { IconButton } from "~/component/IconButton";
 import { OpenPostFormDialogButton } from "~/component/OpenPostFormButton";
 import { requireUser } from "~/utils/session.server";
@@ -18,6 +18,12 @@ export const loader: LoaderFunction = async ({ request }) => {
 export default function Main() {
   const { username } = useLoaderData<LoaderData>();
 
+  const menu = [
+    ["🏡", "ホーム", "/home"],
+    ["🙎", "ユーザー", `/users/${username}`],
+    ["⚙", "設定"],
+  ];
+
   return (
     <div className="bg-slate-200 flex">
       <div className="grid grid-cols-[75px_600px] lg:grid-cols-[300px_600px] xl:grid-cols-[300px_600px_300px] gap-3 mx-auto">
@@ -28,14 +34,12 @@ export default function Main() {
               <img src="/icon.png" alt="logo" className="w-[50px]" />
 
               <ul className="space-y-1 mt-3">
-                {[
-                  ["🏡", "ホーム"],
-                  ["🧑‍🤝‍🧑", "コミュニティ"],
-                  ["⚙", "設定"],
-                ].map(([icon, text], i) => {
+                {menu.map(([icon, text, link], i) => {
                   return (
                     <li key={i}>
-                      <IconButton icon={icon} text={text} fullWidth />
+                      <Link to={link ?? "/"}>
+                        <IconButton icon={icon} text={text} fullWidth />
+                      </Link>
                     </li>
                   );
                 })}

@@ -27,7 +27,7 @@ export const PostForm: React.VFC<Props> = ({ onSuccess, replySourceId }) => {
       ref={formRef}
       action="/api/posts?index"
       method="post"
-      className="p-3 flex flex-col"
+      className="px-3 pt-3 pb-2 flex flex-col"
     >
       {replySourceId && (
         <input hidden name="replySourceId" defaultValue={replySourceId} />
@@ -40,7 +40,7 @@ export const PostForm: React.VFC<Props> = ({ onSuccess, replySourceId }) => {
       )}
       <VariableTextArea
         name="content"
-        className={`mt-3 rounded-md px-3 py-2 resize-none ${
+        className={`rounded-md px-3 py-2 resize-none ${
           error?.fieldErrors?.content ? "" : ""
         }`}
         minRows={3}

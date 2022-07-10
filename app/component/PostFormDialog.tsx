@@ -28,7 +28,7 @@ export const PostFormDialog: React.VFC<Props> = ({
             </button>
           </div>
           <div className="flex mt-3 mx-3">
-            <div className="w-10 h-10 rounded-full bg-emerald-500"></div>
+            <div className="w-12 h-12 rounded-full bg-emerald-500"></div>
             <div className="flex-grow">
               <PostForm onSuccess={close} replySourceId={replySourceId} />
             </div>
