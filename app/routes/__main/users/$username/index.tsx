@@ -9,7 +9,7 @@ import { PostItem } from "~/component/PostItem/PostItem";
 import { UnfollowButton } from "~/component/UnfollowButton";
 import { db } from "~/utils/db.server";
 import { getUser } from "~/utils/session.server";
-import type { Post, User } from "../home";
+import type { Post, User } from "../../home";
 
 type LoaderData = {
   posts: Post[];
@@ -117,7 +117,10 @@ export default function UserHome() {
           <div className="text-2xl font-bold">{user.username}</div>
           <div className="ml-2">自己紹介</div>
           <div className="flex space-x-5 text-sm">
-            <Link to="following" className="hover:underline underline-offset-2">
+            <Link
+              to="followings"
+              className="hover:underline underline-offset-2"
+            >
               <span>{user.following}</span>
               {/* スペース1つだとlinterが中括弧なしに変換してしまうので、わかりやすくするために2つ入れる */}
               {"  "}

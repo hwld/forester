@@ -2,8 +2,8 @@ import type { ComponentProps } from "react";
 import type { Post } from "~/routes/__main/home";
 import { formatDate } from "~/utils/date";
 import { ReplyFormDialogButton } from "../OpenReplyFormDialogButton";
+import { UserIcon } from "../UserIcon";
 import { PostMenuButton } from "./PostMenu/PostMenuButton";
-import { UserIcon } from "./UserIcon";
 
 type Props = {
   post: Post;

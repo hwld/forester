@@ -51,6 +51,7 @@ export async function getUser(request: Request) {
     select: {
       id: true,
       username: true,
+      following: { select: { id: true } },
       _count: { select: { followedBy: true, following: true } },
     },
   });
