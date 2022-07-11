@@ -5,17 +5,21 @@ import type { ZodSchema } from "zod";
 // 同じ型を使うことでエラーはなくなったが、理由がよくわかっていない
 type allKeys<T> = T extends any ? keyof T : never;
 
-type ValidationError<T> = {
+type ValidationError<T, OutputFields = T> = {
   formError?: string;
   fieldErrors?: { [K in allKeys<T>]?: string[] };
-  fields?: T;
+  fields?: OutputFields;
 };
 
-type ValidateResult<T> =
-  | { type: "error"; error: ValidationError<T> }
-  | { type: "ok"; data: T };
+export const createValidator = <T, ErrorOutPutFields = T>(
+  schema: ZodSchema<T>,
+  errorOutputFieldsFilter: (fields: T) => ErrorOutPutFields = (fields) =>
+    fields as unknown as ErrorOutPutFields
+) => {
+  type ValidateResult<T> =
+    | { type: "error"; error: ValidationError<T, ErrorOutPutFields> }
+    | { type: "ok"; data: T };
 
-export const createValidator = <T>(schema: ZodSchema<T>) => {
   const validator = (formData: FormData): ValidateResult<T> => {
     const form = Object.fromEntries(Array.from(formData));
 
@@ -36,9 +40,10 @@ export const createValidator = <T>(schema: ZodSchema<T>) => {
     // ここを実行しているということは、formの型エラーがないということなので、
     // Tを満たすオブジェクトは取得できる？
     const fields = form as unknown as T;
+    const output = errorOutputFieldsFilter(fields);
     return {
       type: "error",
-      error: { fieldErrors: fieldErrors, fields },
+      error: { fieldErrors: fieldErrors, fields: output },
     };
   };
 
