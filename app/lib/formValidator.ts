@@ -11,16 +11,22 @@ type ValidationError<T, OutputFields = T> = {
   fields?: OutputFields;
 };
 
+type ValidationResult<T, ErrorOutPutFields> =
+  | { type: "error"; error: ValidationError<T, ErrorOutPutFields> }
+  | { type: "ok"; data: T };
+
+export type ExtractValidationError<
+  T extends ValidationResult<unknown, unknown>
+> = T extends { type: "error" } ? T["error"] : never;
+
 export const createValidator = <T, ErrorOutPutFields = T>(
   schema: ZodSchema<T>,
   errorOutputFieldsFilter: (fields: T) => ErrorOutPutFields = (fields) =>
     fields as unknown as ErrorOutPutFields
 ) => {
-  type ValidateResult<T> =
-    | { type: "error"; error: ValidationError<T, ErrorOutPutFields> }
-    | { type: "ok"; data: T };
-
-  const validator = (formData: FormData): ValidateResult<T> => {
+  const validator = (
+    formData: FormData
+  ): ValidationResult<T, ErrorOutPutFields> => {
     const form = Object.fromEntries(Array.from(formData));
 
     const validationResult = schema.safeParse(form);

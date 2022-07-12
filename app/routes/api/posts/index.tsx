@@ -1,14 +1,20 @@
 import type { ActionFunction, LoaderFunction } from "@remix-run/node";
-import { redirect } from "@remix-run/node";
+import { json, redirect } from "@remix-run/node";
 import { useFetcher } from "@remix-run/react";
+import type { CreatePostFormValidationError } from "~/models/post/form/createPostForm";
+import { validateCreatePostForm } from "~/models/post/form/createPostForm";
 import { db } from "~/utils/db.server";
-import type {
-  ErrorPostResponse,
-  PostResponse,
-  SuccessPostResponse,
-} from "~/utils/post";
-import { postResponse, validatePostForm } from "~/utils/post";
 import { requireUser } from "~/utils/session.server";
+
+type PostErrorResponse = {
+  type: "error";
+  error: CreatePostFormValidationError;
+};
+type PostSuccessResponse = {
+  type: "ok";
+  data: { postId: string; content: string };
+};
+type PostResponse = PostSuccessResponse | PostErrorResponse;
 
 export const usePostFetcher = () => {
   // loaderもactionも呼ばれる可能性があるのでどちらの型も含める。
@@ -28,9 +34,9 @@ export const action: ActionFunction = async ({ request }) => {
   const user = await requireUser(request);
 
   if (request.method === "POST") {
-    const result = validatePostForm(await request.formData());
+    const result = validateCreatePostForm(await request.formData());
     if (result.type === "error") {
-      return badRequest(result.error);
+      return json<PostErrorResponse>({ type: "error", error: result.error });
     }
 
     const { replySourceId, content } = result.data;
@@ -41,9 +47,12 @@ export const action: ActionFunction = async ({ request }) => {
         where: { id: replySourceId },
       });
       if (!postExists) {
-        return badRequest({
-          fields: { content, replySourceId },
-          formError: `存在しない投稿に返信しようとしています。`,
+        return json<PostErrorResponse>({
+          type: "error",
+          error: {
+            fields: { content, replySourceId },
+            formError: "存在しない投稿に返信しようとしています。",
+          },
         });
       }
     }
@@ -51,16 +60,11 @@ export const action: ActionFunction = async ({ request }) => {
     const created = await db.post.create({
       data: { content, userId: user.id, replySourcePostId: replySourceId },
     });
-    return ok({ createdPost: { id: created.id, content: created.content } });
+    return json<PostSuccessResponse>({
+      type: "ok",
+      data: { postId: created.id, content: created.content },
+    });
   }
 
   return null;
-};
-
-const badRequest = (error: ErrorPostResponse) => {
-  return postResponse({ type: "error", error }, { status: 400 });
-};
-
-const ok = (data: SuccessPostResponse) => {
-  return postResponse({ type: "ok", data });
 };
