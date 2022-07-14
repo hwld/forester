@@ -2,9 +2,15 @@ import type { ActionFunction, LoaderFunction } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { Link } from "@remix-run/react";
 import { AuthForm } from "~/component/AuthForm/AuthForm";
+import type { AuthFormValidationError } from "~/form/authForm";
 import type { ErrorAuthResponse } from "~/utils/auth";
 import { authResponse, validateAuthForm } from "~/utils/auth";
 import { getUser, login } from "~/utils/session.server";
+
+type AuthErrorResponse = {
+  type: "error";
+  error: AuthFormValidationError;
+};
 
 const badRequest = (error: ErrorAuthResponse) => {
   return authResponse({ type: "error", error }, { status: 400 });
