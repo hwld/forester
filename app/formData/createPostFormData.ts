@@ -2,7 +2,7 @@ import { z } from "zod";
 import type { ExtractValidationError } from "~/lib/formValidator";
 import { createValidator } from "~/lib/formValidator";
 
-const createPostForm = z
+const createPostFormData = z
   .object({
     content: z
       .string()
@@ -12,7 +12,7 @@ const createPostForm = z
   })
   .strict();
 
-export const validateCreatePostForm = createValidator(createPostForm);
+export const validateCreatePostForm = createValidator(createPostFormData);
 
 export type CreatePostFormValidationError = ExtractValidationError<
   ReturnType<typeof validateCreatePostForm>

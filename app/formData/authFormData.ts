@@ -2,7 +2,7 @@ import { z } from "zod";
 import type { ExtractValidationError } from "~/lib/formValidator";
 import { createValidator } from "~/lib/formValidator";
 
-const authForm = z
+const authFormData = z
   .object({
     username: z
       .string({ invalid_type_error: "無効なユーザー名です。" })
@@ -14,9 +14,9 @@ const authForm = z
   })
   .strict();
 
-export type AuthFormData = z.infer<typeof authForm>;
+export type AuthFormData = z.infer<typeof authFormData>;
 
-export const validateAuthForm = createValidator(authForm, (fields) => ({
+export const validateAuthForm = createValidator(authFormData, (fields) => ({
   username: fields.username,
 }));
 
