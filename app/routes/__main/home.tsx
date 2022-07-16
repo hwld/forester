@@ -5,7 +5,7 @@ import { MainHeader } from "~/component/MainHeader";
 import { PostForm } from "~/component/PostForm/PostForm";
 import { PostItem } from "~/component/PostItem/PostItem";
 import type { Post } from "~/models/post";
-import { findPostByUserId } from "~/models/post";
+import { findPosts } from "~/models/post";
 import { requireUser } from "~/utils/session.server";
 
 type LoaderData = {
@@ -23,8 +23,9 @@ export const loader: LoaderFunction = async ({ request }) => {
   const loggedInUser = await requireUser(request);
 
   const id = loggedInUser.id;
-  const posts = await findPostByUserId({
-    userId: id,
+  const posts = await findPosts({
+    where: { userId: id },
+    orderBy: { createdAt: "desc" },
     loggedInUserId: id,
   });
 

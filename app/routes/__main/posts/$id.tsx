@@ -6,7 +6,7 @@ import { MainHeader } from "~/component/MainHeader";
 import { PostDetailItem } from "~/component/PostItem/PostDetailItem";
 import { PostItem } from "~/component/PostItem/PostItem";
 import type { Post } from "~/models/post";
-import { findPost, findReplyPosts } from "~/models/post";
+import { findPost, findPosts } from "~/models/post";
 import { getUser } from "~/utils/session.server";
 
 type PostTreeData = {
@@ -23,14 +23,17 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     throw new Error("サーバーでエラーが発生しました。");
   }
 
-  const postData = await findPost({ postId, loggedInUserId: loggedInUser?.id });
+  const postData = await findPost({
+    where: { id: postId },
+    loggedInUserId: loggedInUser?.id,
+  });
   if (!postData) {
     throw new Error("投稿が見つかりませんでした。");
   }
 
   const { post, replySourcePost } = postData;
-  const replyPosts = await findReplyPosts({
-    postId,
+  const replyPosts = await findPosts({
+    where: { id: postId },
     loggedInUserId: loggedInUser?.id,
   });
 

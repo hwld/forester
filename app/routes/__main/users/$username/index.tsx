@@ -8,7 +8,7 @@ import { MainHeader } from "~/component/MainHeader";
 import { PostItem } from "~/component/PostItem/PostItem";
 import { UnfollowButton } from "~/component/UnfollowButton";
 import type { Post } from "~/models/post";
-import { findPostByUserId } from "~/models/post";
+import { findPosts } from "~/models/post";
 import { db } from "~/utils/db.server";
 import { getUser } from "~/utils/session.server";
 import type { User } from "../../home";
@@ -58,8 +58,9 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     return user.id === rawLoggedInUser?.id;
   });
 
-  const posts = await findPostByUserId({
-    userId: user.id,
+  const posts = await findPosts({
+    where: { userId: user.id },
+    orderBy: { createdAt: "desc" },
     loggedInUserId: loggedInUser?.id,
   });
 

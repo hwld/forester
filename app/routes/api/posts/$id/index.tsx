@@ -1,5 +1,6 @@
 import type { ActionFunction, LoaderFunction } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
+import { findPost } from "~/models/post";
 import { db } from "~/utils/db.server";
 import { requireUser } from "~/utils/session.server";
 
@@ -11,9 +12,7 @@ export const action: ActionFunction = async ({ request, params }) => {
   if (request.method === "DELETE") {
     const user = await requireUser(request);
 
-    const post = await db.post.findFirst({
-      where: { id: params.id, userId: user.id },
-    });
+    const post = await findPost({ where: { id: params.id, userId: user.id } });
     if (!post) {
       return json(null, { status: 400 });
     }

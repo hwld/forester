@@ -3,6 +3,7 @@ import { json, redirect } from "@remix-run/node";
 import { useFetcher } from "@remix-run/react";
 import type { CreatePostFormValidationError } from "~/formData/createPostFormData";
 import { validateCreatePostForm } from "~/formData/createPostFormData";
+import { findPost } from "~/models/post";
 import { db } from "~/utils/db.server";
 import { requireUser } from "~/utils/session.server";
 
@@ -43,9 +44,7 @@ export const action: ActionFunction = async ({ request }) => {
 
     // replySourceIdが指定されている場合、その投稿が存在するかチェックする
     if (replySourceId) {
-      const postExists = await db.post.findUnique({
-        where: { id: replySourceId },
-      });
+      const postExists = await findPost({ where: { id: replySourceId } });
       if (!postExists) {
         return json<PostErrorResponse>({
           type: "error",
