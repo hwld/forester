@@ -1,19 +1,20 @@
 import type { ActionFunction, LoaderFunction } from "@remix-run/node";
-import { redirect } from "@remix-run/node";
-import { Link } from "@remix-run/react";
-import { AuthForm } from "~/component/AuthForm/AuthForm";
+import { json, redirect } from "@remix-run/node";
+import { Link, useActionData } from "@remix-run/react";
+import { LoginForm } from "~/component/AuthForm/LoginForm";
 import type { AuthFormValidationError } from "~/form/authForm";
-import type { ErrorAuthResponse } from "~/utils/auth";
-import { authResponse, validateAuthForm } from "~/utils/auth";
+import { validateAuthForm } from "~/form/authForm";
 import { getUser, login } from "~/utils/session.server";
 
-type AuthErrorResponse = {
+type LoginErrorResponse = {
   type: "error";
   error: AuthFormValidationError;
 };
+type LoginSuccessResponse = undefined;
+type LoginResponse = LoginErrorResponse | LoginSuccessResponse;
 
-const badRequest = (error: ErrorAuthResponse) => {
-  return authResponse({ type: "error", error }, { status: 400 });
+export const useLoginActionData = () => {
+  return useActionData<LoginResponse>();
 };
 
 export const loader: LoaderFunction = async ({ request }) => {
@@ -28,15 +29,21 @@ export const action: ActionFunction = async ({ request }) => {
   if (request.method === "POST") {
     const validResult = validateAuthForm(await request.formData());
     if (validResult.type === "error") {
-      return badRequest(validResult.error);
+      return json<LoginErrorResponse>({
+        type: "error",
+        error: validResult.error,
+      });
     }
 
     const { username, password } = validResult.data;
     const loginResult = await login({ username, password });
     if (!loginResult) {
-      return badRequest({
-        fields: { username },
-        formError: "ユーザー名/パスワードの組み合わせが間違っています。",
+      return json<LoginErrorResponse>({
+        type: "error",
+        error: {
+          fields: { username },
+          formError: "ユーザー名/パスワードの組み合わせが間違っています。",
+        },
       });
     }
 
@@ -51,7 +58,7 @@ export const action: ActionFunction = async ({ request }) => {
 export default function Login() {
   return (
     <>
-      <AuthForm type="login" />
+      <LoginForm />
       <p className="self-start mt-1">
         初めての方は{" "}
         <Link to="/signup" className="text-emerald-500 font-bold underline">

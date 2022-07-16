@@ -1,16 +1,15 @@
-import { Form, useActionData, useTransition } from "@remix-run/react";
+import { Form, useTransition } from "@remix-run/react";
 import { useMemo } from "react";
-import type { AuthResponse } from "~/utils/auth";
+import { useSignupActionData } from "~/routes/__auth/signup";
 import { AuthFormHeader } from "./AuthFormHeader";
 import { AuthInput } from "./AuthInput";
 import { AuthSubmitButton } from "./AuthSubmitButton";
 
-type Props = { type: "login" | "signup" };
+type Props = {};
 
-export const AuthForm: React.VFC<Props> = ({ type }) => {
-  const actionData = useActionData<AuthResponse>();
+export const SignupForm: React.VFC<Props> = () => {
+  const actionData = useSignupActionData();
   const transition = useTransition();
-  const isLoginType = type === "login";
 
   const error = useMemo(() => {
     if (actionData?.type === "error") {
@@ -20,9 +19,9 @@ export const AuthForm: React.VFC<Props> = ({ type }) => {
 
   return (
     <div>
-      <AuthFormHeader type={type} />
+      <AuthFormHeader type={"signup"} />
       <Form
-        action={type === "login" ? "/login" : "/signup"}
+        action={"/signup"}
         method="post"
         className="mt-5 p-5 bg-white shadow-md rounded-md"
       >
@@ -46,12 +45,12 @@ export const AuthForm: React.VFC<Props> = ({ type }) => {
               type="password"
               name="password"
               errors={error?.fieldErrors?.password}
-              autoComplete={isLoginType ? "current-password" : "new-password"}
+              autoComplete={"new-password"}
             />
           </div>
           <div className="mt-5">
             <AuthSubmitButton
-              text={isLoginType ? "ログイン" : "登録"}
+              text={"登録"}
               isSubmitting={transition.state === "submitting"}
             />
           </div>

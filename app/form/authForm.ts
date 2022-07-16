@@ -14,6 +14,8 @@ const authForm = z
   })
   .strict();
 
+export type AuthFormData = z.infer<typeof authForm>;
+
 export const validateAuthForm = createValidator(authForm, (fields) => ({
   username: fields.username,
 }));
