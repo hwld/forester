@@ -3,7 +3,7 @@ import { useFetcher } from "@remix-run/react";
 import type { SyntheticEvent } from "react";
 import React from "react";
 import { RiDeleteBinLine } from "react-icons/ri";
-import type { Post } from "~/routes/__main/home";
+import type { Post } from "~/models/post";
 
 type Props = { post: Post };
 

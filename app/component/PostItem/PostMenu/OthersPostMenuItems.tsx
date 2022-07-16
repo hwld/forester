@@ -1,6 +1,6 @@
 import { Menu } from "@headlessui/react";
 import { MdPersonAddAlt1 } from "react-icons/md";
-import type { Post } from "~/routes/__main/home";
+import type { Post } from "~/models/post";
 
 type Props = { post: Post };
 

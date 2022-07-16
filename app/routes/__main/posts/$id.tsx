@@ -5,9 +5,9 @@ import { MdError } from "react-icons/md";
 import { MainHeader } from "~/component/MainHeader";
 import { PostDetailItem } from "~/component/PostItem/PostDetailItem";
 import { PostItem } from "~/component/PostItem/PostItem";
-import { db } from "~/utils/db.server";
+import type { Post } from "~/models/post";
+import { findPost, findReplyPosts } from "~/models/post";
 import { getUser } from "~/utils/session.server";
-import type { Post } from "../home";
 
 type PostTreeData = {
   post: Post;
@@ -19,73 +19,19 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   const loggedInUser = await getUser(request);
   const postId = params.id;
 
-  const rawPost = await db.post.findUnique({
-    select: {
-      id: true,
-      content: true,
-      createdAt: true,
-      user: { select: { username: true, id: true } },
-      replyPosts: {
-        select: {
-          id: true,
-          content: true,
-          createdAt: true,
-          user: { select: { username: true, id: true } },
-          _count: { select: { replyPosts: true } },
-        },
-      },
-      replySourcePost: {
-        select: {
-          id: true,
-          content: true,
-          createdAt: true,
-          user: { select: { username: true, id: true } },
-          _count: { select: { replyPosts: true } },
-          replySourcePost: {
-            select: { user: { select: { username: true, id: true } } },
-          },
-        },
-      },
-    },
-    where: { id: postId },
-  });
-
-  if (!rawPost) {
-    throw new Error("");
+  if (!postId) {
+    throw new Error("サーバーでエラーが発生しました。");
   }
 
-  const post: Post = {
-    id: rawPost.id,
-    content: rawPost.content,
-    createdAt: rawPost.createdAt.toUTCString(),
-    replyPostCount: rawPost.replyPosts.length,
-    username: rawPost.user.username,
-    replyingTo: rawPost.replySourcePost?.user.username,
-    isOwner: rawPost.user.id === loggedInUser?.id,
-  };
+  const postData = await findPost({ postId, loggedInUserId: loggedInUser?.id });
+  if (!postData) {
+    throw new Error("投稿が見つかりませんでした。");
+  }
 
-  const replySourcePost: Post | undefined = rawPost.replySourcePost
-    ? {
-        id: rawPost.replySourcePost.id,
-        content: rawPost.replySourcePost.content,
-        createdAt: rawPost.replySourcePost.createdAt.toUTCString(),
-        username: rawPost.user.username,
-        replyPostCount: rawPost.replySourcePost._count.replyPosts,
-        replyingTo: rawPost.replySourcePost.replySourcePost?.user.username,
-        isOwner: rawPost.replySourcePost.user.id === loggedInUser?.id,
-      }
-    : undefined;
-
-  const replyPosts: Post[] = rawPost.replyPosts.map((rawReply) => {
-    return {
-      id: rawReply.id,
-      content: rawReply.content,
-      createdAt: rawReply.createdAt.toUTCString(),
-      username: rawReply.user.username,
-      replyPostCount: rawReply._count.replyPosts,
-      replyingTo: post.username,
-      isOwner: rawReply.user.id === loggedInUser?.id,
-    };
+  const { post, replySourcePost } = postData;
+  const replyPosts = await findReplyPosts({
+    postId,
+    loggedInUserId: loggedInUser?.id,
   });
 
   return json<PostTreeData>({

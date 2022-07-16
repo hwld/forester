@@ -7,9 +7,11 @@ import { FollowButton } from "~/component/FollowButton";
 import { MainHeader } from "~/component/MainHeader";
 import { PostItem } from "~/component/PostItem/PostItem";
 import { UnfollowButton } from "~/component/UnfollowButton";
+import type { Post } from "~/models/post";
+import { findPostByUserId } from "~/models/post";
 import { db } from "~/utils/db.server";
 import { getUser } from "~/utils/session.server";
-import type { Post, User } from "../../home";
+import type { User } from "../../home";
 
 type LoaderData = {
   posts: Post[];
@@ -36,29 +38,6 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     throw new Error("user not found");
   }
 
-  const rawPosts = await db.post.findMany({
-    select: {
-      id: true,
-      content: true,
-      createdAt: true,
-      user: { select: { username: true, id: true } },
-      replySourcePost: { select: { user: { select: { username: true } } } },
-      _count: { select: { replyPosts: true } },
-    },
-    where: { user: { username } },
-    orderBy: { createdAt: "desc" },
-  });
-
-  const posts: Post[] = rawPosts.map((raw) => ({
-    id: raw.id,
-    content: raw.content,
-    username: raw.user.username,
-    createdAt: raw.createdAt.toUTCString(),
-    replyPostCount: raw._count.replyPosts,
-    replyingTo: raw.replySourcePost?.user.username,
-    isOwner: raw.user.id === rawLoggedInUser?.id,
-  }));
-
   const user: User = {
     id: rawUser.id,
     username: rawUser.username,
@@ -77,6 +56,11 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 
   const isFollowing = rawUser.followedBy.some((user) => {
     return user.id === rawLoggedInUser?.id;
+  });
+
+  const posts = await findPostByUserId({
+    userId: user.id,
+    loggedInUserId: loggedInUser?.id,
   });
 
   return json<LoaderData>({ posts, user, loggedInUser, isFollowing });

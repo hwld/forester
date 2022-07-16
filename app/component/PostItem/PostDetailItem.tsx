@@ -1,4 +1,4 @@
-import type { Post } from "~/routes/__main/home";
+import type { Post } from "~/models/post";
 import { formatDateDetail } from "~/utils/date";
 import { ReplyFormDialogButton } from "../OpenReplyFormDialogButton";
 import { UserIcon } from "../UserIcon";
@@ -19,9 +19,9 @@ export const PostDetailItem: React.VFC<Props> = ({ post }) => {
       </div>
       <div className="ml-2 flex flex-col flex-grow space-y-3">
         <div className="mt-2">
-          {post.replyingTo && (
+          {post.replySourceUsername && (
             <div className="text-sm text-gray-500">
-              Replying to: {post.replyingTo}
+              Replying to: {post.replySourceUsername}
             </div>
           )}
           <p className="whitespace-pre-line break-all">{post.content}</p>

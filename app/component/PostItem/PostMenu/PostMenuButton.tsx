@@ -1,7 +1,7 @@
 import { Menu } from "@headlessui/react";
 
 import { HiOutlineDotsHorizontal } from "react-icons/hi";
-import type { Post } from "~/routes/__main/home";
+import type { Post } from "~/models/post";
 import { PostIconButton } from "../PostIconButton";
 import { OthersPostMenuItems } from "./OthersPostMenuItems";
 import { OwnPostMenuItems } from "./OwnPostMenuItems";

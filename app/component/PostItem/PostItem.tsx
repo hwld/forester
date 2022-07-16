@@ -1,5 +1,5 @@
 import type { ComponentProps } from "react";
-import type { Post } from "~/routes/__main/home";
+import type { Post } from "~/models/post";
 import { formatDate } from "~/utils/date";
 import { ReplyFormDialogButton } from "../OpenReplyFormDialogButton";
 import { UserIcon } from "../UserIcon";
@@ -39,9 +39,9 @@ export const PostItem: React.VFC<Props> = ({ post, onClick, ...props }) => {
         </div>
 
         <div>
-          {post.replyingTo && (
+          {post.replySourceUsername && (
             <div className="text-sm text-gray-600">
-              Replying to: {post.replyingTo}
+              Replying to: {post.replySourceUsername}
             </div>
           )}
           <p className="whitespace-pre-line break-all">{post.content}</p>
