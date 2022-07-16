@@ -1,6 +1,6 @@
 import { createCookieSessionStorage, redirect } from "@remix-run/node";
 import bcrypt from "bcryptjs";
-import type { AuthFormData } from "~/form/authForm";
+import type { AuthFormData } from "~/formData/authFormData";
 import { db } from "./db.server";
 
 const sessionSecret = process.env.SESSION_SECRET;

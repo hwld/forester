@@ -1,8 +1,8 @@
 import type { ActionFunction, LoaderFunction } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { useFetcher } from "@remix-run/react";
-import type { CreatePostFormValidationError } from "~/form/createPostForm";
-import { validateCreatePostForm } from "~/form/createPostForm";
+import type { CreatePostFormValidationError } from "~/formData/createPostFormData";
+import { validateCreatePostForm } from "~/formData/createPostFormData";
 import { db } from "~/utils/db.server";
 import { requireUser } from "~/utils/session.server";
 
