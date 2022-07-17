@@ -13,6 +13,7 @@ type PostTreeData = {
   post: Post;
   replySourcePost?: Post;
   replyPosts: Post[];
+  loggedInUserId?: string;
 };
 
 export const loader: LoaderFunction = async ({ request, params }) => {
@@ -25,7 +26,6 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 
   const postData = await findPost({
     where: { id: postId },
-    loggedInUserId: loggedInUser?.id,
   });
   if (!postData) {
     throw new Error("投稿が見つかりませんでした。");
@@ -34,18 +34,19 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   const { post, replySourcePost } = postData;
   const replyPosts = await findPosts({
     where: { id: postId },
-    loggedInUserId: loggedInUser?.id,
   });
 
   return json<PostTreeData>({
     post,
     replySourcePost,
     replyPosts,
+    loggedInUserId: loggedInUser?.id,
   });
 };
 
 export default function PostTree() {
-  const { post, replySourcePost, replyPosts } = useLoaderData<PostTreeData>();
+  const { post, replySourcePost, replyPosts, loggedInUserId } =
+    useLoaderData<PostTreeData>();
   const navigator = useNavigate();
 
   const handleClickPostItem = (postId: string) => {
@@ -58,7 +59,11 @@ export default function PostTree() {
       <MainHeader title="投稿" canBack />
       {replySourcePost ? (
         <div className="mt-2 mx-2">
-          <PostItem post={replySourcePost} onClick={handleClickPostItem} />
+          <PostItem
+            post={replySourcePost}
+            onClick={handleClickPostItem}
+            loggedInUserId={loggedInUserId}
+          />
           <div className="h-10 w-full flex justify-center">
             <div className="w-1 h-full bg-emerald-800" />
           </div>
@@ -67,7 +72,7 @@ export default function PostTree() {
         <div className="h-2" />
       )}
       <div className="mx-2">
-        <PostDetailItem post={post} />
+        <PostDetailItem post={post} loggedInUserId={loggedInUserId} />
       </div>
       {replyPosts.length > 0 && (
         <>
@@ -78,7 +83,11 @@ export default function PostTree() {
       {replyPosts.map((reply) => {
         return (
           <div key={reply.id} className="m-2 mt-3">
-            <PostItem post={reply} onClick={handleClickPostItem} />
+            <PostItem
+              post={reply}
+              onClick={handleClickPostItem}
+              loggedInUserId={loggedInUserId}
+            />
           </div>
         );
       })}

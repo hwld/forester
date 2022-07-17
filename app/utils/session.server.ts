@@ -1,6 +1,7 @@
 import { createCookieSessionStorage, redirect } from "@remix-run/node";
 import bcrypt from "bcryptjs";
 import type { AuthFormData } from "~/formData/authFormData";
+import { authentication, findUser } from "~/models/user";
 import { db } from "./db.server";
 
 const sessionSecret = process.env.SESSION_SECRET;
@@ -46,15 +47,7 @@ export async function getUser(request: Request) {
     return undefined;
   }
 
-  const user = await db.user.findUnique({
-    where: { id: userId },
-    select: {
-      id: true,
-      username: true,
-      following: { select: { id: true } },
-      _count: { select: { followedBy: true, following: true } },
-    },
-  });
+  const user = await findUser({ where: { id: userId } });
 
   if (!user) {
     throw await logout(request);
@@ -73,19 +66,13 @@ export async function requireUser(request: Request) {
 }
 
 export async function login({ username, password }: AuthFormData) {
-  const user = await db.user.findUnique({ where: { username } });
-  if (!user) {
+  const userId = await authentication(username, password);
+  if (!userId) {
     return null;
   }
+  const sessionCookie = await createUserSession(userId);
 
-  const isCorrectPassword = await bcrypt.compare(password, user.passwordHash);
-  if (!isCorrectPassword) {
-    return null;
-  }
-
-  const sessionCookie = await createUserSession(user.id);
-
-  return { user: { id: user.id, username }, sessionCookie };
+  return { user: { id: userId, username }, sessionCookie };
 }
 
 export async function logout(request: Request) {

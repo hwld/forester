@@ -7,10 +7,16 @@ import { PostMenuButton } from "./PostMenu/PostMenuButton";
 
 type Props = {
   post: Post;
+  loggedInUserId?: string;
   onClick?: (id: string) => void;
 } & Omit<ComponentProps<"li">, "onClick">;
 
-export const PostItem: React.VFC<Props> = ({ post, onClick, ...props }) => {
+export const PostItem: React.VFC<Props> = ({
+  post,
+  loggedInUserId,
+  onClick,
+  ...props
+}) => {
   const handleClick = () => {
     onClick?.(post.id);
   };
@@ -35,7 +41,7 @@ export const PostItem: React.VFC<Props> = ({ post, onClick, ...props }) => {
             </p>
           </div>
 
-          <PostMenuButton post={post} />
+          <PostMenuButton post={post} loggedInUserId={loggedInUserId} />
         </div>
 
         <div>

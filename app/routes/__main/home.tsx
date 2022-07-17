@@ -10,13 +10,7 @@ import { requireUser } from "~/utils/session.server";
 
 type LoaderData = {
   posts: Post[];
-};
-
-export type User = {
-  id: string;
-  username: string;
-  followedBy: number;
-  following: number;
+  loggedInUserId: string;
 };
 
 export const loader: LoaderFunction = async ({ request }) => {
@@ -26,14 +20,13 @@ export const loader: LoaderFunction = async ({ request }) => {
   const posts = await findPosts({
     where: { userId: id },
     orderBy: { createdAt: "desc" },
-    loggedInUserId: id,
   });
 
-  return json<LoaderData>({ posts });
+  return json<LoaderData>({ posts, loggedInUserId: loggedInUser.id });
 };
 
 export default function Home() {
-  const { posts } = useLoaderData<LoaderData>();
+  const { posts, loggedInUserId } = useLoaderData<LoaderData>();
   const navigator = useNavigate();
 
   const handleClickPostItem = (postId: string) => {
@@ -50,7 +43,11 @@ export default function Home() {
         {posts.map((post) => {
           return (
             <div key={post.id} className="m-2">
-              <PostItem onClick={handleClickPostItem} post={post} />
+              <PostItem
+                onClick={handleClickPostItem}
+                post={post}
+                loggedInUserId={loggedInUserId}
+              />
             </div>
           );
         })}

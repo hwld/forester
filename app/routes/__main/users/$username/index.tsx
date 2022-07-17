@@ -9,67 +9,36 @@ import { PostItem } from "~/component/PostItem/PostItem";
 import { UnfollowButton } from "~/component/UnfollowButton";
 import type { Post } from "~/models/post";
 import { findPosts } from "~/models/post";
-import { db } from "~/utils/db.server";
+import type { User } from "~/models/user";
+import { findUser } from "~/models/user";
 import { getUser } from "~/utils/session.server";
-import type { User } from "../../home";
 
 type LoaderData = {
   posts: Post[];
   user: User;
   loggedInUser?: User;
-  isFollowing: boolean;
 };
 
 export const loader: LoaderFunction = async ({ request, params }) => {
   const username = params.username;
-  const rawLoggedInUser = await getUser(request);
+  const loggedInUser = await getUser(request);
 
-  const rawUser = await db.user.findUnique({
-    where: { username },
-    select: {
-      id: true,
-      username: true,
-      followedBy: { select: { id: true } },
-      _count: { select: { followedBy: true, following: true } },
-    },
-  });
+  const user = await findUser({ where: { username } });
 
-  if (!rawUser) {
+  if (!user) {
     throw new Error("user not found");
   }
-
-  const user: User = {
-    id: rawUser.id,
-    username: rawUser.username,
-    followedBy: rawUser._count.followedBy,
-    following: rawUser._count.following,
-  };
-
-  const loggedInUser: User | undefined = rawLoggedInUser
-    ? {
-        id: rawLoggedInUser.id,
-        username: rawLoggedInUser.username,
-        followedBy: rawLoggedInUser._count.followedBy,
-        following: rawLoggedInUser._count.following,
-      }
-    : undefined;
-
-  const isFollowing = rawUser.followedBy.some((user) => {
-    return user.id === rawLoggedInUser?.id;
-  });
 
   const posts = await findPosts({
     where: { userId: user.id },
     orderBy: { createdAt: "desc" },
-    loggedInUserId: loggedInUser?.id,
   });
 
-  return json<LoaderData>({ posts, user, loggedInUser, isFollowing });
+  return json<LoaderData>({ posts, user, loggedInUser });
 };
 
 export default function UserHome() {
-  const { posts, user, loggedInUser, isFollowing } =
-    useLoaderData<LoaderData>();
+  const { posts, user, loggedInUser } = useLoaderData<LoaderData>();
   const navigator = useNavigate();
 
   const handleClickPostItem = (postId: string) => {
@@ -91,7 +60,7 @@ export default function UserHome() {
               <button className="px-4 pb-[2px] h-9 bg-emerald-500 hover:bg-emerald-600 rounded-3xl font-bold flex items-center">
                 プロフィールを編集
               </button>
-            ) : isFollowing ? (
+            ) : user.followedByTheLoggedInUser ? (
               <UnfollowButton userId={user.id} />
             ) : (
               <FollowButton userId={user.id} />
@@ -106,13 +75,13 @@ export default function UserHome() {
               to="followings"
               className="hover:underline underline-offset-2"
             >
-              <span>{user.following}</span>
+              <span>{user.followingsCount}</span>
               {/* スペース1つだとlinterが中括弧なしに変換してしまうので、わかりやすくするために2つ入れる */}
               {"  "}
               <span className="text-gray-300">フォロー中</span>
             </Link>
             <Link to="followers" className="hover:underline underline-offset-2">
-              <span>{user.followedBy}</span>
+              <span>{user.followersCount}</span>
               {"  "}
               <span className="text-gray-300">フォロワー</span>
             </Link>
@@ -122,7 +91,11 @@ export default function UserHome() {
       {posts.map((post) => {
         return (
           <div key={post.id} className="m-2">
-            <PostItem onClick={handleClickPostItem} post={post} />
+            <PostItem
+              onClick={handleClickPostItem}
+              post={post}
+              loggedInUserId={loggedInUser?.id}
+            />
           </div>
         );
       })}

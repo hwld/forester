@@ -10,10 +10,10 @@ export type Post = {
   id: string;
   content: string;
   username: string;
+  userId: string;
   createdAt: string;
   replyPostCount: number;
   replySourceUsername: string | undefined;
-  isOwner: boolean;
 };
 
 const postArgsBase = Prisma.validator<Prisma.PostArgs>()({
@@ -39,63 +39,44 @@ export const postArgs = Prisma.validator<Prisma.PostArgs>()({
   },
 });
 
-const convertToPost = (
-  {
-    id,
-    content,
-    createdAt,
-    _count,
-    user,
-    replySourcePost,
-  }: Prisma.PostGetPayload<typeof postArgsBase>,
-  loggedInUserId: string | undefined
-): Post => {
-  const post: Post = {
+const convertToPost = ({
+  id,
+  content,
+  createdAt,
+  _count,
+  user,
+  replySourcePost,
+}: Prisma.PostGetPayload<typeof postArgsBase>): Post => {
+  return {
     id,
     content,
     createdAt: createdAt.toUTCString(),
     replyPostCount: _count.replyPosts,
     username: user.username,
+    userId: user.id,
     replySourceUsername: replySourcePost?.user.username,
-    isOwner: user.id === loggedInUserId,
   };
-
-  return post;
 };
 
-type FindPostParams = (
-  | { type: "unique"; where?: Prisma.PostFindUniqueArgs["where"] }
-  | { type?: "first"; where?: Prisma.PostFindFirstArgs["where"] }
-) & {
-  loggedInUserId?: string;
-};
+type FindPostParams = { where: Prisma.PostFindFirstArgs["where"] };
 type FindPostResult =
   | { post: Post; replySourcePost: Post | undefined }
   | undefined;
-export const findPost = async (
-  params: FindPostParams
-): Promise<FindPostResult> => {
-  let rawPost;
-  if (params.type === "unique") {
-    rawPost = await db.post.findUnique({
-      ...postArgs,
-      where: params.where ?? {},
-    });
-  } else {
-    rawPost = await db.post.findFirst({
-      ...postArgs,
-      where: params.where ?? {},
-    });
-  }
+export const findPost = async ({
+  where,
+}: FindPostParams): Promise<FindPostResult> => {
+  const rawPost = await db.post.findFirst({
+    ...postArgs,
+    where,
+  });
 
   if (!rawPost) {
     return undefined;
   }
 
-  const loggedInUserId = params.loggedInUserId;
-  const post = convertToPost(rawPost, loggedInUserId);
+  const post = convertToPost(rawPost);
   const replySourcePost: Post | undefined = rawPost.replySourcePost
-    ? convertToPost(rawPost.replySourcePost, loggedInUserId)
+    ? convertToPost(rawPost.replySourcePost)
     : undefined;
 
   return { post, replySourcePost };
@@ -104,21 +85,15 @@ export const findPost = async (
 type FindPostsParams = {
   where?: Prisma.PostFindManyArgs["where"];
   orderBy?: Prisma.PostFindManyArgs["orderBy"];
-  loggedInUserId?: string;
 };
-export const findPosts = async ({
-  where = {},
-  orderBy = {},
-  loggedInUserId,
-}: FindPostsParams): Promise<Post[]> => {
+export const findPosts = async (args: FindPostsParams): Promise<Post[]> => {
   const rawPosts = await db.post.findMany({
     ...postArgs,
-    where,
-    orderBy,
+    ...args,
   });
 
   const posts: Post[] = rawPosts.map((post) => {
-    return convertToPost(post, loggedInUserId);
+    return convertToPost(post);
   });
 
   return posts;

@@ -4,7 +4,7 @@ import { Link, useActionData } from "@remix-run/react";
 import { SignupForm } from "~/component/AuthForm/SIgnupForm";
 import type { AuthFormValidationError } from "~/formData/authFormData";
 import { validateAuthForm } from "~/formData/authFormData";
-import { db } from "~/utils/db.server";
+import { findUser } from "~/models/user";
 import { registerUser } from "~/utils/session.server";
 
 type SignupErrorResponse = {
@@ -33,7 +33,7 @@ export const action: ActionFunction = async ({ request }) => {
     }
 
     const { username, password } = validResult.data;
-    const userExists = await db.user.findUnique({ where: { username } });
+    const userExists = await findUser({ where: { username } });
     if (userExists) {
       return json<SignupErrorResponse>({
         type: "error",

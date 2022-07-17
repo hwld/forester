@@ -1,5 +1,6 @@
 import type { ActionFunction, LoaderFunction } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
+import { findUser } from "~/models/user";
 import { db } from "~/utils/db.server";
 import { requireUser } from "~/utils/session.server";
 
@@ -11,7 +12,7 @@ export const action: ActionFunction = async ({ request, params }) => {
   const userId = params.id;
   const loggedInUser = await requireUser(request);
 
-  const user = await db.user.findUnique({ where: { id: userId } });
+  const user = await findUser({ where: { id: userId } });
   if (!user || userId === loggedInUser.id) {
     return json({}, { status: 400 });
   }

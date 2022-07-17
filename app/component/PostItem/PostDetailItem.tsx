@@ -4,9 +4,9 @@ import { ReplyFormDialogButton } from "../OpenReplyFormDialogButton";
 import { UserIcon } from "../UserIcon";
 import { PostMenuButton } from "./PostMenu/PostMenuButton";
 
-type Props = { post: Post };
+type Props = { post: Post; loggedInUserId?: string };
 
-export const PostDetailItem: React.VFC<Props> = ({ post }) => {
+export const PostDetailItem: React.VFC<Props> = ({ post, loggedInUserId }) => {
   return (
     <li className="p-3 bg-emerald-100 break-words flex flex-col rounded transition">
       <div className="flex justify-between">
@@ -15,7 +15,7 @@ export const PostDetailItem: React.VFC<Props> = ({ post }) => {
           <p className="font-bold">{post.username}</p>
         </div>
 
-        <PostMenuButton post={post} />
+        <PostMenuButton post={post} loggedInUserId={loggedInUserId} />
       </div>
       <div className="ml-2 flex flex-col flex-grow space-y-3">
         <div className="mt-2">
