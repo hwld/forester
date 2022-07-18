@@ -57,9 +57,12 @@ export default function UserHome() {
               <HiOutlineDotsHorizontal className="h-full w-3/5" />
             </button>
             {user.id === loggedInUser?.id ? (
-              <button className="px-4 pb-[2px] h-9 bg-emerald-500 hover:bg-emerald-600 rounded-3xl font-bold flex items-center">
+              <Link
+                to={"/settings/profile"}
+                className="px-4 pb-[2px] h-9 bg-emerald-500 hover:bg-emerald-600 rounded-3xl font-bold flex items-center"
+              >
                 プロフィールを編集
-              </button>
+              </Link>
             ) : user.followedByTheLoggedInUser ? (
               <UnfollowButton userId={user.id} />
             ) : (
