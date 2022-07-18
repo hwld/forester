@@ -1,6 +1,6 @@
 import { FollowButton } from "./FollowButton";
 import { UnfollowButton } from "./UnfollowButton";
-import { UserIcon } from "./UserIcon";
+import { UserIconLink } from "./UserIconLink";
 
 type Props = {
   username: string;
@@ -17,7 +17,7 @@ export const UserItem: React.VFC<Props> = ({
   return (
     <div className="flex bg-emerald-300 px-3 py-2 rounded space-x-2">
       <div>
-        <UserIcon username={username} />
+        <UserIconLink username={username} />
       </div>
       <div className="w-full">
         <div className="flex justify-between">

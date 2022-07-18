@@ -2,7 +2,7 @@ import type { ComponentProps } from "react";
 import type { Post } from "~/models/post";
 import { formatDate } from "~/utils/date";
 import { ReplyFormDialogButton } from "../OpenReplyFormDialogButton";
-import { UserIcon } from "../UserIcon";
+import { UserIconLink } from "../UserIconLink";
 import { PostMenuButton } from "./PostMenu/PostMenuButton";
 
 type Props = {
@@ -30,7 +30,7 @@ export const PostItem: React.VFC<Props> = ({
       {...props}
     >
       <div>
-        <UserIcon username={post.username} />
+        <UserIconLink username={post.username} />
       </div>
       <div className="ml-2 flex flex-col flex-grow space-y-2">
         <div className="flex justify-between">

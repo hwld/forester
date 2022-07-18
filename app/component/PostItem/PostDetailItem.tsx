@@ -1,7 +1,7 @@
 import type { Post } from "~/models/post";
 import { formatDateDetail } from "~/utils/date";
 import { ReplyFormDialogButton } from "../OpenReplyFormDialogButton";
-import { UserIcon } from "../UserIcon";
+import { UserIconLink } from "../UserIconLink";
 import { PostMenuButton } from "./PostMenu/PostMenuButton";
 
 type Props = { post: Post; loggedInUserId?: string };
@@ -11,7 +11,7 @@ export const PostDetailItem: React.VFC<Props> = ({ post, loggedInUserId }) => {
     <li className="p-3 bg-emerald-100 break-words flex flex-col rounded transition">
       <div className="flex justify-between">
         <div className="flex space-x-3 items-center">
-          <UserIcon username={post.username} />
+          <UserIconLink username={post.username} />
           <p className="font-bold">{post.username}</p>
         </div>
 

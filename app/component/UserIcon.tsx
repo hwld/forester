@@ -1,20 +1,25 @@
-import { useNavigate } from "@remix-run/react";
-import type { SyntheticEvent } from "react";
+import type { ComponentProps } from "react";
+import { useMemo } from "react";
 
-type Props = { username: string };
+type Props = { size?: "md" | "lg" } & ComponentProps<"div">;
 
-export const UserIcon: React.VFC<Props> = ({ username }) => {
-  const navigator = useNavigate();
-
-  const handleClick = (e: SyntheticEvent) => {
-    e.stopPropagation();
-    navigator(`/users/${username}`);
-  };
+export const UserIcon: React.VFC<Props> = ({ size = "md", ...props }) => {
+  const interactiveClass = "hover:bg-emerald-600 transition ";
+  const sizeClass = useMemo(() => {
+    if (size === "md") {
+      return "w-12 h-12";
+    } else if (size === "lg") {
+      return "w-24 h-24";
+    }
+    return "w-12 h-12";
+  }, [size]);
 
   return (
     <div
-      className="w-12 h-12 rounded-full bg-emerald-500 hover:bg-emerald-600 transition"
-      onClick={handleClick}
+      className={`rounded-full bg-emerald-500 ${sizeClass} ${
+        props.onClick ? interactiveClass : ""
+      }`}
+      {...props}
     />
   );
 };
