@@ -1,6 +1,7 @@
-import type { ActionFunction, LoaderFunction } from "@remix-run/node";
+import type { ActionArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { useFetcher } from "@remix-run/react";
+import type { UseDataFunctionReturn } from "@remix-run/react/dist/components";
 import type { CreatePostFormValidationError } from "~/formData/createPostFormData";
 import { validateCreatePostForm } from "~/formData/createPostFormData";
 import { findPost } from "~/models/post";
@@ -15,23 +16,18 @@ type PostSuccessResponse = {
   type: "ok";
   data: { postId: string; content: string };
 };
-type PostResponse = PostSuccessResponse | PostErrorResponse;
 
 export const usePostFetcher = () => {
-  // loaderもactionも呼ばれる可能性があるのでどちらの型も含める。
-  // 現状、loaderやactionの戻り値はResponse型で、返ってくるデータの型が
-  // インターフェースに現れないので手動でつけている。
-  // 将来的に https://github.com/remix-run/remix/pull/3276 がマージされればtypeofで書けるようになると思う
-  type LoaderReturnType = undefined;
-  type ActionReturnType = PostResponse;
+  type LoaderReturnType = UseDataFunctionReturn<typeof loader>;
+  type ActionReturnType = UseDataFunctionReturn<typeof action>;
   return useFetcher<LoaderReturnType | ActionReturnType>();
 };
 
-export const loader: LoaderFunction = async () => {
+export const loader = async () => {
   return redirect("/");
 };
 
-export const action: ActionFunction = async ({ request }) => {
+export const action = async ({ request }: ActionArgs) => {
   const user = await requireUser(request);
 
   if (request.method === "POST") {
@@ -65,5 +61,5 @@ export const action: ActionFunction = async ({ request }) => {
     });
   }
 
-  return null;
+  return json(undefined, { status: 405 });
 };

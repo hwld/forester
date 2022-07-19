@@ -1,4 +1,4 @@
-import type { ActionFunction } from "@remix-run/node";
+import type { ActionArgs } from "@remix-run/node";
 import {
   json,
   NodeOnDiskFile,
@@ -11,7 +11,7 @@ import { MainHeader } from "~/component/MainHeader";
 import { UserIcon } from "~/component/UserIcon";
 import { requireUser } from "~/utils/session.server";
 
-export const action: ActionFunction = async ({ request }) => {
+export const action = async ({ request }: ActionArgs) => {
   const user = await requireUser(request);
 
   const uploadHandler = unstable_createFileUploadHandler({

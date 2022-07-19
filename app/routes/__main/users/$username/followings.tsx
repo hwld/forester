@@ -1,4 +1,4 @@
-import type { LoaderFunction } from "@remix-run/node";
+import type { LoaderArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { MainHeader } from "~/component/MainHeader";
@@ -12,7 +12,7 @@ type LoaderData = {
   loggedInUserId?: string;
 };
 
-export const loader: LoaderFunction = async ({ request, params }) => {
+export const loader = async ({ request, params }: LoaderArgs) => {
   const username = params.username;
   const loggedInUser = await getUser(request);
 
@@ -36,7 +36,7 @@ export default function Followings() {
   const {
     userAndFollowing: { user, followings },
     loggedInUserId,
-  } = useLoaderData<LoaderData>();
+  } = useLoaderData<typeof loader>();
   return (
     <>
       <MainHeader title={user.username ?? ""} canBack />

@@ -1,4 +1,4 @@
-import type { LoaderFunction } from "@remix-run/node";
+import type { LoaderArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useLoaderData, useNavigate } from "@remix-run/react";
 import { MdError } from "react-icons/md";
@@ -16,7 +16,7 @@ type PostTreeData = {
   loggedInUserId?: string;
 };
 
-export const loader: LoaderFunction = async ({ request, params }) => {
+export const loader = async ({ request, params }: LoaderArgs) => {
   const loggedInUser = await getUser(request);
   const postId = params.id;
 
@@ -46,7 +46,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 
 export default function PostTree() {
   const { post, replySourcePost, replyPosts, loggedInUserId } =
-    useLoaderData<PostTreeData>();
+    useLoaderData<typeof loader>();
   const navigator = useNavigate();
 
   const handleClickPostItem = (postId: string) => {

@@ -1,4 +1,4 @@
-import type { LoaderFunction } from "@remix-run/node";
+import type { LoaderArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Link, Outlet, useLoaderData } from "@remix-run/react";
 import { IconButton } from "~/component/IconButton";
@@ -8,15 +8,14 @@ import { requireUser } from "~/utils/session.server";
 type LoaderData = {
   username: string;
 };
-
-export const loader: LoaderFunction = async ({ request }) => {
+export const loader = async ({ request }: LoaderArgs) => {
   const user = await requireUser(request);
 
   return json<LoaderData>({ username: user.username });
 };
 
 export default function Main() {
-  const { username } = useLoaderData<LoaderData>();
+  const { username } = useLoaderData<typeof loader>();
 
   const menu = [
     ["🏡", "ホーム", "/home"],

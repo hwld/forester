@@ -1,14 +1,14 @@
-import type { ActionFunction, LoaderFunction } from "@remix-run/node";
+import type { ActionArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { findUser } from "~/models/user";
 import { db } from "~/utils/db.server";
 import { requireUser } from "~/utils/session.server";
 
-export const loader: LoaderFunction = () => {
+export const loader = () => {
   return redirect("/");
 };
 
-export const action: ActionFunction = async ({ request, params }) => {
+export const action = async ({ request, params }: ActionArgs) => {
   const userId = params.id;
   const loggedInUser = await requireUser(request);
 

@@ -1,4 +1,4 @@
-import type { ActionFunction, LoaderFunction } from "@remix-run/node";
+import type { ActionArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { Link, useActionData } from "@remix-run/react";
 import { SignupForm } from "~/component/AuthForm/SIgnupForm";
@@ -18,11 +18,11 @@ export const useSignupActionData = () => {
   return useActionData<SignupResponse>();
 };
 
-export const loader: LoaderFunction = async () => {
-  return null;
+export const loader = async () => {
+  return json({});
 };
 
-export const action: ActionFunction = async ({ request }) => {
+export const action = async ({ request }: ActionArgs) => {
   if (request.method === "POST") {
     const validResult = validateAuthForm(await request.formData());
     if (validResult.type === "error") {

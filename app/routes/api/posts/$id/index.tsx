@@ -1,14 +1,14 @@
-import type { ActionFunction, LoaderFunction } from "@remix-run/node";
+import type { ActionArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { findPost } from "~/models/post";
 import { db } from "~/utils/db.server";
 import { requireUser } from "~/utils/session.server";
 
-export const loader: LoaderFunction = async ({ request }) => {
+export const loader = async () => {
   return redirect("/");
 };
 
-export const action: ActionFunction = async ({ request, params }) => {
+export const action = async ({ request, params }: ActionArgs) => {
   if (request.method === "DELETE") {
     const user = await requireUser(request);
 

@@ -1,4 +1,4 @@
-import type { LoaderFunction } from "@remix-run/node";
+import type { LoaderArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useLoaderData, useNavigate } from "@remix-run/react";
 import { MainHeader } from "~/component/MainHeader";
@@ -12,8 +12,7 @@ type LoaderData = {
   posts: Post[];
   loggedInUserId: string;
 };
-
-export const loader: LoaderFunction = async ({ request }) => {
+export const loader = async ({ request }: LoaderArgs) => {
   const loggedInUser = await requireUser(request);
 
   const id = loggedInUser.id;
@@ -26,7 +25,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 };
 
 export default function Home() {
-  const { posts, loggedInUserId } = useLoaderData<LoaderData>();
+  const { posts, loggedInUserId } = useLoaderData<typeof loader>();
   const navigator = useNavigate();
 
   const handleClickPostItem = (postId: string) => {

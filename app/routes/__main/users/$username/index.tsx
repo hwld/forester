@@ -1,4 +1,4 @@
-import type { LoaderFunction } from "@remix-run/node";
+import type { LoaderArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Link, useLoaderData, useNavigate } from "@remix-run/react";
 import { HiOutlineDotsHorizontal } from "react-icons/hi";
@@ -19,7 +19,7 @@ type LoaderData = {
   loggedInUser?: User;
 };
 
-export const loader: LoaderFunction = async ({ request, params }) => {
+export const loader = async ({ request, params }: LoaderArgs) => {
   const username = params.username;
   const loggedInUser = await getUser(request);
 
@@ -38,7 +38,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 };
 
 export default function UserHome() {
-  const { posts, user, loggedInUser } = useLoaderData<LoaderData>();
+  const { posts, user, loggedInUser } = useLoaderData<typeof loader>();
   const navigator = useNavigate();
 
   const handleClickPostItem = (postId: string) => {
