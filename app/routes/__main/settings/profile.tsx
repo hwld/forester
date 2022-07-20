@@ -6,6 +6,7 @@ import {
   unstable_parseMultipartFormData,
 } from "@remix-run/node";
 import { useFetcher } from "@remix-run/react";
+import path from "path";
 import { useRef } from "react";
 import { MainHeader } from "~/component/MainHeader";
 import { UserIcon } from "~/component/UserIcon";
@@ -15,8 +16,8 @@ export const action = async ({ request }: ActionArgs) => {
   const user = await requireUser(request);
 
   const uploadHandler = unstable_createFileUploadHandler({
-    directory: "./private/icons",
-    file: () => `${user.id}`,
+    directory: "./public/images/user-icons",
+    file: ({ filename }) => `${user.id}${path.extname(filename)}`,
     avoidFileConflicts: false,
   });
   const formData = await unstable_parseMultipartFormData(

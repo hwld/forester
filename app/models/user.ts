@@ -5,6 +5,7 @@ import { db } from "~/utils/db.server";
 export type User = {
   id: string;
   username: string;
+  iconUrl: string;
   followersCount: number;
   followingsCount: number;
   followedByTheLoggedInUser?: boolean;
@@ -38,6 +39,7 @@ export const userArgs = Prisma.validator<Prisma.UserArgs>()({
   select: {
     id: true,
     username: true,
+    iconUrl: true,
     _count: { select: { followedBy: true, following: true } },
   },
 });
@@ -53,6 +55,7 @@ const convertToUser = ({
   return {
     username: rawUser.username,
     id: rawUser.id,
+    iconUrl: rawUser.iconUrl,
     followedByTheLoggedInUser: loggedInUserFollowingIds.includes(rawUser.id),
     followersCount: rawUser._count.followedBy,
     followingsCount: rawUser._count.following,

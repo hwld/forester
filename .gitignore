@@ -3,9 +3,8 @@ node_modules
 /.cache
 /build
 /public/build
+/public/images/user-icons
 .env
 
 /prisma/dev.db
 /app/tailwind.css
-
-/private
