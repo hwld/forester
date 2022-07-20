@@ -46,6 +46,7 @@ export default function Followings() {
           <div key={following.username} className="m-3">
             <UserItem
               username={following.username}
+              iconUrl={following.iconUrl}
               id={following.id}
               isOwner={following.id === loggedInUserId}
               isFollowing={following.followedByTheLoggedInUser ?? false}

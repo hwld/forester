@@ -4,20 +4,22 @@ import { UserIconLink } from "./UserIconLink";
 
 type Props = {
   username: string;
+  iconUrl: string;
   id: string;
   isOwner: boolean;
   isFollowing: boolean;
 };
 export const UserItem: React.VFC<Props> = ({
   username,
+  iconUrl,
   id,
   isFollowing,
   isOwner,
 }) => {
   return (
     <div className="flex bg-emerald-300 px-3 py-2 rounded space-x-2">
-      <div>
-        <UserIconLink username={username} />
+      <div className="shrink-0">
+        <UserIconLink username={username} src={iconUrl} />
       </div>
       <div className="w-full">
         <div className="flex justify-between">

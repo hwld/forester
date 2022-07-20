@@ -1,22 +1,31 @@
-import type { ActionArgs } from "@remix-run/node";
+import type { ActionArgs, LoaderArgs } from "@remix-run/node";
 import {
   json,
   NodeOnDiskFile,
   unstable_createFileUploadHandler,
   unstable_parseMultipartFormData,
 } from "@remix-run/node";
-import { useFetcher } from "@remix-run/react";
+import { useFetcher, useLoaderData } from "@remix-run/react";
 import path from "path";
 import { useRef } from "react";
 import { MainHeader } from "~/component/MainHeader";
 import { UserIcon } from "~/component/UserIcon";
+import { db } from "~/utils/db.server";
 import { requireUser } from "~/utils/session.server";
+
+export const loader = async ({ request }: LoaderArgs) => {
+  const user = await requireUser(request);
+
+  return json({ user });
+};
 
 export const action = async ({ request }: ActionArgs) => {
   const user = await requireUser(request);
 
+  const userIconsDirectory = "images/users-icons";
+  const uploadDirectory = `./public/${userIconsDirectory}`;
   const uploadHandler = unstable_createFileUploadHandler({
-    directory: "./public/images/user-icons",
+    directory: `${uploadDirectory}`,
     file: ({ filename }) => `${user.id}${path.extname(filename)}`,
     avoidFileConflicts: false,
   });
@@ -30,10 +39,17 @@ export const action = async ({ request }: ActionArgs) => {
     return json({});
   }
 
+  // ユーザーのiconUrlに保存した画像のurlをセットする
+  await db.user.update({
+    where: { id: user.id },
+    data: { iconUrl: `/${userIconsDirectory}/${icon.name}` },
+  });
+
   return json({});
 };
 
 export default function ProfileSetting() {
+  const { user } = useLoaderData<typeof loader>();
   const profileSettingFetcher = useFetcher();
   const fileRef = useRef<HTMLInputElement | null>(null);
 
@@ -60,7 +76,7 @@ export default function ProfileSetting() {
               onClick={handleClick}
             >
               <input ref={fileRef} type={"file"} name="icon" hidden />
-              <UserIcon size="lg" />
+              <UserIcon size="lg" src={user.iconUrl} />
               <div className="text-sm text-gray-800 text-center mt-1">
                 変更する
               </div>

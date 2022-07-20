@@ -30,7 +30,7 @@ export const PostItem: React.VFC<Props> = ({
       {...props}
     >
       <div>
-        <UserIconLink username={post.username} />
+        <UserIconLink username={post.username} src={post.userIconUrl} />
       </div>
       <div className="ml-2 flex flex-col flex-grow space-y-2">
         <div className="flex justify-between">

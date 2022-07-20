@@ -11,7 +11,7 @@ export const PostDetailItem: React.VFC<Props> = ({ post, loggedInUserId }) => {
     <li className="p-3 bg-emerald-100 break-words flex flex-col rounded transition">
       <div className="flex justify-between">
         <div className="flex space-x-3 items-center">
-          <UserIconLink username={post.username} />
+          <UserIconLink username={post.username} src={post.userIconUrl} />
           <p className="font-bold">{post.username}</p>
         </div>
 

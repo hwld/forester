@@ -7,6 +7,7 @@ import { FollowButton } from "~/component/FollowButton";
 import { MainHeader } from "~/component/MainHeader";
 import { PostItem } from "~/component/PostItem/PostItem";
 import { UnfollowButton } from "~/component/UnfollowButton";
+import { UserIcon } from "~/component/UserIcon";
 import type { Post } from "~/models/post";
 import { findPosts } from "~/models/post";
 import type { User } from "~/models/user";
@@ -51,7 +52,9 @@ export default function UserHome() {
       <div className="h-32 bg-emerald-700" />
       <div className="bg-emerald-800 flex flex-col px-3 pb-3 space-y-2 text-white">
         <div className="h-12 w-full flex justify-between items-center">
-          <div className="rounded-full bg-emerald-500 w-24 h-24 -mt-12" />
+          <div className="-mt-12">
+            <UserIcon size="lg" src={user.iconUrl} />
+          </div>
           <div className="flex space-x-2">
             <button className="border border-emerald-500 hover:bg-white/20 transition rounded-full w-9 h-9 flex justify-center items-center">
               <HiOutlineDotsHorizontal className="h-full w-3/5" />

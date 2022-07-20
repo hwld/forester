@@ -11,6 +11,7 @@ export type Post = {
   content: string;
   username: string;
   userId: string;
+  userIconUrl: string;
   createdAt: string;
   replyPostCount: number;
   replySourceUsername: string | undefined;
@@ -21,7 +22,7 @@ const postArgsBase = Prisma.validator<Prisma.PostArgs>()({
     id: true,
     content: true,
     createdAt: true,
-    user: { select: { username: true, id: true } },
+    user: { select: { username: true, id: true, iconUrl: true } },
     _count: { select: { replyPosts: true } },
     replySourcePost: {
       select: { user: { select: { username: true, id: true } } },
@@ -33,7 +34,7 @@ export const postArgs = Prisma.validator<Prisma.PostArgs>()({
     id: true,
     content: true,
     createdAt: true,
-    user: { select: { username: true, id: true } },
+    user: { select: { username: true, id: true, iconUrl: true } },
     _count: { select: { replyPosts: true } },
     replySourcePost: postArgsBase,
   },
@@ -54,6 +55,7 @@ const convertToPost = ({
     replyPostCount: _count.replyPosts,
     username: user.username,
     userId: user.id,
+    userIconUrl: user.iconUrl,
     replySourceUsername: replySourcePost?.user.username,
   };
 };

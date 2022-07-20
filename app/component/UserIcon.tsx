@@ -1,7 +1,7 @@
 import type { ComponentProps } from "react";
 import { useMemo } from "react";
 
-type Props = { size?: "md" | "lg" } & ComponentProps<"div">;
+type Props = { size?: "md" | "lg" } & ComponentProps<"img">;
 
 export const UserIcon: React.VFC<Props> = ({ size = "md", ...props }) => {
   const interactiveClass = "hover:bg-emerald-600 transition ";
@@ -15,8 +15,9 @@ export const UserIcon: React.VFC<Props> = ({ size = "md", ...props }) => {
   }, [size]);
 
   return (
-    <div
-      className={`rounded-full bg-emerald-500 ${sizeClass} ${
+    <img
+      alt="user"
+      className={`rounded-full bg-slate-400 ${sizeClass} ${
         props.onClick ? interactiveClass : ""
       }`}
       {...props}
