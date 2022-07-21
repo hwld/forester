@@ -7,13 +7,13 @@ import {
 } from "@remix-run/node";
 import { useFetcher, useLoaderData } from "@remix-run/react";
 import path from "path";
-import { useRef } from "react";
 import { MainHeader } from "~/component/MainHeader";
-import { UserIcon } from "~/component/UserIcon";
+import { UserIconInput } from "~/component/UserIconInput";
 import { db } from "~/utils/db.server";
 import { requireUser } from "~/utils/session.server";
 
 export const loader = async ({ request }: LoaderArgs) => {
+  console.log("loader");
   const user = await requireUser(request);
 
   return json({ user });
@@ -51,15 +51,6 @@ export const action = async ({ request }: ActionArgs) => {
 export default function ProfileSetting() {
   const { user } = useLoaderData<typeof loader>();
   const profileSettingFetcher = useFetcher();
-  const fileRef = useRef<HTMLInputElement | null>(null);
-
-  const handleClick = () => {
-    if (!fileRef.current) {
-      return;
-    }
-
-    fileRef.current.click();
-  };
 
   return (
     <>
@@ -71,16 +62,7 @@ export default function ProfileSetting() {
           className="flex flex-col bg-emerald-200 h-full m-2 p-3 rounded"
         >
           <div className="flex">
-            <div
-              className="group cursor-pointer hover:bg-black/5 transition rounded-lg p-3"
-              onClick={handleClick}
-            >
-              <input ref={fileRef} type={"file"} name="icon" hidden />
-              <UserIcon size="lg" src={user.iconUrl} />
-              <div className="text-sm text-gray-800 text-center mt-1">
-                変更する
-              </div>
-            </div>
+            <UserIconInput defaultIconUrl={user.iconUrl} />
           </div>
 
           <button
