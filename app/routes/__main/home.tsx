@@ -35,7 +35,7 @@ export default function Home() {
   return (
     <>
       <MainHeader title="ホーム" />
-      <div className="bg-emerald-400">
+      <div className="bg-stone-100">
         <PostForm />
       </div>
       <ul>

@@ -40,9 +40,7 @@ export const PostForm: React.VFC<Props> = ({ onSuccess, replySourceId }) => {
       )}
       <VariableTextArea
         name="content"
-        className={`rounded-md px-3 py-2 resize-none ${
-          error?.fieldErrors?.content ? "" : ""
-        }`}
+        isError={error?.fieldErrors?.content !== undefined}
         minRows={3}
       />
       {error?.fieldErrors?.content && (

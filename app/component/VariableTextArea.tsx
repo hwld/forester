@@ -1,10 +1,15 @@
-import type { ChangeEventHandler, ComponentProps } from "react";
+import type { ChangeEventHandler } from "react";
 import { useEffect, useRef } from "react";
+import type { TextareaProps } from "./Textarea";
+import { Textarea } from "./Textarea";
 
 type Props = {
   minRows?: number;
-} & ComponentProps<"textarea">;
+} & TextareaProps;
 
+/**
+ * 改行すると高さが変わるtextarea
+ */
 export const VariableTextArea: React.VFC<Props> = ({
   minRows,
   ...textAreaProps
@@ -12,7 +17,7 @@ export const VariableTextArea: React.VFC<Props> = ({
   const ref = useRef<HTMLTextAreaElement | null>(null);
 
   const changeHeight = (element: HTMLTextAreaElement) => {
-    //scrollHeightにコンテンツが収まる最小の高さを計算させるためにheightを一旦autoにする
+    //scrollHeightでコンテンツが収まる最小の高さを計算させるためにheightを一旦autoにする
     element.style.height = "auto";
     element.style.height = element.scrollHeight + "px";
   };
@@ -23,16 +28,20 @@ export const VariableTextArea: React.VFC<Props> = ({
   };
 
   useEffect(() => {
+    // デフォルトの値が入っている場合に対応するために、
+    // レンダリング時に高さを変更する
     if (ref.current) {
       changeHeight(ref.current);
     }
   }, []);
 
   return (
-    <textarea
+    <Textarea
       ref={ref}
       onChange={handleChange}
       rows={minRows}
+      canResize={false}
+      overflowHidden={true}
       {...textAreaProps}
     />
   );
