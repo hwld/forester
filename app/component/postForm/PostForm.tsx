@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef } from "react";
 import { MdError } from "react-icons/md";
 import { usePostFetcher } from "~/routes/api/posts";
+import { Button } from "../Button";
 import { VariableTextArea } from "../VariableTextArea";
 
 type Props = { onSuccess?: () => void; replySourceId?: string };
@@ -49,12 +50,9 @@ export const PostForm: React.VFC<Props> = ({ onSuccess, replySourceId }) => {
           <p className="ml-1 text-red-600">{error?.fieldErrors.content}</p>
         </div>
       )}
-      <button
-        type="submit"
-        className="mt-3 bg-emerald-300 px-3 py-2 rounded-md self-end font-bold text-gray-800"
-      >
-        投稿する
-      </button>
+      <div className="self-end mt-3">
+        <Button type="submit">投稿する</Button>
+      </div>
     </postFetcher.Form>
   );
 };

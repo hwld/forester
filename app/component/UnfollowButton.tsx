@@ -1,4 +1,5 @@
 import { useFetcher } from "@remix-run/react";
+import { Button } from "./Button";
 
 type Props = { userId: string };
 export const UnfollowButton: React.VFC<Props> = ({ userId }) => {
@@ -9,9 +10,7 @@ export const UnfollowButton: React.VFC<Props> = ({ userId }) => {
       action={`/api/users/${userId}/unfollow`}
       method="post"
     >
-      <button className="px-4 pb-[2px] h-9 bg-emerald-500 hover:bg-emerald-600 rounded-3xl font-bold flex items-center text-white">
-        フォロー解除
-      </button>
+      <Button fullRounded>フォロー解除</Button>
     </unfollowFetcher.Form>
   );
 };

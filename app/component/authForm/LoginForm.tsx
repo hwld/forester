@@ -1,9 +1,9 @@
 import { Form, useTransition } from "@remix-run/react";
 import { useMemo } from "react";
 import { useLoginActionData } from "~/routes/__auth/login";
+import { Button } from "../Button";
 import { AuthFormHeader } from "./AuthFormHeader";
 import { AuthInput } from "./AuthInput";
-import { AuthSubmitButton } from "./AuthSubmitButton";
 
 type Props = {};
 
@@ -49,10 +49,9 @@ export const LoginForm: React.VFC<Props> = () => {
             />
           </div>
           <div className="mt-5">
-            <AuthSubmitButton
-              text={"ログイン"}
-              isSubmitting={transition.state === "submitting"}
-            />
+            <Button type="submit" fullWidth>
+              {transition.state === "submitting" ? "送信中..." : "ログイン"}
+            </Button>
           </div>
         </fieldset>
       </Form>

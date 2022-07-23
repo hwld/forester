@@ -14,10 +14,10 @@ export const MainHeader: React.VFC<Props> = ({ title, canBack = false }) => {
       {canBack && (
         <button
           onClick={handleClickReturn}
-          className="transition rounded-full flex items-center justify-center group"
+          className="rounded-full flex items-center justify-center group"
         >
           <MdOutlineArrowBack className="fill-white w-8 h-8" />
-          <div className="w-11 h-11 absolute bg-transparent rounded-full group-hover:bg-white/20"></div>
+          <div className="w-11 h-11 absolute bg-transparent rounded-full group-hover:bg-white/20 transition"></div>
         </button>
       )}
       <p className="font-bold text-xl text-white">{title}</p>

@@ -7,6 +7,7 @@ import {
 } from "@remix-run/node";
 import { useFetcher, useLoaderData } from "@remix-run/react";
 import path from "path";
+import { Button } from "~/component/Button";
 import { MainHeader } from "~/component/MainHeader";
 import { UserIconInput } from "~/component/UserIconInput";
 import { db } from "~/utils/db.server";
@@ -65,12 +66,9 @@ export default function ProfileSetting() {
             <UserIconInput defaultIconUrl={user.iconUrl} />
           </div>
 
-          <button
-            type={"submit"}
-            className="px-3 py-2 rounded-md font-bold bg-emerald-400 hover:bg-emerald-500 transition self-end text-gray-800"
-          >
-            更新する
-          </button>
+          <div className="self-end">
+            <Button type="submit">更新する</Button>
+          </div>
         </profileSettingFetcher.Form>
       </div>
     </>

@@ -1,6 +1,7 @@
 import type { LoaderArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Link, Outlet, useLoaderData } from "@remix-run/react";
+import { Button } from "~/component/Button";
 import { IconButton } from "~/component/IconButton";
 import { OpenPostFormDialogButton } from "~/component/OpenPostFormButton";
 import { requireUser } from "~/utils/session.server";
@@ -53,9 +54,9 @@ export default function Main() {
                 <div className="hidden lg:block">{username}</div>
               </div>
               <form action="/logout" method="post">
-                <button className="duration-200 bg-emerald-500 hover:bg-emerald-600 text-white text-sm rounded-md px-3 py-2 hidden lg:block">
-                  ログアウト
-                </button>
+                <div className="hidden lg:block">
+                  <Button>ログアウト</Button>
+                </div>
               </form>
             </div>
           </div>
