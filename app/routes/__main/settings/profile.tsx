@@ -91,7 +91,6 @@ export default function ProfileSetting() {
             <UserIconInput name="icon" defaultIconUrl={user.iconUrl} />
             <div className="grow mt-5 space-y-2">
               <FormControl
-                controlType="input"
                 label="ユーザー名"
                 name="username"
                 defaultValue={user.username}

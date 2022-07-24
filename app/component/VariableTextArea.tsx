@@ -3,14 +3,14 @@ import { useEffect, useRef } from "react";
 import type { TextareaProps } from "./Textarea";
 import { Textarea } from "./Textarea";
 
-type Props = {
+export type VariableTextAreaProps = {
   minRows?: number;
 } & TextareaProps;
 
 /**
  * 改行すると高さが変わるtextarea
  */
-export const VariableTextArea: React.VFC<Props> = ({
+export const VariableTextArea: React.VFC<VariableTextAreaProps> = ({
   minRows,
   ...textAreaProps
 }) => {

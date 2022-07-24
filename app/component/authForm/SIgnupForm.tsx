@@ -30,7 +30,6 @@ export const SignupForm: React.VFC<Props> = () => {
           {error?.formError && <FormError message={error.formError} />}
           <div className="mt-5 space-y-4">
             <FormControl
-              controlType="input"
               label="ユーザー名"
               type="text"
               name="username"
@@ -39,7 +38,6 @@ export const SignupForm: React.VFC<Props> = () => {
               autoComplete="username"
             />
             <FormControl
-              controlType="input"
               label="パスワード"
               type="password"
               name="password"

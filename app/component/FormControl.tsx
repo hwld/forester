@@ -3,27 +3,33 @@ import type { InputProps } from "./Input";
 import { Input } from "./Input";
 import type { TextareaProps } from "./Textarea";
 import { Textarea } from "./Textarea";
+import type { VariableTextAreaProps } from "./VariableTextArea";
+import { VariableTextArea } from "./VariableTextArea";
 
 type Props = {
-  label: string;
+  label?: string;
   errors?: string[];
 } & (
-  | ({ controlType: "input" } & InputProps)
+  | ({ controlType?: "input" } & InputProps)
   | ({ controlType: "textarea" } & TextareaProps)
+  | ({ controlType: "variable-textarea" } & VariableTextAreaProps)
 );
 
 export const FormControl: React.VFC<Props> = ({ label, errors, ...props }) => {
   const isError = errors !== undefined && errors.length > 0;
 
   const control = useMemo(() => {
-    console.log(props.controlType);
-    if (props.controlType === "input") {
-      const { controlType, ...others } = { ...props };
+    if (props.controlType === "input" || props.controlType === undefined) {
+      const { controlType, ...others } = props;
       return <Input isError={isError} {...others} />;
     }
     if (props.controlType === "textarea") {
-      const { controlType, ...others } = { ...props };
+      const { controlType, ...others } = props;
       return <Textarea isError={isError} {...others} />;
+    }
+    if (props.controlType === "variable-textarea") {
+      const { controlType, ...others } = props;
+      return <VariableTextArea isError={isError} {...others} />;
     }
 
     return undefined;
@@ -45,7 +51,7 @@ export const FormControl: React.VFC<Props> = ({ label, errors, ...props }) => {
 
   return (
     <div>
-      <label className="block text-sm mb-1">{label}</label>
+      {label && <label className="block text-sm mb-1">{label}</label>}
       <div>{control}</div>
       {isError ? errorMessages : null}
     </div>
