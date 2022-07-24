@@ -49,7 +49,7 @@ export default function Followings() {
               iconUrl={following.iconUrl}
               id={following.id}
               isOwner={following.id === loggedInUserId}
-              isFollowing={following.followedByTheLoggedInUser ?? false}
+              isFollowing={following.followedByLoggedInUser ?? false}
             />
           </div>
         );

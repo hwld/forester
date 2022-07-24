@@ -24,7 +24,10 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   const username = params.username;
   const loggedInUser = await getUser(request);
 
-  const user = await findUser({ where: { username } });
+  const user = await findUser({
+    where: { username },
+    loggedInUserId: loggedInUser?.id,
+  });
 
   if (!user) {
     throw new Error("user not found");
@@ -66,7 +69,7 @@ export default function UserHome() {
               >
                 プロフィールを編集
               </Link>
-            ) : user.followedByTheLoggedInUser ? (
+            ) : user.followedByLoggedInUser ? (
               <UnfollowButton userId={user.id} />
             ) : (
               <FollowButton userId={user.id} />

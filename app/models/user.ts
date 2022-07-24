@@ -9,7 +9,7 @@ export type User = {
   iconUrl: string;
   followersCount: number;
   followingsCount: number;
-  followedByTheLoggedInUser?: boolean;
+  followedByLoggedInUser?: boolean;
 };
 
 export type UserAndFollowers = {
@@ -59,7 +59,7 @@ const convertToUser = ({
     profile: rawUser.profile,
     id: rawUser.id,
     iconUrl: rawUser.iconUrl,
-    followedByTheLoggedInUser: loggedInUserFollowingIds.includes(rawUser.id),
+    followedByLoggedInUser: loggedInUserFollowingIds.includes(rawUser.id),
     followersCount: rawUser._count.followedBy,
     followingsCount: rawUser._count.following,
   };
