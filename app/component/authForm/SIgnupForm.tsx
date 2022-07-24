@@ -2,8 +2,8 @@ import { Form, useTransition } from "@remix-run/react";
 import { useMemo } from "react";
 import { useSignupActionData } from "~/routes/__auth/signup";
 import { Button } from "../Button";
+import { FormControl } from "../FormControl";
 import { FormError } from "../FormError";
-import { FormInput } from "../FormInput";
 import { AuthFormHeader } from "./AuthFormHeader";
 
 type Props = {};
@@ -29,7 +29,8 @@ export const SignupForm: React.VFC<Props> = () => {
         <fieldset disabled={transition.state === "submitting"}>
           {error?.formError && <FormError message={error.formError} />}
           <div className="mt-5 space-y-4">
-            <FormInput
+            <FormControl
+              controlType="input"
               label="ユーザー名"
               type="text"
               name="username"
@@ -37,7 +38,8 @@ export const SignupForm: React.VFC<Props> = () => {
               errors={error?.fieldErrors?.username}
               autoComplete="username"
             />
-            <FormInput
+            <FormControl
+              controlType="input"
               label="パスワード"
               type="password"
               name="password"

@@ -1,6 +1,6 @@
 import type { ComponentPropsWithoutRef } from "react";
 
-type Props = { isError?: boolean } & Omit<
+export type InputProps = { isError?: boolean } & Omit<
   ComponentPropsWithoutRef<"input">,
   "className"
 >;
@@ -10,7 +10,7 @@ const inputClass =
 const errorInputClass = `${inputClass} border-red-500 focus:border-red-500 focus:ring-red-500`;
 const normalInputClass = `${inputClass} focus:border-emerald-400 focus:ring-emerald-400`;
 
-export const Input: React.VFC<Props> = ({ isError, ...props }) => {
+export const Input: React.VFC<InputProps> = ({ isError, ...props }) => {
   return (
     <input
       {...props}

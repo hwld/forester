@@ -11,9 +11,8 @@ import type { UseDataFunctionReturn } from "@remix-run/react/dist/components";
 import path from "path";
 import { useMemo } from "react";
 import { Button } from "~/component/Button";
+import { FormControl } from "~/component/FormControl";
 import { FormError } from "~/component/FormError";
-import { FormInput } from "~/component/FormInput";
-import { FormTextarea } from "~/component/FormTextarea";
 import { MainHeader } from "~/component/MainHeader";
 import { UserIconInput } from "~/component/UserIconInput";
 import { validateUserForm } from "~/formData/userFormData";
@@ -91,13 +90,15 @@ export default function ProfileSetting() {
           <div className="flex gap-3">
             <UserIconInput name="icon" defaultIconUrl={user.iconUrl} />
             <div className="grow mt-5 space-y-2">
-              <FormInput
+              <FormControl
+                controlType="input"
                 label="ユーザー名"
                 name="username"
                 defaultValue={user.username}
                 errors={error?.fieldErrors?.username}
               />
-              <FormTextarea
+              <FormControl
+                controlType="textarea"
                 label="プロフィール"
                 name="profile"
                 canResize={false}
