@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef } from "react";
 import { MdError } from "react-icons/md";
 import { usePostFetcher } from "~/routes/api/posts";
 import { Button } from "../Button";
+import { FormError } from "../FormError";
 import { VariableTextArea } from "../VariableTextArea";
 
 type Props = { onSuccess?: () => void; replySourceId?: string };
@@ -33,12 +34,7 @@ export const PostForm: React.VFC<Props> = ({ onSuccess, replySourceId }) => {
       {replySourceId && (
         <input hidden name="replySourceId" defaultValue={replySourceId} />
       )}
-      {error?.formError && (
-        <div className="p-3 bg-red-50 border border-red-200 rounded-md flex items-center">
-          <MdError className="fill-red-500 w-5 h-5" />
-          <p className="text-red-600">{error?.formError}</p>
-        </div>
-      )}
+      {error?.formError && <FormError message={error.formError} />}
       <VariableTextArea
         name="content"
         isError={error?.fieldErrors?.content !== undefined}

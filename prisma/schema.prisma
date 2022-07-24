@@ -12,8 +12,9 @@ datasource db {
 
 model User {
   id           String @id @default(uuid())
-  username     String @unique
   passwordHash String
+  username     String @unique
+  profile      String @default("")
   iconUrl      String @default("/images/user-icons/default.png")
 
   createdAt DateTime @default(now())

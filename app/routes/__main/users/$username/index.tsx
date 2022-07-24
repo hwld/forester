@@ -75,7 +75,9 @@ export default function UserHome() {
         </div>
         <div className="space-y-2">
           <div className="text-2xl font-bold">{user.username}</div>
-          <div className="ml-2">自己紹介</div>
+          <div className="ml-2">
+            <p className="whitespace-pre-line break-all">{user.profile}</p>
+          </div>
           <div className="flex space-x-5 text-sm">
             <Link
               to="followings"

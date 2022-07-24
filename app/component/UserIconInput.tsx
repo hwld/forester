@@ -1,8 +1,8 @@
 import { useRef, useState } from "react";
 import { UserIcon } from "./UserIcon";
 
-type Props = { defaultIconUrl: string };
-export const UserIconInput: React.VFC<Props> = ({ defaultIconUrl }) => {
+type Props = { defaultIconUrl: string; name?: string };
+export const UserIconInput: React.VFC<Props> = ({ defaultIconUrl, name }) => {
   const fileRef = useRef<HTMLInputElement | null>(null);
   const [url, setUrl] = useState<string | null>(null);
 
@@ -35,9 +35,10 @@ export const UserIconInput: React.VFC<Props> = ({ defaultIconUrl }) => {
       <input
         ref={fileRef}
         type={"file"}
-        name="icon"
+        name={name}
         hidden
         onChange={handleChange}
+        accept="image/*"
       />
       <UserIcon
         size="lg"

@@ -1,13 +1,13 @@
 import type { ComponentProps } from "react";
 import { useMemo } from "react";
-import { Input } from "../Input";
+import { Input } from "./Input";
 
 type Props = {
   label: string;
   errors?: string[];
 } & ComponentProps<"input">;
 
-export const AuthInput: React.VFC<Props> = ({
+export const FormInput: React.VFC<Props> = ({
   label,
   errors,
   ...inputProps

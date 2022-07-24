@@ -2,8 +2,9 @@ import { Form, useTransition } from "@remix-run/react";
 import { useMemo } from "react";
 import { useLoginActionData } from "~/routes/__auth/login";
 import { Button } from "../Button";
+import { FormError } from "../FormError";
+import { FormInput } from "../FormInput";
 import { AuthFormHeader } from "./AuthFormHeader";
-import { AuthInput } from "./AuthInput";
 
 type Props = {};
 
@@ -26,13 +27,9 @@ export const LoginForm: React.VFC<Props> = () => {
         className="mt-5 p-5 bg-white shadow-md rounded-md"
       >
         <fieldset disabled={transition.state === "submitting"}>
-          {error?.formError && (
-            <div className="p-3 bg-red-50 border border-red-200 rounded-md">
-              <p className="text-red-600">{error?.formError}</p>
-            </div>
-          )}
+          {error?.formError && <FormError message={error.formError} />}
           <div className="mt-5 space-y-4">
-            <AuthInput
+            <FormInput
               label="ユーザー名"
               type="text"
               name="username"
@@ -40,7 +37,7 @@ export const LoginForm: React.VFC<Props> = () => {
               errors={error?.fieldErrors?.username}
               autoComplete="username"
             />
-            <AuthInput
+            <FormInput
               label="パスワード"
               type="password"
               name="password"
