@@ -16,9 +16,9 @@ export const OpenPostFormDialogButton: React.VFC<Props> = () => {
         <IconButton icon={<Icon icon={RiPencilLine} />} onClick={open} />
       </div>
       <div className="hidden lg:block w-full">
-        <Button fullRounded fullWidth>
+        <Button fullRounded fullWidth onClick={open}>
           <Icon icon={RiPencilLine} />
-          <p className="ml-1">投稿する</p>
+          <p className="ml-1 text-lg">投稿する</p>
         </Button>
       </div>
       <PostFormDialog isOpen={isOpen} close={close} />
