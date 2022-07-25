@@ -29,7 +29,7 @@ export const PostItem: React.VFC<Props> = ({
       onClick={handleClick}
       {...props}
     >
-      <div>
+      <div className="shrink-0">
         <UserIconLink username={post.username} src={post.userIconUrl} />
       </div>
       <div className="ml-2 flex flex-col flex-grow space-y-2">

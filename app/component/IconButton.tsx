@@ -1,31 +1,28 @@
-import type { ComponentProps, ReactNode } from "react";
+import clsx from "clsx";
+import type { ComponentPropsWithoutRef, ReactNode } from "react";
+import { buttonBaseClass } from "~/consts/buttonBaseClass";
 
 // いつもはサボってclassNameを渡してコンポーネント内部のスタイリングを
 // やっているのだが、uhyoさんの記事(https://blog.uhy.ooo/entry/2020-12-19/css-component-design/)
 // に従って、そのコンポーネントが責任を負う挙動のみをpropsとして受け取るようにしてみる。
 type Props = {
   icon: ReactNode;
-  text?: string;
-  textBold?: boolean;
-  fullWidth?: boolean;
-} & Omit<ComponentProps<"button">, "className">;
+  size?: "md" | "lg";
+} & Omit<ComponentPropsWithoutRef<"button">, "className">;
 
 export const IconButton: React.VFC<Props> = ({
-  text,
   icon,
-  textBold = false,
-  fullWidth = false,
+  size = "md",
   ...buttonProps
 }) => {
+  const sizeClass = { md: "w-10 h-10", lg: "w-14 h-14" };
+
   return (
     <button
+      className={clsx(buttonBaseClass, "rounded-full", sizeClass[size])}
       {...buttonProps}
-      className={`transition bg-emerald-300 hover:bg-emerald-400 px-3 py-2 rounded-md flex ${
-        textBold ? "font-bold" : ""
-      } ${fullWidth ? "w-full" : ""}`}
     >
       <div>{icon}</div>
-      <div className="ml-1 hidden lg:block">{text}</div>
     </button>
   );
 };
