@@ -33,7 +33,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 
   const { post, replySourcePost } = postData;
   const replyPosts = await findPosts({
-    where: { id: postId },
+    where: { replySourcePostId: postId },
   });
 
   return json<PostTreeData>({
