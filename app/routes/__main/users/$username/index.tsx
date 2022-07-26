@@ -8,14 +8,14 @@ import { MainHeader } from "~/component/MainHeader";
 import { PostItem } from "~/component/PostItem/PostItem";
 import { UnfollowButton } from "~/component/UnfollowButton";
 import { UserIcon } from "~/component/UserIcon";
-import type { Post } from "~/models/post";
-import { findPosts } from "~/models/post";
+import type { PostWithOwner } from "~/models/post";
+import { findPostWithOwners } from "~/models/post";
 import type { User } from "~/models/user";
 import { findUser } from "~/models/user";
 import { requireUser } from "~/utils/session.server";
 
 type LoaderData = {
-  posts: Post[];
+  posts: PostWithOwner[];
   user: User;
   loggedInUser: User;
 };
@@ -33,9 +33,10 @@ export const loader = async ({ request, params }: LoaderArgs) => {
     throw new Error("user not found");
   }
 
-  const posts = await findPosts({
+  const posts = await findPostWithOwners({
     where: { userId: user.id },
     orderBy: { createdAt: "desc" },
+    loggedInUserId: loggedInUser.id,
   });
 
   return json<LoaderData>({ posts, user, loggedInUser });

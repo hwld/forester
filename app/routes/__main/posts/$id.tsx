@@ -5,15 +5,15 @@ import { MdError } from "react-icons/md";
 import { MainHeader } from "~/component/MainHeader";
 import { PostDetailItem } from "~/component/PostItem/PostDetailItem";
 import { PostItem } from "~/component/PostItem/PostItem";
-import type { Post } from "~/models/post";
-import { findPost, findPosts } from "~/models/post";
+import type { PostWithOwner } from "~/models/post";
+import { findPostWithOwner, findPostWithOwners } from "~/models/post";
 import type { User } from "~/models/user";
 import { requireUser } from "~/utils/session.server";
 
 type PostTreeData = {
-  post: Post;
-  replySourcePost?: Post;
-  replyPosts: Post[];
+  post: PostWithOwner;
+  replySourcePost?: PostWithOwner;
+  replyPosts: PostWithOwner[];
   loggedInUser: User;
 };
 
@@ -25,16 +25,18 @@ export const loader = async ({ request, params }: LoaderArgs) => {
     throw new Error("サーバーでエラーが発生しました。");
   }
 
-  const postData = await findPost({
+  const postData = await findPostWithOwner({
     where: { id: postId },
+    loggedInUserId: loggedInUser.id,
   });
   if (!postData) {
     throw new Error("投稿が見つかりませんでした。");
   }
 
   const { post, replySourcePost } = postData;
-  const replyPosts = await findPosts({
+  const replyPosts = await findPostWithOwners({
     where: { replySourcePostId: postId },
+    loggedInUserId: loggedInUser.id,
   });
 
   return json<PostTreeData>({

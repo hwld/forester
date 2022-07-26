@@ -1,11 +1,11 @@
-import type { Post } from "~/models/post";
+import type { PostWithOwner } from "~/models/post";
 import type { User } from "~/models/user";
 import { formatDateDetail } from "~/utils/date";
 import { ReplyFormDialogButton } from "../OpenReplyFormDialogButton";
 import { UserIconLink } from "../UserIconLink";
 import { PostMenuButton } from "./PostMenu/PostMenuButton";
 
-type Props = { user: User; post: Post; loggedInUserId?: string };
+type Props = { user: User; post: PostWithOwner; loggedInUserId?: string };
 
 export const PostDetailItem: React.VFC<Props> = ({
   user,

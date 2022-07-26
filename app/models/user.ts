@@ -50,7 +50,7 @@ type ConvertToUserParams = {
   rawUser: Prisma.UserGetPayload<typeof userArgs>;
   loggedInUserFollowingIds?: string[];
 };
-const convertToUser = ({
+export const convertToUser = ({
   rawUser,
   loggedInUserFollowingIds = [],
 }: ConvertToUserParams): User => {
@@ -65,7 +65,7 @@ const convertToUser = ({
   };
 };
 
-const findFollowingIds = async (userId: string) => {
+export const findFollowingIds = async (userId: string) => {
   const user = await db.user.findFirst({
     ...userArgs,
     select: { ...userArgs.select, following: true },

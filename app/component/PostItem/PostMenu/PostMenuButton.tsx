@@ -1,12 +1,11 @@
 import { Menu } from "@headlessui/react";
-
 import { HiOutlineDotsHorizontal } from "react-icons/hi";
-import type { Post } from "~/models/post";
+import type { PostWithOwner } from "~/models/post";
 import { PostIconButton } from "../PostIconButton";
 import { OthersPostMenuItems } from "./OthersPostMenuItems";
 import { OwnPostMenuItems } from "./OwnPostMenuItems";
 
-type Props = { post: Post; loggedInUserId?: string };
+type Props = { post: PostWithOwner; loggedInUserId?: string };
 
 export const PostMenuButton: React.VFC<Props> = ({ post, loggedInUserId }) => {
   return (

@@ -4,14 +4,14 @@ import { useLoaderData, useNavigate } from "@remix-run/react";
 import { MainHeader } from "~/component/MainHeader";
 import { PostForm } from "~/component/PostForm/PostForm";
 import { PostItem } from "~/component/PostItem/PostItem";
-import type { Post } from "~/models/post";
-import { findPosts } from "~/models/post";
+import type { PostWithOwner } from "~/models/post";
+import { findPostWithOwners } from "~/models/post";
 import type { User } from "~/models/user";
 import { findUsers } from "~/models/user";
 import { requireUser } from "~/utils/session.server";
 
 type LoaderData = {
-  posts: Post[];
+  posts: PostWithOwner[];
   loggedInUser: User;
 };
 export const loader = async ({ request }: LoaderArgs) => {
@@ -23,7 +23,7 @@ export const loader = async ({ request }: LoaderArgs) => {
   });
 
   const id = loggedInUser.id;
-  const posts = await findPosts({
+  const posts = await findPostWithOwners({
     where: {
       OR: [
         { userId: id },
@@ -31,6 +31,7 @@ export const loader = async ({ request }: LoaderArgs) => {
       ],
     },
     orderBy: { createdAt: "desc" },
+    loggedInUserId: loggedInUser.id,
   });
 
   return json<LoaderData>({ posts, loggedInUser });

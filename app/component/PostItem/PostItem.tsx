@@ -1,5 +1,5 @@
 import type { ComponentProps } from "react";
-import type { Post } from "~/models/post";
+import type { PostWithOwner } from "~/models/post";
 import type { User } from "~/models/user";
 import { formatDate } from "~/utils/date";
 import { ReplyFormDialogButton } from "../OpenReplyFormDialogButton";
@@ -8,7 +8,7 @@ import { PostMenuButton } from "./PostMenu/PostMenuButton";
 
 type Props = {
   user: User;
-  post: Post;
+  post: PostWithOwner;
   onClick?: (id: string) => void;
 } & Omit<ComponentProps<"li">, "onClick">;
 
