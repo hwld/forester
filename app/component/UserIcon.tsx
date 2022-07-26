@@ -17,7 +17,7 @@ export const UserIcon: React.VFC<Props> = ({ size = "md", ...props }) => {
   return (
     <img
       alt="user"
-      className={`rounded-full bg-slate-400 ${sizeClass} ${
+      className={`rounded-full bg-slate-400 shrink-0 ${sizeClass} ${
         props.onClick ? interactiveClass : ""
       }`}
       {...props}

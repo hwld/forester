@@ -12,17 +12,17 @@ import type { Post } from "~/models/post";
 import { findPosts } from "~/models/post";
 import type { User } from "~/models/user";
 import { findUser } from "~/models/user";
-import { getUser } from "~/utils/session.server";
+import { requireUser } from "~/utils/session.server";
 
 type LoaderData = {
   posts: Post[];
   user: User;
-  loggedInUser?: User;
+  loggedInUser: User;
 };
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const username = params.username;
-  const loggedInUser = await getUser(request);
+  const loggedInUser = await requireUser(request);
 
   const user = await findUser({
     where: { username },
@@ -52,7 +52,7 @@ export default function UserHome() {
   return (
     <>
       <MainHeader title={user.username ?? ""} canBack />
-      <div className="h-32 bg-orange-400" />
+      <div className="h-32 bg-emerald-700 border-b border-emerald-500" />
       <div className="flex flex-col px-3 pb-3 space-y-2 border-b border-emerald-500">
         <div className="h-12 w-full flex justify-between items-center">
           <div className="-mt-12">
@@ -105,7 +105,7 @@ export default function UserHome() {
             <PostItem
               onClick={handleClickPostItem}
               post={post}
-              loggedInUserId={loggedInUser?.id}
+              user={loggedInUser}
             />
           </div>
         );

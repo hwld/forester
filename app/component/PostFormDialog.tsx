@@ -1,11 +1,19 @@
 import { Dialog } from "@headlessui/react";
 import { useRef } from "react";
 import { MdOutlineClose } from "react-icons/md";
+import type { User } from "~/models/user";
 import { PostForm } from "./PostForm/PostForm";
+import { UserIcon } from "./UserIcon";
 
-type Props = { isOpen: boolean; close: () => void; replySourceId?: string };
+type Props = {
+  user: User;
+  isOpen: boolean;
+  close: () => void;
+  replySourceId?: string;
+};
 
 export const PostFormDialog: React.VFC<Props> = ({
+  user,
   isOpen,
   close,
   replySourceId,
@@ -28,7 +36,7 @@ export const PostFormDialog: React.VFC<Props> = ({
             </button>
           </div>
           <div className="flex mt-3 mx-3">
-            <div className="w-12 h-12 rounded-full bg-emerald-500"></div>
+            <UserIcon src={user.iconUrl} />
             <div className="flex-grow">
               <PostForm onSuccess={close} replySourceId={replySourceId} />
             </div>

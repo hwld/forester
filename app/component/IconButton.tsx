@@ -7,7 +7,7 @@ import { buttonBaseClass } from "~/consts/buttonBaseClass";
 // に従って、そのコンポーネントが責任を負う挙動のみをpropsとして受け取るようにしてみる。
 type Props = {
   icon: ReactNode;
-  size?: "md" | "lg";
+  size?: "sm" | "md" | "lg";
 } & Omit<ComponentPropsWithoutRef<"button">, "className">;
 
 export const IconButton: React.VFC<Props> = ({
@@ -15,7 +15,11 @@ export const IconButton: React.VFC<Props> = ({
   size = "md",
   ...buttonProps
 }) => {
-  const sizeClass = { md: "w-10 h-10", lg: "w-14 h-14" };
+  const sizeClass = {
+    sm: "w-7 h-7",
+    md: "w-10 h-10",
+    lg: "w-14 h-14",
+  };
 
   return (
     <button

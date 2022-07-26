@@ -6,11 +6,12 @@ import { PostForm } from "~/component/PostForm/PostForm";
 import { PostItem } from "~/component/PostItem/PostItem";
 import type { Post } from "~/models/post";
 import { findPosts } from "~/models/post";
+import type { User } from "~/models/user";
 import { requireUser } from "~/utils/session.server";
 
 type LoaderData = {
   posts: Post[];
-  loggedInUserId: string;
+  loggedInUser: User;
 };
 export const loader = async ({ request }: LoaderArgs) => {
   const loggedInUser = await requireUser(request);
@@ -21,11 +22,11 @@ export const loader = async ({ request }: LoaderArgs) => {
     orderBy: { createdAt: "desc" },
   });
 
-  return json<LoaderData>({ posts, loggedInUserId: loggedInUser.id });
+  return json<LoaderData>({ posts, loggedInUser });
 };
 
 export default function Home() {
-  const { posts, loggedInUserId } = useLoaderData<typeof loader>();
+  const { posts, loggedInUser } = useLoaderData<typeof loader>();
   const navigator = useNavigate();
 
   const handleClickPostItem = (postId: string) => {
@@ -45,7 +46,7 @@ export default function Home() {
               <PostItem
                 onClick={handleClickPostItem}
                 post={post}
-                loggedInUserId={loggedInUserId}
+                user={loggedInUser}
               />
             </div>
           );

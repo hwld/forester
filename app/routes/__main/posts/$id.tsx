@@ -7,17 +7,18 @@ import { PostDetailItem } from "~/component/PostItem/PostDetailItem";
 import { PostItem } from "~/component/PostItem/PostItem";
 import type { Post } from "~/models/post";
 import { findPost, findPosts } from "~/models/post";
-import { getUser } from "~/utils/session.server";
+import type { User } from "~/models/user";
+import { requireUser } from "~/utils/session.server";
 
 type PostTreeData = {
   post: Post;
   replySourcePost?: Post;
   replyPosts: Post[];
-  loggedInUserId?: string;
+  loggedInUser: User;
 };
 
 export const loader = async ({ request, params }: LoaderArgs) => {
-  const loggedInUser = await getUser(request);
+  const loggedInUser = await requireUser(request);
   const postId = params.id;
 
   if (!postId) {
@@ -40,12 +41,12 @@ export const loader = async ({ request, params }: LoaderArgs) => {
     post,
     replySourcePost,
     replyPosts,
-    loggedInUserId: loggedInUser?.id,
+    loggedInUser,
   });
 };
 
 export default function PostTree() {
-  const { post, replySourcePost, replyPosts, loggedInUserId } =
+  const { post, replySourcePost, replyPosts, loggedInUser } =
     useLoaderData<typeof loader>();
   const navigator = useNavigate();
 
@@ -62,7 +63,7 @@ export default function PostTree() {
           <PostItem
             post={replySourcePost}
             onClick={handleClickPostItem}
-            loggedInUserId={loggedInUserId}
+            user={loggedInUser}
           />
           {/* TODO: 返信があるときはユーザーのアイコンを線で結びたい */}
           <div className="h-5 w-full flex justify-center">
@@ -70,7 +71,7 @@ export default function PostTree() {
           </div>
         </div>
       )}
-      <PostDetailItem post={post} loggedInUserId={loggedInUserId} />
+      <PostDetailItem post={post} user={loggedInUser} />
       {replyPosts.length > 0 && (
         <>
           <div className="mt-10 ml-2 text-lg">返信</div>
@@ -83,7 +84,7 @@ export default function PostTree() {
             key={reply.id}
             post={reply}
             onClick={handleClickPostItem}
-            loggedInUserId={loggedInUserId}
+            user={loggedInUser}
           />
         );
       })}

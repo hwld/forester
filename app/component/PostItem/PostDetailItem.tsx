@@ -1,14 +1,19 @@
 import type { Post } from "~/models/post";
+import type { User } from "~/models/user";
 import { formatDateDetail } from "~/utils/date";
 import { ReplyFormDialogButton } from "../OpenReplyFormDialogButton";
 import { UserIconLink } from "../UserIconLink";
 import { PostMenuButton } from "./PostMenu/PostMenuButton";
 
-type Props = { post: Post; loggedInUserId?: string };
+type Props = { user: User; post: Post; loggedInUserId?: string };
 
-export const PostDetailItem: React.VFC<Props> = ({ post, loggedInUserId }) => {
+export const PostDetailItem: React.VFC<Props> = ({
+  user,
+  post,
+  loggedInUserId,
+}) => {
   return (
-    <li className="p-3 border-y border-emerald-500 break-words flex flex-col rounded transition">
+    <li className="p-3 border-y border-emerald-500 break-words flex flex-col transition">
       <div className="flex justify-between">
         <div className="flex space-x-3 items-center">
           <UserIconLink username={post.username} src={post.userIconUrl} />
@@ -35,7 +40,11 @@ export const PostDetailItem: React.VFC<Props> = ({ post, loggedInUserId }) => {
         </div>
         <div className="w-full h-[1px] bg-emerald-500"></div>
         <div className="flex space-x-5">
-          <ReplyFormDialogButton replySourceId={post.id} size="lg" />
+          <ReplyFormDialogButton
+            replySourceId={post.id}
+            size="lg"
+            user={user}
+          />
         </div>
       </div>
     </li>

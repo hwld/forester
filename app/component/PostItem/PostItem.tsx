@@ -1,19 +1,20 @@
 import type { ComponentProps } from "react";
 import type { Post } from "~/models/post";
+import type { User } from "~/models/user";
 import { formatDate } from "~/utils/date";
 import { ReplyFormDialogButton } from "../OpenReplyFormDialogButton";
 import { UserIconLink } from "../UserIconLink";
 import { PostMenuButton } from "./PostMenu/PostMenuButton";
 
 type Props = {
+  user: User;
   post: Post;
-  loggedInUserId?: string;
   onClick?: (id: string) => void;
 } & Omit<ComponentProps<"li">, "onClick">;
 
 export const PostItem: React.VFC<Props> = ({
+  user,
   post,
-  loggedInUserId,
   onClick,
   ...props
 }) => {
@@ -41,7 +42,7 @@ export const PostItem: React.VFC<Props> = ({
             </p>
           </div>
 
-          <PostMenuButton post={post} loggedInUserId={loggedInUserId} />
+          <PostMenuButton post={post} loggedInUserId={user.id} />
         </div>
 
         <div>
@@ -53,7 +54,7 @@ export const PostItem: React.VFC<Props> = ({
           <p className="whitespace-pre-line break-all">{post.content}</p>
         </div>
         <div className="flex space-x-5">
-          <ReplyFormDialogButton replySourceId={post.id} />
+          <ReplyFormDialogButton replySourceId={post.id} user={user} />
           {post.replyPostCount > 0 ? post.replyPostCount : ""}
         </div>
       </div>
