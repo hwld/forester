@@ -29,8 +29,8 @@ export const OwnPostMenuItems: React.VFC<Props> = ({ post }) => {
               }`}
               onClick={handleClick}
             >
-              <RiDeleteBinLine className="mr-2 h-5 w-5 fill-white" />
-              <p className="font-bold text-white">削除</p>
+              <RiDeleteBinLine className="mr-2 h-5 w-5 " />
+              <p className="font-bold">削除</p>
             </button>
           </deletePostFetcher.Form>
         )}

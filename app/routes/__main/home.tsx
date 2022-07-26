@@ -7,6 +7,7 @@ import { PostItem } from "~/component/PostItem/PostItem";
 import type { Post } from "~/models/post";
 import { findPosts } from "~/models/post";
 import type { User } from "~/models/user";
+import { findUsers } from "~/models/user";
 import { requireUser } from "~/utils/session.server";
 
 type LoaderData = {
@@ -16,9 +17,19 @@ type LoaderData = {
 export const loader = async ({ request }: LoaderArgs) => {
   const loggedInUser = await requireUser(request);
 
+  const followings = await findUsers({
+    where: { followedBy: { some: { id: loggedInUser.id } } },
+    loggedInUserId: loggedInUser.id,
+  });
+
   const id = loggedInUser.id;
   const posts = await findPosts({
-    where: { userId: id },
+    where: {
+      OR: [
+        { userId: id },
+        { userId: { in: followings.map((user) => user.id) } },
+      ],
+    },
     orderBy: { createdAt: "desc" },
   });
 

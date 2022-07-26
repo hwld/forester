@@ -13,7 +13,7 @@ export const PostMenuButton: React.VFC<Props> = ({ post, loggedInUserId }) => {
     <Menu as="div" className="relative">
       <Menu.Button as={PostIconButton} icon={HiOutlineDotsHorizontal} />
 
-      <Menu.Items className="absolute right-0 bg-emerald-600 w-56 shadow-lg rounded">
+      <Menu.Items className="absolute right-0 bg-emerald-400 w-56 shadow-lg rounded">
         <div className="px-1 py-1">
           {post.userId === loggedInUserId ? (
             <OwnPostMenuItems post={post} />

@@ -65,7 +65,7 @@ export default function UserHome() {
             {user.id === loggedInUser?.id ? (
               <Link
                 to={"/settings/profile"}
-                className="px-4 pb-[2px] h-9 bg-emerald-500 hover:bg-emerald-600 rounded-3xl font-bold flex items-center"
+                className="px-4 pb-[2px] h-9 bg-emerald-400 hover:bg-emerald-500 rounded-3xl font-bold flex items-center"
               >
                 プロフィールを編集
               </Link>

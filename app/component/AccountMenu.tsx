@@ -18,7 +18,7 @@ export const AccountMenu: React.VFC<Props> = ({ user }) => {
                   type="submit"
                   className={clsx(
                     "flex w-full items-center rounded p-2",
-                    active ? "bg-emerald-300" : ""
+                    active ? "bg-emerald-500" : ""
                   )}
                   onClick={(e) => e.stopPropagation()}
                 >
