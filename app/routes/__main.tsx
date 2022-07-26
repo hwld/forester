@@ -23,7 +23,7 @@ export default function Main() {
         <SideMenu username={username} />
 
         {/* メインカラム */}
-        <div className="bg-emerald-500">
+        <div className="border-t border-x border-emerald-500">
           <Outlet />
         </div>
 

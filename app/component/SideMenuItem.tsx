@@ -21,9 +21,9 @@ export const SideMenuItem: React.VFC<Props> = ({
     <Link
       to={link}
       className={clsx(
-        "flex items-center justify-center w-10 h-10 space-x-0 px-3 py-1 transition hover:bg-orange-400/25 rounded-full",
+        "flex items-center justify-center w-10 h-10 space-x-0 px-3 py-1 transition hover:bg-emerald-400/25 rounded-full",
         "lg:w-auto lg:space-x-2 lg:p-3 lg:justify-start",
-        isActive ? "text-orange-500 font-bold" : "bg-transparent"
+        isActive ? "text-emerald-500 font-bold" : "bg-transparent"
       )}
     >
       <div>{icon}</div>

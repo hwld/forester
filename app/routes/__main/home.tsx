@@ -35,13 +35,13 @@ export default function Home() {
   return (
     <>
       <MainHeader title="ホーム" />
-      <div>
+      <div className="border-b border-emerald-500">
         <PostForm />
       </div>
       <ul>
         {posts.map((post) => {
           return (
-            <div key={post.id} className="m-2">
+            <div key={post.id} className="">
               <PostItem
                 onClick={handleClickPostItem}
                 post={post}

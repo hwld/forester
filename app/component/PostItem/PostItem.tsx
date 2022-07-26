@@ -23,8 +23,8 @@ export const PostItem: React.VFC<Props> = ({
 
   return (
     <li
-      className={`p-3 bg-emerald-200 break-words flex rounded transition ${
-        onClick ? "hover:bg-opacity-80 cursor-pointer" : ""
+      className={`p-3 break-words flex transition border-b border-emerald-500 ${
+        onClick ? "hover:bg-black/5 cursor-pointer" : ""
       }`}
       onClick={handleClick}
       {...props}

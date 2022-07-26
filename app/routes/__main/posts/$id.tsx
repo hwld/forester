@@ -57,38 +57,34 @@ export default function PostTree() {
     <>
       {/* TODO: MainHeaderをひとつ上のルートに持っていって、ここからタイトルだけ変えるみたいなことできないかなあ */}
       <MainHeader title="投稿" canBack />
-      {replySourcePost ? (
-        <div className="mt-2 mx-2">
+      {replySourcePost && (
+        <div>
           <PostItem
             post={replySourcePost}
             onClick={handleClickPostItem}
             loggedInUserId={loggedInUserId}
           />
-          <div className="h-10 w-full flex justify-center">
-            <div className="w-1 h-full bg-emerald-800" />
+          {/* TODO: 返信があるときはユーザーのアイコンを線で結びたい */}
+          <div className="h-5 w-full flex justify-center">
+            <div className="w-[1px] h-full bg-emerald-500" />
           </div>
         </div>
-      ) : (
-        <div className="h-2" />
       )}
-      <div className="mx-2">
-        <PostDetailItem post={post} loggedInUserId={loggedInUserId} />
-      </div>
+      <PostDetailItem post={post} loggedInUserId={loggedInUserId} />
       {replyPosts.length > 0 && (
         <>
-          <div className="mt-10 ml-2 text-lg text-white">返信</div>
-          <div className="w-full h-[3px] bg-emerald-300" />
+          <div className="mt-10 ml-2 text-lg">返信</div>
+          <div className="w-full h-[2px] bg-emerald-500" />
         </>
       )}
       {replyPosts.map((reply) => {
         return (
-          <div key={reply.id} className="m-2 mt-3">
-            <PostItem
-              post={reply}
-              onClick={handleClickPostItem}
-              loggedInUserId={loggedInUserId}
-            />
-          </div>
+          <PostItem
+            key={reply.id}
+            post={reply}
+            onClick={handleClickPostItem}
+            loggedInUserId={loggedInUserId}
+          />
         );
       })}
     </>

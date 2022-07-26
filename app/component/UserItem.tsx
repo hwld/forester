@@ -17,7 +17,7 @@ export const UserItem: React.VFC<Props> = ({
   isOwner,
 }) => {
   return (
-    <div className="flex bg-emerald-300 px-3 py-2 rounded space-x-2">
+    <div className="flex px-3 py-2 rounded space-x-2 border-b border-emerald-500">
       <div className="shrink-0">
         <UserIconLink username={username} src={iconUrl} />
       </div>

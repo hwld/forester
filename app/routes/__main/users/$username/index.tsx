@@ -52,8 +52,8 @@ export default function UserHome() {
   return (
     <>
       <MainHeader title={user.username ?? ""} canBack />
-      <div className="h-32 bg-emerald-700" />
-      <div className="bg-emerald-800 flex flex-col px-3 pb-3 space-y-2 text-white">
+      <div className="h-32 bg-orange-400" />
+      <div className="flex flex-col px-3 pb-3 space-y-2 border-b border-emerald-500">
         <div className="h-12 w-full flex justify-between items-center">
           <div className="-mt-12">
             <UserIcon size="lg" src={user.iconUrl} />
@@ -89,19 +89,19 @@ export default function UserHome() {
               <span>{user.followingsCount}</span>
               {/* スペース1つだとlinterが中括弧なしに変換してしまうので、わかりやすくするために2つ入れる */}
               {"  "}
-              <span className="text-gray-300">フォロー中</span>
+              <span className="text-gray-500">フォロー中</span>
             </Link>
             <Link to="followers" className="hover:underline underline-offset-2">
               <span>{user.followersCount}</span>
               {"  "}
-              <span className="text-gray-300">フォロワー</span>
+              <span className="text-gray-500">フォロワー</span>
             </Link>
           </div>
         </div>
       </div>
       {posts.map((post) => {
         return (
-          <div key={post.id} className="m-2">
+          <div key={post.id} className="">
             <PostItem
               onClick={handleClickPostItem}
               post={post}

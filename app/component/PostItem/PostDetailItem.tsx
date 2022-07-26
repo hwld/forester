@@ -8,7 +8,7 @@ type Props = { post: Post; loggedInUserId?: string };
 
 export const PostDetailItem: React.VFC<Props> = ({ post, loggedInUserId }) => {
   return (
-    <li className="p-3 bg-emerald-100 break-words flex flex-col rounded transition">
+    <li className="p-3 border-y border-emerald-500 break-words flex flex-col rounded transition">
       <div className="flex justify-between">
         <div className="flex space-x-3 items-center">
           <UserIconLink username={post.username} src={post.userIconUrl} />
@@ -29,11 +29,11 @@ export const PostDetailItem: React.VFC<Props> = ({ post, loggedInUserId }) => {
 
         <p className="text-gray-500">{formatDateDetail(post.createdAt)}</p>
 
-        <div className="w-full h-[2px] bg-emerald-200"></div>
+        <div className="w-full h-[1px] bg-emerald-500"></div>
         <div className="h-5 flex items-center">
           <p>0件のいいね</p>
         </div>
-        <div className="w-full h-[2px] bg-emerald-200"></div>
+        <div className="w-full h-[1px] bg-emerald-500"></div>
         <div className="flex space-x-5">
           <ReplyFormDialogButton replySourceId={post.id} size="lg" />
         </div>

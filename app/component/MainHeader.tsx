@@ -10,7 +10,7 @@ export const MainHeader: React.VFC<Props> = ({ title, canBack = false }) => {
   };
 
   return (
-    <div className="sticky top-0 h-12 bg-emerald-600 flex items-center px-4 select-none z-10 space-x-2">
+    <div className="sticky top-0 h-12 bg-emerald-500 flex items-center px-4 select-none z-10 space-x-2">
       {canBack && (
         <button
           onClick={handleClickReturn}

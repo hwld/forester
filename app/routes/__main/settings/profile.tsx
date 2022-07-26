@@ -84,11 +84,13 @@ export default function ProfileSetting() {
         <profileSettingFetcher.Form
           method="post"
           encType="multipart/form-data"
-          className="flex flex-col bg-emerald-200 h-full m-2 p-3 rounded"
+          className="flex flex-col h-full p-3 rounded border-b border-emerald-500"
         >
           {error?.formError && <FormError message={error.formError} />}
           <div className="flex gap-3">
-            <UserIconInput name="icon" defaultIconUrl={user.iconUrl} />
+            <div>
+              <UserIconInput name="icon" defaultIconUrl={user.iconUrl} />
+            </div>
             <div className="grow mt-5 space-y-2">
               <FormControl
                 label="ユーザー名"

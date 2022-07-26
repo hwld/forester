@@ -40,18 +40,19 @@ export default function Followings() {
   return (
     <>
       <MainHeader title={user.username ?? ""} canBack />
-      <div className="m-3 font-bold text-white text-xl">フォロー中</div>
+      <div className="p-3 font-bold text-xl border-b border-emerald-500">
+        フォロー中
+      </div>
       {followings.map((following) => {
         return (
-          <div key={following.username} className="m-3">
-            <UserItem
-              username={following.username}
-              iconUrl={following.iconUrl}
-              id={following.id}
-              isOwner={following.id === loggedInUserId}
-              isFollowing={following.followedByLoggedInUser ?? false}
-            />
-          </div>
+          <UserItem
+            key={following.username}
+            username={following.username}
+            iconUrl={following.iconUrl}
+            id={following.id}
+            isOwner={following.id === loggedInUserId}
+            isFollowing={following.followedByLoggedInUser ?? false}
+          />
         );
       })}
     </>
