@@ -73,7 +73,11 @@ export default function PostTree() {
           </div>
         </div>
       )}
-      <PostDetailItem post={post} user={loggedInUser} />
+      <PostDetailItem
+        post={post}
+        user={loggedInUser}
+        loggedInUserId={loggedInUser.id}
+      />
       {replyPosts.length > 0 && (
         <>
           <div className="mt-10 ml-2 text-lg">返信</div>
