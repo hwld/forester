@@ -28,7 +28,7 @@ export const loader = async ({ request }: LoaderArgs) => {
 export const action = async ({ request }: ActionArgs) => {
   const user = await requireUser(request);
 
-  const userIconsDirectory = "images/users-icons";
+  const userIconsDirectory = "images/user-icons";
   const uploadDirectory = `./public/${userIconsDirectory}`;
   const uploadHandler = unstable_composeUploadHandlers(
     unstable_createFileUploadHandler({

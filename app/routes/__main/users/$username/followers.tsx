@@ -47,9 +47,7 @@ export default function Followers() {
         return (
           <UserItem
             key={follower.username}
-            username={follower.username}
-            iconUrl={follower.iconUrl}
-            id={follower.id}
+            user={follower}
             isOwner={follower.id === loggedInUserId}
             isFollowing={follower.followedByLoggedInUser ?? false}
           />
