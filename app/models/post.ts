@@ -35,25 +35,15 @@ const postArgsBase = Prisma.validator<Prisma.PostArgs>()({
 });
 export const postArgs = Prisma.validator<Prisma.PostArgs>()({
   select: {
-    id: true,
-    content: true,
-    createdAt: true,
-    user: { select: { username: true, id: true, iconUrl: true } },
-    _count: { select: { replyPosts: true } },
+    ...postArgsBase.select,
     replySourcePost: postArgsBase,
   },
 });
 
 const postWithOwnerArgsBase = Prisma.validator<Prisma.PostArgs>()({
   select: {
-    id: true,
-    content: true,
-    createdAt: true,
+    ...postArgsBase.select,
     user: userArgs,
-    _count: { select: { replyPosts: true } },
-    replySourcePost: {
-      select: { user: { select: { username: true, id: true } } },
-    },
   },
 });
 

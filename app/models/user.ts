@@ -67,7 +67,6 @@ export const convertToUser = ({
 
 export const findFollowingIds = async (userId: string) => {
   const user = await db.user.findFirst({
-    ...userArgs,
     select: { ...userArgs.select, following: true },
     where: { id: userId },
   });
