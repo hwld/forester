@@ -5,9 +5,9 @@ import { MainHeader } from "~/component/MainHeader";
 import { PostForm } from "~/component/PostForm/PostForm";
 import { PostItem } from "~/component/PostItem/PostItem";
 import type { PostWithOwner } from "~/models/post";
-import { findPostWithOwners } from "~/models/post";
+import { findPostWithOwners } from "~/models/post/finder.server";
 import type { User } from "~/models/user";
-import { findUsers } from "~/models/user";
+import { findUsers } from "~/models/user/finder.server";
 import { requireUser } from "~/utils/session.server";
 
 type LoaderData = {

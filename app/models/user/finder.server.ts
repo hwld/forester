@@ -1,26 +1,7 @@
 import { Prisma } from "@prisma/client";
 import bcrypt from "bcryptjs";
 import { db } from "~/utils/db.server";
-
-export type User = {
-  id: string;
-  username: string;
-  profile: string;
-  iconUrl: string;
-  followersCount: number;
-  followingsCount: number;
-  followedByLoggedInUser?: boolean;
-};
-
-export type UserAndFollowers = {
-  user: User;
-  followers: User[];
-};
-
-export type UserAndFollowings = {
-  user: User;
-  followings: User[];
-};
+import type { User } from ".";
 
 export const authentication = async (username: string, password: string) => {
   const user = await db.user.findUnique({ where: { username } });

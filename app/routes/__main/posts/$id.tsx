@@ -6,7 +6,10 @@ import { MainHeader } from "~/component/MainHeader";
 import { PostDetailItem } from "~/component/PostItem/PostDetailItem";
 import { PostItem } from "~/component/PostItem/PostItem";
 import type { PostWithOwner } from "~/models/post";
-import { findPostWithOwner, findPostWithOwners } from "~/models/post";
+import {
+  findPostWithOwner,
+  findPostWithOwners,
+} from "~/models/post/finder.server";
 import type { User } from "~/models/user";
 import { requireUser } from "~/utils/session.server";
 

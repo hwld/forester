@@ -1,6 +1,6 @@
 import type { ActionArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
-import { findPost } from "~/models/post";
+import { findPost } from "~/models/post/finder.server";
 import { db } from "~/utils/db.server";
 import { requireUser } from "~/utils/session.server";
 

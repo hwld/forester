@@ -9,9 +9,9 @@ import { PostItem } from "~/component/PostItem/PostItem";
 import { UnfollowButton } from "~/component/UnfollowButton";
 import { UserIcon } from "~/component/UserIcon";
 import type { PostWithOwner } from "~/models/post";
-import { findPostWithOwners } from "~/models/post";
+import { findPostWithOwners } from "~/models/post/finder.server";
 import type { User } from "~/models/user";
-import { findUser } from "~/models/user";
+import { findUser } from "~/models/user/finder.server";
 import { requireUser } from "~/utils/session.server";
 
 type LoaderData = {

@@ -4,7 +4,7 @@ import { useLoaderData } from "@remix-run/react";
 import { MainHeader } from "~/component/MainHeader";
 import { UserItem } from "~/component/UserItem";
 import type { UserAndFollowers } from "~/models/user";
-import { findUser, findUsers } from "~/models/user";
+import { findUser, findUsers } from "~/models/user/finder.server";
 import { getUser } from "~/utils/session.server";
 
 type LoaderData = {

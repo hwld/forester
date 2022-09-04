@@ -4,7 +4,7 @@ import { Link, useActionData } from "@remix-run/react";
 import { SignupForm } from "~/component/AuthForm/SIgnupForm";
 import type { AuthFormValidationError } from "~/formData/authFormData";
 import { validateAuthForm } from "~/formData/authFormData";
-import { findUser } from "~/models/user";
+import { findUser } from "~/models/user/finder.server";
 import { registerUser } from "~/utils/session.server";
 
 type SignupErrorResponse = {

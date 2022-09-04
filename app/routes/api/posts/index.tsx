@@ -4,7 +4,7 @@ import { useFetcher } from "@remix-run/react";
 import type { UseDataFunctionReturn } from "@remix-run/react/dist/components";
 import type { CreatePostFormValidationError } from "~/formData/createPostFormData";
 import { validateCreatePostForm } from "~/formData/createPostFormData";
-import { findPost } from "~/models/post";
+import { findPost } from "~/models/post/finder.server";
 import { db } from "~/utils/db.server";
 import { requireUser } from "~/utils/session.server";
 

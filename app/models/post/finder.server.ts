@@ -1,25 +1,11 @@
 import { Prisma } from "@prisma/client";
 import { db } from "~/utils/db.server";
-import type { User } from "./user";
-import { convertToUser, findFollowingIds, userArgs } from "./user";
-
-// Prismaのデータから実際に使用するデータに変換を行うためにmodelファイルを作った。
-// PrismaClientをRemix側のactionなどから隠蔽する意図はないので、createやdeleteなどの操作系の
-// APIはactionから直接使用している。
-// 中間処理をはさみたくなったときにここに書く
-
-export type Post = {
-  id: string;
-  content: string;
-  username: string;
-  userId: string;
-  userIconUrl: string;
-  createdAt: string;
-  replyPostCount: number;
-  replySourceUsername: string | undefined;
-};
-
-export type PostWithOwner = Post & { owner: User };
+import type { Post, PostWithOwner } from ".";
+import {
+  convertToUser,
+  findFollowingIds,
+  userArgs,
+} from "../user/finder.server";
 
 const postArgsBase = Prisma.validator<Prisma.PostArgs>()({
   select: {
