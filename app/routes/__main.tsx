@@ -3,13 +3,13 @@ import { json } from "@remix-run/node";
 import { Outlet, useLoaderData } from "@remix-run/react";
 import { SideMenu } from "~/component/SideMenu";
 import type { User } from "~/models/user";
-import { requireUser } from "~/utils/session.server";
+import { Auth } from "~/services/authentication.server";
 
 type LoaderData = {
   user: User;
 };
 export const loader = async ({ request }: LoaderArgs) => {
-  const user = await requireUser(request);
+  const user = await Auth.requireUser(request);
 
   return json<LoaderData>({ user });
 };

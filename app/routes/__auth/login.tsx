@@ -4,7 +4,7 @@ import { Link, useActionData } from "@remix-run/react";
 import { LoginForm } from "~/component/AuthForm/LoginForm";
 import type { AuthFormValidationError } from "~/formData/authFormData";
 import { validateAuthForm } from "~/formData/authFormData";
-import { getUser, login } from "~/utils/session.server";
+import { Auth } from "~/services/authentication.server";
 
 type LoginErrorResponse = {
   type: "error";
@@ -18,7 +18,7 @@ export const useLoginActionData = () => {
 };
 
 export const loader = async ({ request }: LoaderArgs) => {
-  const user = await getUser(request);
+  const user = await Auth.getLoggedInUser(request);
   if (user) {
     return redirect("/");
   }
@@ -36,7 +36,7 @@ export const action = async ({ request }: ActionArgs) => {
     }
 
     const { username, password } = validResult.data;
-    const loginResult = await login({ username, password });
+    const loginResult = await Auth.login({ username, password });
     if (!loginResult) {
       return json<LoginErrorResponse>({
         type: "error",

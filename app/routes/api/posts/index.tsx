@@ -5,8 +5,8 @@ import type { UseDataFunctionReturn } from "@remix-run/react/dist/components";
 import type { CreatePostFormValidationError } from "~/formData/createPostFormData";
 import { validateCreatePostForm } from "~/formData/createPostFormData";
 import { findPost } from "~/models/post/finder.server";
+import { Auth } from "~/services/authentication.server";
 import { db } from "~/utils/db.server";
-import { requireUser } from "~/utils/session.server";
 
 type PostErrorResponse = {
   type: "error";
@@ -28,7 +28,7 @@ export const loader = async () => {
 };
 
 export const action = async ({ request }: ActionArgs) => {
-  const user = await requireUser(request);
+  const user = await Auth.requireUser(request);
 
   if (request.method === "POST") {
     const result = validateCreatePostForm(await request.formData());

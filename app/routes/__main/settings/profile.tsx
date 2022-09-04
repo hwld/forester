@@ -16,17 +16,17 @@ import { FormError } from "~/component/FormError";
 import { MainHeader } from "~/component/MainHeader";
 import { UserIconInput } from "~/component/UserIconInput";
 import { validateUserForm } from "~/formData/userFormData";
+import { Auth } from "~/services/authentication.server";
 import { db } from "~/utils/db.server";
-import { requireUser } from "~/utils/session.server";
 
 export const loader = async ({ request }: LoaderArgs) => {
-  const user = await requireUser(request);
+  const user = await Auth.requireUser(request);
 
   return json({ user });
 };
 
 export const action = async ({ request }: ActionArgs) => {
-  const user = await requireUser(request);
+  const user = await Auth.requireUser(request);
 
   const userIconsDirectory = "images/user-icons";
   const uploadDirectory = `./public/${userIconsDirectory}`;

@@ -5,7 +5,7 @@ import { SignupForm } from "~/component/AuthForm/SIgnupForm";
 import type { AuthFormValidationError } from "~/formData/authFormData";
 import { validateAuthForm } from "~/formData/authFormData";
 import { findUser } from "~/models/user/finder.server";
-import { registerUser } from "~/utils/session.server";
+import { Auth } from "~/services/authentication.server";
 
 type SignupErrorResponse = {
   type: "error";
@@ -44,7 +44,7 @@ export const action = async ({ request }: ActionArgs) => {
       });
     }
 
-    const { sessionCookie } = await registerUser({ username, password });
+    const { sessionCookie } = await Auth.registerUser({ username, password });
     return redirect("/", { headers: { "Set-Cookie": sessionCookie } });
   }
   return null;

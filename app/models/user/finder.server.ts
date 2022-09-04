@@ -1,21 +1,8 @@
 import { Prisma } from "@prisma/client";
-import bcrypt from "bcryptjs";
 import { db } from "~/utils/db.server";
 import type { User } from ".";
 
-export const authentication = async (username: string, password: string) => {
-  const user = await db.user.findUnique({ where: { username } });
-  if (!user) {
-    return false;
-  }
 
-  const isCorrectPassword = await bcrypt.compare(password, user.passwordHash);
-  if (!isCorrectPassword) {
-    return false;
-  }
-
-  return user.id;
-};
 
 export const userArgs = Prisma.validator<Prisma.UserArgs>()({
   select: {

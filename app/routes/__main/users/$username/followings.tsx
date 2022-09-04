@@ -5,7 +5,7 @@ import { MainHeader } from "~/component/MainHeader";
 import { UserItem } from "~/component/UserItem";
 import type { UserAndFollowings } from "~/models/user";
 import { findUser, findUsers } from "~/models/user/finder.server";
-import { getUser } from "~/utils/session.server";
+import { Auth } from "~/services/authentication.server";
 
 type LoaderData = {
   userAndFollowing: UserAndFollowings;
@@ -14,7 +14,7 @@ type LoaderData = {
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const username = params.username;
-  const loggedInUser = await getUser(request);
+  const loggedInUser = await Auth.getLoggedInUser(request);
 
   const user = await findUser({ where: { username } });
   if (!user) {

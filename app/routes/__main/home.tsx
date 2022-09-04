@@ -8,14 +8,14 @@ import type { PostWithOwner } from "~/models/post";
 import { findPostWithOwners } from "~/models/post/finder.server";
 import type { User } from "~/models/user";
 import { findUsers } from "~/models/user/finder.server";
-import { requireUser } from "~/utils/session.server";
+import { Auth } from "~/services/authentication.server";
 
 type LoaderData = {
   posts: PostWithOwner[];
   loggedInUser: User;
 };
 export const loader = async ({ request }: LoaderArgs) => {
-  const loggedInUser = await requireUser(request);
+  const loggedInUser = await Auth.requireUser(request);
 
   const followings = await findUsers({
     where: { followedBy: { some: { id: loggedInUser.id } } },

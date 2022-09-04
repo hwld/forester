@@ -1,8 +1,8 @@
 import type { ActionArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { findPost } from "~/models/post/finder.server";
+import { Auth } from "~/services/authentication.server";
 import { db } from "~/utils/db.server";
-import { requireUser } from "~/utils/session.server";
 
 export const loader = async () => {
   return redirect("/");
@@ -10,7 +10,7 @@ export const loader = async () => {
 
 export const action = async ({ request, params }: ActionArgs) => {
   if (request.method === "DELETE") {
-    const user = await requireUser(request);
+    const user = await Auth.requireUser(request);
 
     const post = await findPost({ where: { id: params.id, userId: user.id } });
     if (!post) {

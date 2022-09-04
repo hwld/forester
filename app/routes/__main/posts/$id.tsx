@@ -11,7 +11,7 @@ import {
   findPostWithOwners,
 } from "~/models/post/finder.server";
 import type { User } from "~/models/user";
-import { requireUser } from "~/utils/session.server";
+import { Auth } from "~/services/authentication.server";
 
 type PostTreeData = {
   post: PostWithOwner;
@@ -21,7 +21,7 @@ type PostTreeData = {
 };
 
 export const loader = async ({ request, params }: LoaderArgs) => {
-  const loggedInUser = await requireUser(request);
+  const loggedInUser = await Auth.requireUser(request);
   const postId = params.id;
 
   if (!postId) {
