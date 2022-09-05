@@ -1,6 +1,6 @@
+import { formatDateDetail } from "~/lib/date";
 import type { PostWithOwner } from "~/models/post";
 import type { User } from "~/models/user";
-import { formatDateDetail } from "~/utils/date";
 import { ReplyFormDialogButton } from "../OpenReplyFormDialogButton";
 import { UserIconLink } from "../UserIconLink";
 import { PostMenuButton } from "./PostMenu/PostMenuButton";

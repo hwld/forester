@@ -16,8 +16,8 @@ import { FormError } from "~/component/FormError";
 import { MainHeader } from "~/component/MainHeader";
 import { UserIconInput } from "~/component/UserIconInput";
 import { validateUserForm } from "~/formData/userFormData";
+import { db } from "~/lib/db.server";
 import { Auth } from "~/services/authentication.server";
-import { db } from "~/utils/db.server";
 
 export const loader = async ({ request }: LoaderArgs) => {
   const user = await Auth.requireUser(request);

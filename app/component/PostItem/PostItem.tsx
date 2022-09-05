@@ -1,7 +1,7 @@
 import type { ComponentProps } from "react";
+import { formatDate } from "~/lib/date";
 import type { PostWithOwner } from "~/models/post";
 import type { User } from "~/models/user";
-import { formatDate } from "~/utils/date";
 import { ReplyFormDialogButton } from "../OpenReplyFormDialogButton";
 import { UserIconLink } from "../UserIconLink";
 import { PostMenuButton } from "./PostMenu/PostMenuButton";

@@ -1,8 +1,8 @@
 import { redirect } from "@remix-run/node";
 import bcrypt from "bcryptjs";
 import type { AuthFormData } from "~/formData/authFormData";
+import { db } from "~/lib/db.server";
 import { findUser } from "~/models/user/finder.server";
-import { db } from "~/utils/db.server";
 import { Session } from "./session.server";
 
 const authentication = async (username: string, password: string) => {

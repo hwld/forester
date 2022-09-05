@@ -1,5 +1,5 @@
 import { Prisma } from "@prisma/client";
-import { db } from "~/utils/db.server";
+import { db } from "~/lib/db.server";
 import type { Post, PostWithOwner } from ".";
 import {
   convertToUser,

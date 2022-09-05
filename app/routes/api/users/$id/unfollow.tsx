@@ -1,8 +1,8 @@
 import type { ActionArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
+import { db } from "~/lib/db.server";
 import { findUser } from "~/models/user/finder.server";
 import { Auth } from "~/services/authentication.server";
-import { db } from "~/utils/db.server";
 
 export const loader = () => {
   return redirect("/");

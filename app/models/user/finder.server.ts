@@ -1,8 +1,6 @@
 import { Prisma } from "@prisma/client";
-import { db } from "~/utils/db.server";
+import { db } from "~/lib/db.server";
 import type { User } from ".";
-
-
 
 export const userArgs = Prisma.validator<Prisma.UserArgs>()({
   select: {
