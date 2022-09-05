@@ -3,6 +3,7 @@ import { useFetcher } from "@remix-run/react";
 import type { SyntheticEvent } from "react";
 import React from "react";
 import { RiDeleteBinLine } from "react-icons/ri";
+import { MenuItem } from "~/component/Menu/MenuItem";
 import type { Post } from "~/models/post";
 
 type Props = { post: Post };
@@ -22,16 +23,10 @@ export const OwnPostMenuItems: React.VFC<Props> = ({ post }) => {
             method="delete"
             action={`/api/posts/${post.id}?index`}
           >
-            <button
-              type="submit"
-              className={`flex w-full items-center rounded px-2 py-2  ${
-                active ? "bg-emerald-500" : ""
-              }`}
-              onClick={handleClick}
-            >
+            <MenuItem active={active}>
               <RiDeleteBinLine className="mr-2 h-5 w-5 " />
               <p className="font-bold">削除</p>
-            </button>
+            </MenuItem>
           </deletePostFetcher.Form>
         )}
       </Menu.Item>

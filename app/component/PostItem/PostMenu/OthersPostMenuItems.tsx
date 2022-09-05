@@ -1,6 +1,7 @@
 import { Menu } from "@headlessui/react";
 import { useFetcher } from "@remix-run/react";
 import { MdPersonAddAlt1 } from "react-icons/md";
+import { MenuItem } from "~/component/Menu/MenuItem";
 import type { PostWithOwner } from "~/models/post";
 
 type Props = { post: PostWithOwner };
@@ -21,20 +22,14 @@ export const OthersPostMenuItems: React.VFC<Props> = ({ post }) => {
                 : `/api/users/${post.userId}/follow`
             }
           >
-            <button
-              type="submit"
-              className={`flex w-full items-center rounded px-2 py-2  ${
-                active ? "bg-emerald-500" : ""
-              }`}
-              onClick={(e) => e.stopPropagation()}
-            >
+            <MenuItem active={active}>
               <MdPersonAddAlt1 className="mr-2 h-5 w-5" />
-              <p className="font-bold break-">
+              <p className="font-bold">
                 {isFollowing
                   ? `フォローを解除する`
                   : `${post.username} をフォローする`}
               </p>
-            </button>
+            </MenuItem>
           </fetcher.Form>
         )}
       </Menu.Item>

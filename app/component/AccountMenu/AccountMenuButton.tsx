@@ -2,8 +2,8 @@ import type { ComponentPropsWithoutRef } from "react";
 import { forwardRef } from "react";
 import { HiDotsHorizontal } from "react-icons/hi";
 import type { User } from "~/models/user";
-import { Icon } from "./Icon";
-import { UserIcon } from "./UserIcon";
+import { Icon } from "../Icon";
+import { UserIcon } from "../UserIcon";
 
 type Props = { user: User } & ComponentPropsWithoutRef<"button">;
 

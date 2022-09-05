@@ -3,7 +3,7 @@ import type { PostWithOwner } from "~/models/post";
 import type { User } from "~/models/user";
 import { ReplyFormDialogButton } from "../OpenReplyFormDialogButton";
 import { UserIconLink } from "../UserIconLink";
-import { PostMenuButton } from "./PostMenu/PostMenuButton";
+import { PostMenu } from "./PostMenu/PostMenu";
 
 type Props = { user: User; post: PostWithOwner; loggedInUserId?: string };
 
@@ -20,7 +20,7 @@ export const PostDetailItem: React.VFC<Props> = ({
           <p className="font-bold">{post.username}</p>
         </div>
 
-        <PostMenuButton post={post} loggedInUserId={loggedInUserId} />
+        <PostMenu post={post} loggedInUserId={loggedInUserId} />
       </div>
       <div className="ml-2 flex flex-col flex-grow space-y-3">
         <div className="mt-2">
