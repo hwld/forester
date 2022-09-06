@@ -29,13 +29,13 @@ export const PostFormDialog: React.VFC<Props> = ({
     >
       <div className="fixed inset-0 bg-black/30" aria-hidden="true"></div>
       <div className="fixed inset-0 flex items-center justify-center py-4 px-5 ">
-        <Dialog.Panel className="w-full max-w-lg rounded-lg bg-slate-200 flex flex-col items-stretch px-3 pt-3">
+        <Dialog.Panel className="w-full max-w-lg rounded-lg bg-slate-200 flex flex-col items-stretch p-1">
           <div className="flex items-center">
             <button onClick={close}>
               <MdOutlineClose className="w-8 h-8" />
             </button>
           </div>
-          <div className="flex mt-3 mx-3">
+          <div className="flex mt-1 mx-3">
             <UserIcon src={user.iconUrl} />
             <div className="flex-grow">
               <PostForm onSuccess={close} replySourceId={replySourceId} />

@@ -33,16 +33,18 @@ export const PostForm: React.VFC<Props> = ({ onSuccess, replySourceId }) => {
       {replySourceId && (
         <input hidden name="replySourceId" defaultValue={replySourceId} />
       )}
-      {error?.formError && <FormError message={error.formError} />}
-      <div className="mt-3">
-        <FormControl
-          name="content"
-          controlType="variable-textarea"
-          minRows={3}
-          errors={error?.fieldErrors?.content}
-        />
-      </div>
-      <div className="self-end mt-3">
+      {error?.formError && (
+        <div className="mb-2">
+          <FormError message={error.formError} />
+        </div>
+      )}
+      <FormControl
+        name="content"
+        controlType="variable-textarea"
+        minRows={3}
+        errors={error?.fieldErrors?.content}
+      />
+      <div className="self-end mt-2">
         <Button type="submit">投稿する</Button>
       </div>
     </postFetcher.Form>
