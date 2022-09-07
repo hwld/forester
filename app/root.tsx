@@ -7,7 +7,6 @@ import {
   Scripts,
   ScrollRestoration,
 } from "@remix-run/react";
-import { useEffect } from "react";
 import headlessuiStyles from "./headlessui.css";
 import styles from "./tailwind.css";
 
@@ -24,17 +23,6 @@ export const links: LinksFunction = () => [
 ];
 
 export default function App() {
-  // headlessuiのportalにスタイルを当てる方法が見つからなかったので
-  // querySelectorで無理やりスタイルを変える・・・
-  useEffect(() => {
-    const portal = document.querySelector<HTMLElement>(
-      "#headlessui-portal-root"
-    );
-    if (portal) {
-      portal.style.zIndex = "100";
-    }
-  }, []);
-
   return (
     <html lang="en">
       <head>
