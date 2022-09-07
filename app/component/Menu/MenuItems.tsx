@@ -1,7 +1,7 @@
-import { Menu } from "@headlessui/react";
+import { Menu, Transition } from "@headlessui/react";
 import clsx from "clsx";
 import type { ReactNode } from "react";
-import { useMemo } from "react";
+import { Fragment, useMemo } from "react";
 
 type Props = {
   children: ReactNode;
@@ -36,14 +36,24 @@ export const MenuItems: React.VFC<Props> = ({
   }, [position]);
 
   return (
-    <Menu.Items
-      className={clsx(
-        "absolute border bg-slate-200 border-slate-400 w-56 shadow-md rounded",
-        alignClass,
-        positionClass
-      )}
+    <Transition
+      as={Fragment}
+      enter="transition ease-out duration-100"
+      enterFrom="transform opacity-0 scale-95"
+      enterTo="transform opacity-100 scale-100"
+      leave="transition ease-in duration-75"
+      leaveFrom="transform opacity-100 scale-100"
+      leaveTo="transform opacity-0 scale-95"
     >
-      {children}
-    </Menu.Items>
+      <Menu.Items
+        className={clsx(
+          "absolute border bg-slate-200 border-slate-400 w-56 shadow-md rounded",
+          alignClass,
+          positionClass
+        )}
+      >
+        {children}
+      </Menu.Items>
+    </Transition>
   );
 };
