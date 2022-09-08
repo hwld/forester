@@ -1,53 +1,44 @@
 import type { ActionArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { Link, useActionData } from "@remix-run/react";
+import { validationError } from "remix-validated-form";
 import { SignupForm } from "~/component/AuthForm/SIgnupForm";
-import type { AuthFormValidationError } from "~/formData/authFormData";
-import { validateAuthForm } from "~/formData/authFormData";
+import { authFormValidator } from "~/formData/authFormData";
 import { findUser } from "~/models/user/finder.server";
 import { Auth } from "~/services/authentication.server";
 
-type SignupErrorResponse = {
-  type: "error";
-  error: AuthFormValidationError;
-};
-type SignupSuccessResponse = undefined;
-type SignupResponse = SignupErrorResponse | SignupSuccessResponse;
-
+// TODO:
+// repopulateFieldsに型がつかない・・・ (参考: https://github.com/remix-run/remix/issues/3931)
+// issueのコメントにあるremix-typedjsonを使ってみる
 export const useSignupActionData = () => {
-  return useActionData<SignupResponse>();
+  return useActionData<typeof action>();
 };
 
 export const loader = async () => {
-  return json({});
+  return json(null);
 };
 
 export const action = async ({ request }: ActionArgs) => {
   if (request.method === "POST") {
-    const validResult = validateAuthForm(await request.formData());
-    if (validResult.type === "error") {
-      return json<SignupErrorResponse>({
-        type: "error",
-        error: validResult.error,
-      });
+    const result = await authFormValidator.validate(await request.formData());
+    if (result.error) {
+      return validationError(result.error);
     }
 
-    const { username, password } = validResult.data;
+    const { username, password } = result.data;
     const userExists = await findUser({ where: { username } });
     if (userExists) {
-      return json<SignupErrorResponse>({
-        type: "error",
-        error: {
-          fields: { username },
-          formError: `ユーザー名 ${username} はすでに使用されています。`,
-        },
-      });
+      return validationError(
+        { fieldErrors: {} },
+        { formError: `ユーザー名 ${username} はすでに使用されています。` }
+      );
     }
 
     const { sessionCookie } = await Auth.registerUser({ username, password });
     return redirect("/", { headers: { "Set-Cookie": sessionCookie } });
   }
-  return null;
+
+  return json(null);
 };
 
 export default function Signup() {

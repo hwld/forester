@@ -1,9 +1,11 @@
-import { Form, useTransition } from "@remix-run/react";
+import { useTransition } from "@remix-run/react";
 import { useMemo } from "react";
+import { ValidatedForm } from "remix-validated-form";
+import { authFormValidator } from "~/formData/authFormData";
 import { useLoginActionData } from "~/routes/__auth/login";
 import { Button } from "../Button";
-import { FormControl } from "../FormControl";
 import { FormError } from "../FormError";
+import { ValidatedFormInput } from "../ValidatedFormInput";
 import { AuthFormHeader } from "./AuthFormHeader";
 
 type Props = {};
@@ -12,37 +14,35 @@ export const LoginForm: React.VFC<Props> = () => {
   const actionData = useLoginActionData();
   const transition = useTransition();
 
-  const error = useMemo(() => {
-    if (actionData?.type === "error") {
-      return actionData.error;
+  const formError = useMemo(() => {
+    // TODO
+    // remix側で正しい型がつかないのでとりあえず無理やりanyにキャストして使う
+    if (actionData) {
+      return (actionData.repopulateFields as any).formError;
     }
   }, [actionData]);
 
   return (
     <div>
       <AuthFormHeader type={"login"} />
-      <Form
+      <ValidatedForm
+        validator={authFormValidator}
         action={"/login"}
         method="post"
         className="mt-5 p-5 bg-white shadow-md rounded-md"
       >
         <fieldset disabled={transition.state === "submitting"}>
-          {error?.formError && <FormError message={error.formError} />}
+          {formError && <FormError message={formError} />}
           <div className="mt-5 space-y-4">
-            <FormControl
+            <ValidatedFormInput
               label="ユーザー名"
-              type="text"
               name="username"
-              defaultValue={error?.fields?.username}
-              errors={error?.fieldErrors?.username}
               autoComplete="username"
             />
-            <FormControl
+            <ValidatedFormInput
               label="パスワード"
-              type="password"
               name="password"
-              errors={error?.fieldErrors?.password}
-              autoComplete={"current-password"}
+              autoComplete="current-password"
             />
           </div>
           <div className="mt-5">
@@ -51,7 +51,7 @@ export const LoginForm: React.VFC<Props> = () => {
             </Button>
           </div>
         </fieldset>
-      </Form>
+      </ValidatedForm>
     </div>
   );
 };

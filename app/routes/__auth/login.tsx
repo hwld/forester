@@ -1,20 +1,16 @@
 import type { ActionArgs, LoaderArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { Link, useActionData } from "@remix-run/react";
+import { validationError } from "remix-validated-form";
 import { LoginForm } from "~/component/AuthForm/LoginForm";
-import type { AuthFormValidationError } from "~/formData/authFormData";
-import { validateAuthForm } from "~/formData/authFormData";
+import { authFormValidator } from "~/formData/authFormData";
 import { Auth } from "~/services/authentication.server";
 
-type LoginErrorResponse = {
-  type: "error";
-  error: AuthFormValidationError;
-};
-type LoginSuccessResponse = undefined;
-type LoginResponse = LoginErrorResponse | LoginSuccessResponse;
-
+// TODO:
+// repopulateFieldsに型がつかない・・・ (参考: https://github.com/remix-run/remix/issues/3931)
+// issueのコメントにあるremix-typedjsonを使ってみる
 export const useLoginActionData = () => {
-  return useActionData<LoginResponse>();
+  return useActionData<typeof action>();
 };
 
 export const loader = async ({ request }: LoaderArgs) => {
@@ -22,29 +18,25 @@ export const loader = async ({ request }: LoaderArgs) => {
   if (user) {
     return redirect("/");
   }
-  return json({});
+  return json(null);
 };
 
 export const action = async ({ request }: ActionArgs) => {
   if (request.method === "POST") {
-    const validResult = validateAuthForm(await request.formData());
-    if (validResult.type === "error") {
-      return json<LoginErrorResponse>({
-        type: "error",
-        error: validResult.error,
-      });
+    const result = await authFormValidator.validate(await request.formData());
+    if (result.error) {
+      return validationError(result.error);
     }
 
-    const { username, password } = validResult.data;
+    const { username, password } = result.data;
     const loginResult = await Auth.login({ username, password });
     if (!loginResult) {
-      return json<LoginErrorResponse>({
-        type: "error",
-        error: {
-          fields: { username },
-          formError: "ユーザー名/パスワードの組み合わせが間違っています。",
+      return validationError(
+        {
+          fieldErrors: {},
         },
-      });
+        { formError: "ユーザー名/パスワードの組み合わせが間違っています。" }
+      );
     }
 
     return redirect("/", {
@@ -52,7 +44,7 @@ export const action = async ({ request }: ActionArgs) => {
     });
   }
 
-  return null;
+  return json(null);
 };
 
 export default function Login() {
