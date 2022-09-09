@@ -12,7 +12,10 @@ export const action = async ({ request, params }: ActionArgs) => {
   if (request.method === "DELETE") {
     const user = await Auth.requireUser(request);
 
-    const post = await findPost({ where: { id: params.id, userId: user.id } });
+    const post = await findPost({
+      where: { id: params.id, userId: user.id },
+      loggedInUserId: user.id,
+    });
     if (!post) {
       return json(null, { status: 400 });
     }

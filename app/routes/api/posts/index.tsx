@@ -38,7 +38,10 @@ export const action = async ({ request }: ActionArgs) => {
 
     // replySourceIdが指定されている場合、その投稿が存在するかチェックする
     if (replySourceId) {
-      const postExists = await findPost({ where: { id: replySourceId } });
+      const postExists = await findPost({
+        where: { id: replySourceId },
+        loggedInUserId: user.id,
+      });
       if (!postExists) {
         return validationErrorResponse({
           fieldErrors: {},

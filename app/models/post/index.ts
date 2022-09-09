@@ -9,6 +9,8 @@ export type Post = {
   createdAt: string;
   replyPostCount: number;
   replySourceUsername: string | undefined;
+  likesCount: number;
+  likedByLoggedInUser?: boolean;
 };
 
 export type PostWithOwner = Post & { owner: User };

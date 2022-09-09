@@ -13,7 +13,7 @@ const postArgsBase = Prisma.validator<Prisma.PostArgs>()({
     content: true,
     createdAt: true,
     user: { select: { username: true, id: true, iconUrl: true } },
-    _count: { select: { replyPosts: true } },
+    _count: { select: { replyPosts: true, likes: true } },
     replySourcePost: {
       select: { user: { select: { username: true, id: true } } },
     },
@@ -40,14 +40,14 @@ const postWithOwnerArgs = Prisma.validator<Prisma.PostArgs>()({
   },
 });
 
+type ConvertToPostParams = {
+  rawPost: Prisma.PostGetPayload<typeof postArgsBase>;
+  loggedInUserLikingPostIds?: string[];
+};
 const convertToPost = ({
-  id,
-  content,
-  createdAt,
-  _count,
-  user,
-  replySourcePost,
-}: Prisma.PostGetPayload<typeof postArgsBase>): Post => {
+  rawPost: { id, content, createdAt, _count, user, replySourcePost },
+  loggedInUserLikingPostIds = [],
+}: ConvertToPostParams): Post => {
   return {
     id,
     content,
@@ -57,29 +57,46 @@ const convertToPost = ({
     userId: user.id,
     userIconUrl: user.iconUrl,
     replySourceUsername: replySourcePost?.user.username,
+    likesCount: _count.likes,
+    likedByLoggedInUser: loggedInUserLikingPostIds.includes(id),
   };
 };
 
 type ConvertToPostWithOwnerParams = {
   rawPost: Prisma.PostGetPayload<typeof postWithOwnerArgsBase>;
+  loggedInUserLikingPostIds?: string[];
   loggedInUserFollowingIds?: string[];
 };
 const convertToPostWithOwner = ({
   rawPost,
+  loggedInUserLikingPostIds,
   loggedInUserFollowingIds,
 }: ConvertToPostWithOwnerParams): PostWithOwner => {
   return {
-    ...convertToPost(rawPost),
+    ...convertToPost({ rawPost, loggedInUserLikingPostIds }),
     owner: convertToUser({ rawUser: rawPost.user, loggedInUserFollowingIds }),
   };
 };
 
-type FindPostParams = { where: Prisma.PostFindFirstArgs["where"] };
+export const findLikingPostIds = async (userId: string) => {
+  const post = await db.post.findMany({
+    select: { id: true },
+    where: { likes: { some: { userId } } },
+  });
+
+  return post.map((p) => p.id);
+};
+
+type FindPostParams = {
+  where: Prisma.PostFindFirstArgs["where"];
+  loggedInUserId?: string;
+};
 type FindPostResult =
   | { post: Post; replySourcePost: Post | undefined }
   | undefined;
 export const findPost = async ({
   where,
+  loggedInUserId,
 }: FindPostParams): Promise<FindPostResult> => {
   const rawPost = await db.post.findFirst({
     ...postArgs,
@@ -90,9 +107,16 @@ export const findPost = async ({
     return undefined;
   }
 
-  const post = convertToPost(rawPost);
+  const loggedInUserLikingPostIds = loggedInUserId
+    ? await findLikingPostIds(loggedInUserId)
+    : [];
+
+  const post = convertToPost({ rawPost, loggedInUserLikingPostIds });
   const replySourcePost: Post | undefined = rawPost.replySourcePost
-    ? convertToPost(rawPost.replySourcePost)
+    ? convertToPost({
+        rawPost: rawPost.replySourcePost,
+        loggedInUserLikingPostIds,
+      })
     : undefined;
 
   return { post, replySourcePost };
@@ -101,15 +125,23 @@ export const findPost = async ({
 type FindPostsParams = {
   where?: Prisma.PostFindManyArgs["where"];
   orderBy?: Prisma.PostFindManyArgs["orderBy"];
+  loggedInUserId?: string;
 };
-export const findPosts = async (args: FindPostsParams): Promise<Post[]> => {
+export const findPosts = async ({
+  loggedInUserId,
+  ...args
+}: FindPostsParams): Promise<Post[]> => {
   const rawPosts = await db.post.findMany({
     ...postArgs,
     ...args,
   });
 
+  const loggedInUserLikingPostIds = loggedInUserId
+    ? await findLikingPostIds(loggedInUserId)
+    : [];
+
   const posts: Post[] = rawPosts.map((post) => {
-    return convertToPost(post);
+    return convertToPost({ rawPost: post, loggedInUserLikingPostIds });
   });
 
   return posts;
@@ -118,11 +150,13 @@ export const findPosts = async (args: FindPostsParams): Promise<Post[]> => {
 export const findPostWithOwner = async ({
   loggedInUserId,
   ...args
-}: FindPostParams & {
-  loggedInUserId?: string;
-}) => {
+}: FindPostParams) => {
   const loggedInUserFollowingIds = loggedInUserId
     ? await findFollowingIds(loggedInUserId)
+    : [];
+
+  const loggedInUserLikingPostIds = loggedInUserId
+    ? await findLikingPostIds(loggedInUserId)
     : [];
 
   const rawPost = await db.post.findFirst({ ...postWithOwnerArgs, ...args });
@@ -133,11 +167,13 @@ export const findPostWithOwner = async ({
   const post = convertToPostWithOwner({
     rawPost,
     loggedInUserFollowingIds,
+    loggedInUserLikingPostIds,
   });
   const replySourcePost: PostWithOwner | undefined = rawPost.replySourcePost
     ? convertToPostWithOwner({
         rawPost: rawPost.replySourcePost,
         loggedInUserFollowingIds,
+        loggedInUserLikingPostIds,
       })
     : undefined;
 
@@ -147,14 +183,21 @@ export const findPostWithOwner = async ({
 export const findPostWithOwners = async ({
   loggedInUserId,
   ...args
-}: FindPostsParams & { loggedInUserId?: string }): Promise<PostWithOwner[]> => {
+}: FindPostsParams): Promise<PostWithOwner[]> => {
   const rawPosts = await db.post.findMany({ ...postWithOwnerArgs, ...args });
   const loggedInUserFollowingIds = loggedInUserId
     ? await findFollowingIds(loggedInUserId)
     : [];
+  const loggedInUserLikingPostIds = loggedInUserId
+    ? await findLikingPostIds(loggedInUserId)
+    : [];
 
   const posts: PostWithOwner[] = rawPosts.map((post) => {
-    return convertToPostWithOwner({ rawPost: post, loggedInUserFollowingIds });
+    return convertToPostWithOwner({
+      rawPost: post,
+      loggedInUserFollowingIds,
+      loggedInUserLikingPostIds,
+    });
   });
 
   return posts;

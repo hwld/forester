@@ -1,6 +1,7 @@
 import { formatDateDetail } from "~/lib/date";
 import type { PostWithOwner } from "~/models/post";
 import type { User } from "~/models/user";
+import { LikePostButton } from "../LikePostButton";
 import { ReplyFormDialogButton } from "../OpenReplyFormDialogButton";
 import { UserIconLink } from "../UserIconLink";
 import { PostMenu } from "./PostMenu/PostMenu";
@@ -36,16 +37,21 @@ export const PostDetailItem: React.VFC<Props> = ({
 
         <div className="w-full h-[1px] bg-emerald-500"></div>
         <div className="h-5 flex items-center">
-          <p>0件のいいね</p>
+          <p>{post.likesCount}件のいいね</p>
         </div>
         <div className="w-full h-[1px] bg-emerald-500"></div>
-        <div className="flex space-x-5">
-          <ReplyFormDialogButton
-            replySourceId={post.id}
-            size="lg"
-            user={user}
-          />
-        </div>
+        <ul className="flex space-x-3">
+          <li className="flex items-center">
+            <ReplyFormDialogButton
+              replySourceId={post.id}
+              size="lg"
+              user={user}
+            />
+          </li>
+          <li className="flex items-center">
+            <LikePostButton post={post} size="lg" />
+          </li>
+        </ul>
       </div>
     </li>
   );
