@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import { UserIcon } from "./UserIcon";
 
-type Props = { defaultIconUrl: string; name?: string };
+type Props = { defaultIconUrl: string; name: string };
 export const UserIconInput: React.VFC<Props> = ({ defaultIconUrl, name }) => {
   const fileRef = useRef<HTMLInputElement | null>(null);
   const [url, setUrl] = useState<string | null>(null);

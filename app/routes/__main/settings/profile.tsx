@@ -6,16 +6,16 @@ import {
   unstable_createMemoryUploadHandler,
   unstable_parseMultipartFormData,
 } from "@remix-run/node";
-import { useFetcher, useLoaderData } from "@remix-run/react";
-import type { UseDataFunctionReturn } from "@remix-run/react/dist/components";
+import { useLoaderData } from "@remix-run/react";
 import path from "path";
-import { useMemo } from "react";
+import { ValidatedForm, validationError } from "remix-validated-form";
 import { Button } from "~/component/Button";
-import { FormControl } from "~/component/FormControl";
-import { FormError } from "~/component/FormError";
 import { MainHeader } from "~/component/MainHeader";
 import { UserIconInput } from "~/component/UserIconInput";
-import { validateUserForm } from "~/formData/userFormData";
+import { ValidatedFormInput } from "~/component/ValidatedFormInput";
+import { ValidatedFormTextarea } from "~/component/ValidatedFormTextarea";
+import { clientUserFormValidator } from "~/formData/user/formData";
+import { serverUserFormValidator } from "~/formData/user/formData.server";
 import { db } from "~/lib/db.server";
 import { Auth } from "~/services/authentication.server";
 
@@ -43,9 +43,9 @@ export const action = async ({ request }: ActionArgs) => {
     uploadHandler
   );
 
-  const validationResult = validateUserForm(formData);
-  if (validationResult.type === "error") {
-    return json({ type: "error", error: validationResult.error } as const);
+  const validationResult = await serverUserFormValidator.validate(formData);
+  if (validationResult.error) {
+    return validationError(validationResult.error);
   }
 
   const { username, profile, icon } = validationResult.data;
@@ -63,49 +63,39 @@ export const action = async ({ request }: ActionArgs) => {
     },
   });
 
-  return json({ type: "success" } as const);
+  return json(null);
 };
 
 export default function ProfileSetting() {
   const { user } = useLoaderData<typeof loader>();
-  const profileSettingFetcher =
-    useFetcher<UseDataFunctionReturn<typeof action>>();
-
-  const error = useMemo(() => {
-    if (profileSettingFetcher.data?.type === "error") {
-      return profileSettingFetcher.data.error;
-    }
-  }, [profileSettingFetcher]);
 
   return (
     <>
       <MainHeader title="プロフィール編集" canBack />
       <div>
-        <profileSettingFetcher.Form
+        <ValidatedForm
+          validator={clientUserFormValidator}
           method="post"
           encType="multipart/form-data"
           className="flex flex-col h-full p-3 rounded border-b border-emerald-500"
         >
-          {error?.formError && <FormError message={error.formError} />}
           <div className="flex gap-3">
             <div>
               <UserIconInput name="icon" defaultIconUrl={user.iconUrl} />
             </div>
             <div className="grow mt-5 space-y-2">
-              <FormControl
+              <ValidatedFormInput
                 label="ユーザー名"
                 name="username"
                 defaultValue={user.username}
-                errors={error?.fieldErrors?.username}
               />
-              <FormControl
-                controlType="textarea"
+              <ValidatedFormTextarea
+                isVariable={false}
                 label="プロフィール"
                 name="profile"
-                canResize={false}
                 rows={6}
+                canResize={false}
                 defaultValue={user.profile}
-                errors={error?.fieldErrors?.profile}
               />
             </div>
           </div>
@@ -113,7 +103,7 @@ export default function ProfileSetting() {
           <div className="self-end mt-3">
             <Button type="submit">更新する</Button>
           </div>
-        </profileSettingFetcher.Form>
+        </ValidatedForm>
       </div>
     </>
   );

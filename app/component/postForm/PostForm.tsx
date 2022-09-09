@@ -36,7 +36,7 @@ export const PostForm: React.VFC<Props> = ({ onSuccess, replySourceId }) => {
           <FormError message={formError} />
         </div>
       )}
-      <ValidatedFormTextarea name="content" minRows={3} />
+      <ValidatedFormTextarea name="content" minRows={3} isVariable />
       <div className="self-end mt-2">
         <Button type="submit">投稿する</Button>
       </div>

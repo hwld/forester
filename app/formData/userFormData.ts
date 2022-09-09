@@ -1,12 +1,10 @@
-import { NodeOnDiskFile } from "@remix-run/node";
-import { File } from "@remix-run/node/dist/fetch";
 import { z } from "zod";
 import type { ExtractValidationError } from "~/lib/formValidator";
 import { createValidator } from "~/lib/formValidator";
 
 const userFormData = z
   .object({
-    icon: z.instanceof(NodeOnDiskFile).or(z.instanceof(File)),
+    icon: z.instanceof(File),
     username: z
       .string({ invalid_type_error: "無効なユーザー名です。" })
       .min(3, "ユーザー名は3文字以上で入力してください。")
