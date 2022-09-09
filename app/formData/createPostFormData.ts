@@ -1,3 +1,4 @@
+import { withZod } from "@remix-validated-form/with-zod";
 import { z } from "zod";
 import type { ExtractValidationError } from "~/lib/formValidator";
 import { createValidator } from "~/lib/formValidator";
@@ -17,3 +18,5 @@ export const validateCreatePostForm = createValidator(createPostFormData);
 export type CreatePostFormValidationError = ExtractValidationError<
   ReturnType<typeof validateCreatePostForm>
 >;
+
+export const createPostFormValidator = withZod(createPostFormData);

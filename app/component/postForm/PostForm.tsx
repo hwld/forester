@@ -1,52 +1,45 @@
-import { useEffect, useMemo, useRef } from "react";
-import { usePostFetcher } from "~/routes/api/posts";
+import { useActionData } from "@remix-run/react";
+import { useMemo } from "react";
+import { ValidatedForm } from "remix-validated-form";
+import { createPostFormValidator } from "~/formData/createPostFormData";
+import type { action } from "~/routes/api/posts";
 import { Button } from "../Button";
-import { FormControl } from "../FormControl";
 import { FormError } from "../FormError";
+import { ValidatedFormTextarea } from "../ValidatedFormTextarea";
 
 type Props = { onSuccess?: () => void; replySourceId?: string };
 
 export const PostForm: React.VFC<Props> = ({ onSuccess, replySourceId }) => {
-  const formRef = useRef<HTMLFormElement | null>(null);
-  const postFetcher = usePostFetcher();
+  const actionData = useActionData<typeof action>();
 
-  const error = useMemo(() => {
-    if (postFetcher.data?.type === "error") {
-      return postFetcher.data.error;
+  const formError = useMemo(() => {
+    // TODO
+    // remix側で正しい型がつかないのでとりあえず無理やりanyにキャストして使う
+    if (actionData) {
+      return (actionData.repopulateFields as any).formError;
     }
-  }, [postFetcher]);
-
-  useEffect(() => {
-    if (postFetcher.type == "done" && postFetcher.data?.type === "ok") {
-      formRef.current?.reset();
-      onSuccess?.();
-    }
-  }, [onSuccess, postFetcher]);
+  }, [actionData]);
 
   return (
-    <postFetcher.Form
-      ref={formRef}
+    <ValidatedForm
+      validator={createPostFormValidator}
       action="/api/posts?index"
       method="post"
+      resetAfterSubmit
       className="px-3 pt-3 pb-2 flex flex-col"
     >
       {replySourceId && (
         <input hidden name="replySourceId" defaultValue={replySourceId} />
       )}
-      {error?.formError && (
+      {formError && (
         <div className="mb-2">
-          <FormError message={error.formError} />
+          <FormError message={formError} />
         </div>
       )}
-      <FormControl
-        name="content"
-        controlType="variable-textarea"
-        minRows={3}
-        errors={error?.fieldErrors?.content}
-      />
+      <ValidatedFormTextarea name="content" minRows={3} />
       <div className="self-end mt-2">
         <Button type="submit">投稿する</Button>
       </div>
-    </postFetcher.Form>
+    </ValidatedForm>
   );
 };

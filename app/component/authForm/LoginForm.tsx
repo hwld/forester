@@ -42,6 +42,7 @@ export const LoginForm: React.VFC<Props> = () => {
             <ValidatedFormInput
               label="パスワード"
               name="password"
+              type="password"
               autoComplete="current-password"
             />
           </div>

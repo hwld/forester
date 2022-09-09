@@ -12,6 +12,7 @@ export type VariableTextAreaProps = {
  */
 export const VariableTextArea: React.VFC<VariableTextAreaProps> = ({
   minRows,
+  onChange,
   ...textAreaProps
 }) => {
   const ref = useRef<HTMLTextAreaElement | null>(null);
@@ -24,7 +25,7 @@ export const VariableTextArea: React.VFC<VariableTextAreaProps> = ({
 
   const handleChange: ChangeEventHandler<HTMLTextAreaElement> = (args) => {
     changeHeight(args.target);
-    textAreaProps.onChange?.(args);
+    onChange?.(args);
   };
 
   useEffect(() => {
