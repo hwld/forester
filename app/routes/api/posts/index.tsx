@@ -4,20 +4,10 @@ import { useFetcher } from "@remix-run/react";
 import type { UseDataFunctionReturn } from "@remix-run/react/dist/components";
 import { useActionData } from "@remix-run/react/dist/components";
 import { validationError } from "remix-validated-form";
-import type { CreatePostFormValidationError } from "~/formData/createPostFormData";
 import { createPostFormValidator } from "~/formData/createPostFormData";
 import { db } from "~/lib/db.server";
 import { findPost } from "~/models/post/finder.server";
 import { Auth } from "~/services/authentication.server";
-
-type PostErrorResponse = {
-  type: "error";
-  error: CreatePostFormValidationError;
-};
-type PostSuccessResponse = {
-  type: "ok";
-  data: { postId: string; content: string };
-};
 
 export const usePostActionData = () => {
   return useActionData<typeof action>();
