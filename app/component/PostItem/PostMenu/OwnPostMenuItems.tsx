@@ -23,7 +23,7 @@ export const OwnPostMenuItems: React.VFC<Props> = ({ post }) => {
             method="delete"
             action={`/api/posts/${post.id}?index`}
           >
-            <MenuItem active={active}>
+            <MenuItem active={active} onClick={handleClick}>
               <RiDeleteBinLine className="mr-2 h-5 w-5 " />
               <p className="font-bold">削除</p>
             </MenuItem>
