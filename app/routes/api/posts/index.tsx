@@ -3,9 +3,9 @@ import { json, redirect } from "@remix-run/node";
 import { useFetcher } from "@remix-run/react";
 import type { UseDataFunctionReturn } from "@remix-run/react/dist/components";
 import { useActionData } from "@remix-run/react/dist/components";
-import { validationError } from "remix-validated-form";
 import { createPostFormValidator } from "~/formData/createPostFormData";
 import { db } from "~/lib/db.server";
+import { validationErrorResponse } from "~/lib/validationErrorResponse.server";
 import { findPost } from "~/models/post/finder.server";
 import { Auth } from "~/services/authentication.server";
 
@@ -31,7 +31,7 @@ export const action = async ({ request }: ActionArgs) => {
       await request.formData()
     );
     if (result.error) {
-      return validationError(result.error);
+      return validationErrorResponse(result.error);
     }
 
     const { replySourceId, content } = result.data;
@@ -40,10 +40,10 @@ export const action = async ({ request }: ActionArgs) => {
     if (replySourceId) {
       const postExists = await findPost({ where: { id: replySourceId } });
       if (!postExists) {
-        return validationError(
-          { fieldErrors: {} },
-          { formError: "存在しない投稿に返信しようとしています。" }
-        );
+        return validationErrorResponse({
+          fieldErrors: {},
+          formError: "存在しない投稿に返信しようとしています。",
+        });
       }
     }
 
@@ -53,5 +53,5 @@ export const action = async ({ request }: ActionArgs) => {
     return json(null);
   }
 
-  return json(null, { status: 405 });
+  return json(null);
 };

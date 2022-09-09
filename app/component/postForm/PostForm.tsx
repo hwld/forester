@@ -1,5 +1,4 @@
 import { useActionData } from "@remix-run/react";
-import { useMemo } from "react";
 import { ValidatedForm } from "remix-validated-form";
 import { createPostFormValidator } from "~/formData/createPostFormData";
 import type { action } from "~/routes/api/posts";
@@ -12,13 +11,7 @@ type Props = { onSuccess?: () => void; replySourceId?: string };
 export const PostForm: React.VFC<Props> = ({ onSuccess, replySourceId }) => {
   const actionData = useActionData<typeof action>();
 
-  const formError = useMemo(() => {
-    // TODO
-    // remix側で正しい型がつかないのでとりあえず無理やりanyにキャストして使う
-    if (actionData) {
-      return (actionData.repopulateFields as any).formError;
-    }
-  }, [actionData]);
+  const formError = actionData?.formError;
 
   const handleSubmit = () => {
     onSuccess?.();

@@ -14,7 +14,7 @@ export const action = async ({ request, params }: ActionArgs) => {
 
   const user = await findUser({ where: { id: userId } });
   if (!user || userId === loggedInUser.id) {
-    return json({}, { status: 400 });
+    return json(null, { status: 400 });
   }
 
   await db.user.update({
@@ -22,5 +22,5 @@ export const action = async ({ request, params }: ActionArgs) => {
     data: { followedBy: { disconnect: { id: loggedInUser.id } } },
   });
 
-  return json({});
+  return json(null);
 };

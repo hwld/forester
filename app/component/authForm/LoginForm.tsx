@@ -1,5 +1,4 @@
 import { useTransition } from "@remix-run/react";
-import { useMemo } from "react";
 import { ValidatedForm } from "remix-validated-form";
 import { authFormValidator } from "~/formData/authFormData";
 import { useLoginActionData } from "~/routes/__auth/login";
@@ -14,13 +13,7 @@ export const LoginForm: React.VFC<Props> = () => {
   const actionData = useLoginActionData();
   const transition = useTransition();
 
-  const formError = useMemo(() => {
-    // TODO
-    // remix側で正しい型がつかないのでとりあえず無理やりanyにキャストして使う
-    if (actionData) {
-      return (actionData.repopulateFields as any).formError;
-    }
-  }, [actionData]);
+  const formError = actionData?.formError;
 
   return (
     <div>
