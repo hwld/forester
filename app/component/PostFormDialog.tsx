@@ -35,7 +35,10 @@ export const PostFormDialog: React.VFC<Props> = ({
           <div className="fixed inset-0 bg-black/30" aria-hidden="true"></div>
         </Transition.Child>
 
-        <div className="fixed inset-0 flex items-center justify-center py-4 px-5 ">
+        <div
+          className="fixed inset-0 flex items-center justify-center py-4 px-5 "
+          onClick={(e) => e.stopPropagation()}
+        >
           <Transition.Child
             as={Fragment}
             enter="ease-out duration-250"

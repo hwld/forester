@@ -20,6 +20,10 @@ export const PostForm: React.VFC<Props> = ({ onSuccess, replySourceId }) => {
     }
   }, [actionData]);
 
+  const handleSubmit = () => {
+    onSuccess?.();
+  };
+
   return (
     <ValidatedForm
       validator={createPostFormValidator}
@@ -27,6 +31,7 @@ export const PostForm: React.VFC<Props> = ({ onSuccess, replySourceId }) => {
       method="post"
       resetAfterSubmit
       className="px-3 pt-3 pb-2 flex flex-col"
+      onSubmit={handleSubmit}
     >
       {replySourceId && (
         <input hidden name="replySourceId" defaultValue={replySourceId} />
