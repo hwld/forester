@@ -6,9 +6,19 @@ import { Button } from "../Button";
 import { FormError } from "../FormError";
 import { ValidatedFormTextarea } from "../ValidatedFormTextarea";
 
-type Props = { onSuccess?: () => void; replySourceId?: string };
+type Props = {
+  onSuccess?: () => void;
+  replySourceId?: string;
+} & (
+  | { isVariableTextarea: true; minRows?: number }
+  | { isVariableTextarea?: false; rows?: number }
+);
 
-export const PostForm: React.VFC<Props> = ({ onSuccess, replySourceId }) => {
+export const PostForm: React.VFC<Props> = ({
+  onSuccess,
+  replySourceId,
+  ...props
+}) => {
   const actionData = useActionData<typeof action>();
 
   const formError = actionData?.formError;
@@ -23,7 +33,7 @@ export const PostForm: React.VFC<Props> = ({ onSuccess, replySourceId }) => {
       action="/api/posts?index"
       method="post"
       resetAfterSubmit
-      className="px-3 pt-3 pb-2 flex flex-col"
+      className="flex flex-col"
       onSubmit={handleSubmit}
     >
       {replySourceId && (
@@ -34,7 +44,12 @@ export const PostForm: React.VFC<Props> = ({ onSuccess, replySourceId }) => {
           <FormError message={formError} />
         </div>
       )}
-      <ValidatedFormTextarea name="content" minRows={3} isVariable />
+      <ValidatedFormTextarea
+        name="content"
+        {...(props.isVariableTextarea
+          ? { isVariable: true, minRows: props.minRows }
+          : { isVariable: false, rows: props.rows, canResize: false })}
+      />
       <div className="self-end mt-2">
         <Button type="submit">投稿する</Button>
       </div>

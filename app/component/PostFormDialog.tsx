@@ -56,8 +56,12 @@ export const PostFormDialog: React.VFC<Props> = ({
               </div>
               <div className="flex mt-1 mx-3">
                 <UserIcon src={user.iconUrl} />
-                <div className="flex-grow">
-                  <PostForm onSuccess={close} replySourceId={replySourceId} />
+                <div className="flex-grow p-3 pr-0">
+                  <PostForm
+                    onSuccess={close}
+                    replySourceId={replySourceId}
+                    rows={5}
+                  />
                 </div>
               </div>
             </Dialog.Panel>

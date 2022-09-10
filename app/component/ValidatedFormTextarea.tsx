@@ -10,29 +10,30 @@ type Props = {
   label?: string;
 } & (
   | ({ isVariable: true } & VariableTextAreaProps)
-  | ({ isVariable: false } & TextareaProps)
+  | ({ isVariable?: false } & TextareaProps)
 );
 export const ValidatedFormTextarea: React.VFC<Props> = ({
   name,
   label,
-  isVariable,
   ...rest
 }) => {
   const { error, getInputProps } = useField(name);
 
   const textArea = useMemo(() => {
-    if (isVariable) {
+    if (rest.isVariable) {
+      const { isVariable, ...props } = rest;
       return (
         <VariableTextArea
           isError={error !== undefined}
           {...getInputProps()}
-          {...rest}
+          {...props}
         />
       );
     } else {
-      return <Textarea {...getInputProps()} {...rest} />;
+      const { isVariable, ...props } = rest;
+      return <Textarea {...getInputProps()} {...props} />;
     }
-  }, [error, getInputProps, isVariable, rest]);
+  }, [error, getInputProps, rest]);
 
   return (
     <div>

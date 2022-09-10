@@ -48,8 +48,8 @@ export default function Home() {
   return (
     <>
       <MainHeader title="ホーム" />
-      <div className="border-b border-emerald-500">
-        <PostForm />
+      <div className="border-b border-emerald-500 p-3">
+        <PostForm isVariableTextarea minRows={3} />
       </div>
       <ul>
         {posts.map((post) => {
