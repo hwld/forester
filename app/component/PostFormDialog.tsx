@@ -48,7 +48,7 @@ export const PostFormDialog: React.VFC<Props> = ({
             leaveFrom="opacity-100 scale-100"
             leaveTo="opacity-0 scale-95"
           >
-            <Dialog.Panel className="w-full max-w-lg rounded-lg bg-slate-200 flex flex-col items-stretch p-1 transition-all">
+            <Dialog.Panel className="w-full max-w-lg rounded-lg bg-slate-200 flex flex-col items-stretch p-2 pb-0 transition-all">
               <div className="flex items-center">
                 <button onClick={close}>
                   <MdOutlineClose className="w-8 h-8" />

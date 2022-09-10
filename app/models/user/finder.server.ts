@@ -40,6 +40,30 @@ export const findFollowingIds = async (userId: string) => {
   return user?.following.map((f) => f.id);
 };
 
+type FindUsersLikedPostParams = {
+  postId: string;
+  loggedInUserId: string;
+};
+export const findUsersLikedPost = async ({
+  postId,
+  loggedInUserId,
+}: FindUsersLikedPostParams) => {
+  const rawUsers = await db.user.findMany({
+    select: { ...userArgs.select },
+    where: { likes: { some: { postId } } },
+  });
+
+  const loggedInUserFollowingIds = loggedInUserId
+    ? await findFollowingIds(loggedInUserId)
+    : [];
+
+  const users = rawUsers.map((rawUser) => {
+    return convertToUser({ rawUser, loggedInUserFollowingIds });
+  });
+
+  return users;
+};
+
 type FindUserParams = {
   where: Prisma.UserFindFirstArgs["where"];
   loggedInUserId?: string;

@@ -1,3 +1,5 @@
+import { Link } from "@remix-run/react";
+import { useMemo } from "react";
 import { formatDateDetail } from "~/lib/date";
 import type { PostWithOwner } from "~/models/post";
 import type { User } from "~/models/user";
@@ -13,6 +15,25 @@ export const PostDetailItem: React.VFC<Props> = ({
   post,
   loggedInUserId,
 }) => {
+  const likeCount = useMemo(() => {
+    const text = `${post.likesCount}件のいいね`;
+
+    if (post.likesCount > 0) {
+      return (
+        // "いいねしたユーザー画面"に遷移する際に、サイト内からの繊維であることを伝える
+        <Link
+          to="like"
+          className="hover:underline underline-offset-2"
+          state={{ from: "onSite" }}
+        >
+          {text}
+        </Link>
+      );
+    } else {
+      return <p>{text}</p>;
+    }
+  }, [post.likesCount]);
+
   return (
     <li className="p-3 border-y border-emerald-500 break-words flex flex-col transition">
       <div className="flex justify-between">
@@ -36,9 +57,7 @@ export const PostDetailItem: React.VFC<Props> = ({
         <p className="text-gray-500">{formatDateDetail(post.createdAt)}</p>
 
         <div className="w-full h-[1px] bg-emerald-500"></div>
-        <div className="h-5 flex items-center">
-          <p>{post.likesCount}件のいいね</p>
-        </div>
+        <div className="h-5 flex items-center">{likeCount}</div>
         <div className="w-full h-[1px] bg-emerald-500"></div>
         <ul className="flex space-x-3">
           <li className="flex items-center">

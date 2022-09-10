@@ -1,3 +1,4 @@
+import clsx from "clsx";
 import type { User } from "~/models/user";
 import { FollowButton } from "./FollowButton";
 import { UnfollowButton } from "./UnfollowButton";
@@ -7,10 +8,21 @@ type Props = {
   user: User;
   isOwner: boolean;
   isFollowing: boolean;
+  border?: boolean;
 };
-export const UserItem: React.VFC<Props> = ({ user, isFollowing, isOwner }) => {
+export const UserItem: React.VFC<Props> = ({
+  user,
+  isFollowing,
+  isOwner,
+  border = true,
+}) => {
   return (
-    <div className="flex px-3 py-2 rounded space-x-2 border-b border-emerald-500">
+    <div
+      className={clsx(
+        "flex px-3 py-2 rounded space-x-2",
+        border && "border-b border-emerald-500"
+      )}
+    >
       <div className="shrink-0">
         <UserIconLink username={user.username} src={user.iconUrl} />
       </div>

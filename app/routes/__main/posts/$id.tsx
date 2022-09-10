@@ -1,6 +1,6 @@
 import type { LoaderArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { useLoaderData, useNavigate } from "@remix-run/react";
+import { Outlet, useLoaderData, useNavigate } from "@remix-run/react";
 import { MdError } from "react-icons/md";
 import { MainHeader } from "~/component/MainHeader";
 import { PostDetailItem } from "~/component/PostItem/PostDetailItem";
@@ -97,6 +97,7 @@ export default function PostTree() {
           />
         );
       })}
+      <Outlet />
     </>
   );
 }
