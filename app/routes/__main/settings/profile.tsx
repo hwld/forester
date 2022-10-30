@@ -8,7 +8,11 @@ import {
 } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import path from "path";
-import { ValidatedForm, validationError } from "remix-validated-form";
+import {
+  useIsSubmitting,
+  ValidatedForm,
+  validationError,
+} from "remix-validated-form";
 import { Button } from "~/component/Button";
 import { MainHeader } from "~/component/MainHeader";
 import { UserIconInput } from "~/component/UserIconInput";
@@ -16,6 +20,7 @@ import { ValidatedFormInput } from "~/component/ValidatedFormInput";
 import { ValidatedFormTextarea } from "~/component/ValidatedFormTextarea";
 import { clientUserFormValidator } from "~/formData/user/formData";
 import { serverUserFormValidator } from "~/formData/user/formData.server";
+import { useKeepStateAtLeast } from "~/hooks/useKeepStateAtLeast";
 import { db } from "~/lib/db.server";
 import { Auth } from "~/services/authentication.server";
 
@@ -68,12 +73,17 @@ export const action = async ({ request }: ActionArgs) => {
 
 export default function ProfileSetting() {
   const { user } = useLoaderData<typeof loader>();
+  const formId = "profile-form";
+
+  const innerIsSubmitting = useIsSubmitting(formId);
+  const isSubmit = useKeepStateAtLeast(250, innerIsSubmitting);
 
   return (
     <>
       <MainHeader title="プロフィール編集" canBack />
       <div>
         <ValidatedForm
+          id={formId}
           validator={clientUserFormValidator}
           method="post"
           encType="multipart/form-data"
@@ -101,7 +111,9 @@ export default function ProfileSetting() {
           </div>
 
           <div className="self-end mt-3">
-            <Button type="submit">更新する</Button>
+            <Button type="submit" disabled={isSubmit}>
+              {isSubmit ? "更新中..." : "更新する"}
+            </Button>
           </div>
         </ValidatedForm>
       </div>
